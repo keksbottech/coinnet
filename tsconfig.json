@@ -6,12 +6,12 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "components/header tabs/HeaderTabs.jsx", "components/ui/checkbox/Checkbox.jsx", "components/select/Select.tsx"  ]
 }

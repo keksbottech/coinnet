@@ -5,7 +5,7 @@ import { Href, useRouter } from 'expo-router';
 type RedirectPropType = {
     url?: Href<string | object>;
 }
-const Redirect = ({url = ''}:RedirectPropType) => {
+const Redirect = ({url = '/'}:RedirectPropType) => {
     const router = useRouter()
 
 
@@ -13,7 +13,7 @@ const Redirect = ({url = ''}:RedirectPropType) => {
          router.push(url);
     }, [url])
 
-    
+
   return (
     <View>
       <Text>Redirect</Text>

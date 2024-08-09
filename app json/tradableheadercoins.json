@@ -1,0 +1,33 @@
+[
+    {
+        "id":0,
+        "name":"USDT",
+        "screen": "/"
+    },
+    {
+        "id":1,
+        "name":"USDC",
+        "screen": "/"
+    },
+    {
+        "id":2,
+        "name":"BTC",
+        "screen": "/"
+    },
+    {
+        "id":3,
+        "name":"Litecoiin",
+        "screen": "/"
+    },
+    {
+        "id":4,
+        "name":"Tron",
+        "screen": "/"
+    },
+    {
+        "id":5,
+        "name":"USD",
+        "screen": "/",
+        "icon":"drop"
+    }
+]
