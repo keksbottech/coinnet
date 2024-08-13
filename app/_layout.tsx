@@ -12,15 +12,16 @@ SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(onboarding)',
+  initialRouteName: '(tabs)',
 };
 
 export default function RootLayout() {
     
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
-    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+    MonsterMid: require('../assets/fonts/montserrat/Montserrat-Medium.ttf'),
+    MonsterReg: require('../assets/fonts/montserrat/Montserrat-Regular.ttf'),
+    MonsterBold: require('../assets/fonts/montserrat/Montserrat-Bold.ttf'),
   });
 
   useEffect(() => {
@@ -31,27 +32,35 @@ export default function RootLayout() {
 
   if (!loaded) return null;
 
-  return (
-       
-       
+
+
+  return ( 
     <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
     <TamaguiProvider config={config}>
-      <Stack initialRouteName='(onboarding)'>
+      <Stack initialRouteName='(tabs)'>
+      <Stack.Screen name="(tabs)" options={{headerShown:false}}/>
         <Stack.Screen name='index' options={{headerShown:false}}/>
       <Stack.Screen name="(onboarding)" options={{headerShown:false}}/>
-      <Stack.Screen name="(tabs)" options={{headerShown:false}}/>
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <Stack.Screen name="(other)" options={{headerShown:false}}/>
+      <Stack.Screen name="(trade)" options={{headerShown:false}}/>
+      <Stack.Screen name="(market)" options={{headerShown:false}}/>
+       <Stack.Screen name="+not-found" />
+      
+
+      </Stack>   
     </TamaguiProvider>
-    </ThemeProvider>
+    </ThemeProvider> 
   );
- }
+}
+
+
+
 
 // import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 // import { useFonts } from 'expo-font';
 // import { Stack } from 'expo-router';
 // import * as SplashScreen from 'expo-splash-screen';
-// import { useEffect } from 'react';
+// import { useEfect } from 'react';
 // import 'react-native-reanimated';
 // import { useColorScheme } from '@/hooks/useColorScheme';
 // import "@/global.css"

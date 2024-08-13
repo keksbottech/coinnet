@@ -3,28 +3,44 @@ import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import EvilIcons from '@expo/vector-icons/EvilIcons'
 import AntDesign from '@expo/vector-icons/AntDesign'
+import { Separator } from 'tamagui'
+import GoogleImage from '@/assets/svg/google.svg'
+import AppleImage from '@/assets/svg/apple.svg'
+import FacebookImage from '@/assets/svg/facebook.svg'
 
-const ContinueWithOauth = () => {
+
+type ContinueWithOauthTypes = {
+  styles?: {}
+}
+
+const ContinueWithOauth = ({styles}: ContinueWithOauthTypes) => {
+
+
   return (
   
-    <View>
-    <View>
-        <View></View>
-        <Text>or continue with</Text>
-        <View></View>
+    <View style={styles} className='flex flex-col items-center justify-center'>
+    <View className='flex flex-row items-center' style={{marginBottom:30}}>
+       
+        <Separator/>
+        <Text style={{marginHorizontal:10}} className='font-bold text-lg'>or continue with</Text>
+       
+        <Separator/>
     </View>
-    <TouchableOpacity>
-    <EvilIcons name="sc-facebook" size={24} color="black" />
+
+    <View className='flex flex-row items-center'>
+
+    <TouchableOpacity style={{marginRight:10}}>
+    <FacebookImage/>
     </TouchableOpacity>
 
-    <TouchableOpacity>
-    <AntDesign name="apple1" size={24} color="black" />
+    <TouchableOpacity style={{marginRight:10}}>
+    <AppleImage/>
     </TouchableOpacity>      
     
-      <TouchableOpacity>
-    <AntDesign name="google" size={24} color="black" />
+      <TouchableOpacity style={{marginRight:10}}>
+        <GoogleImage/>
     </TouchableOpacity>
-
+</View>
   </View>
   )
 }

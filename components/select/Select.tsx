@@ -19,7 +19,7 @@ const Select = ({data,styles}: SelectTypes) => {
         onValueChange={(itemValue: React.SetStateAction<string>) => setSelectedValue(itemValue)}
       >
         {
-          data?.map(el => <Picker.Item label={` ${el.dial_code}`} value={el.dial_code}/> )
+          data?.map(el => <Picker.Item key={el.id} label={` ${el.dial_code}`} value={el.dial_code}/> )
         }
   
       </Picker>

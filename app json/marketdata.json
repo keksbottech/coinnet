@@ -1,0 +1,43 @@
+[
+    {
+      "pair": "SOL/USDT",
+      "topPrice": "138.32",
+      "lowPrice": "1.091",
+      "volume": "55 431 281,69",
+      "change": "0.72%",
+      "changePositive": true
+    },
+    {
+      "pair": "BTC/USDT",
+      "topPrice": "31,221.89",
+      "lowPrice": "1,113",
+      "volume": "55 431 281,69",
+      "change": "2.76%",
+      "changePositive": true
+    },
+    {
+      "pair": "ETH/USDT",
+      "topPrice": "1,801.10",
+      "lowPrice": "1,515",
+      "volume": "24 900 280,04",
+      "change": "-1.02%",
+      "changePositive": false
+    },
+    {
+      "pair": "BNB/USDT",
+      "topPrice": "690.15",
+      "lowPrice": "690.15",
+      "volume": "53 431 281,69",
+      "change": "2.01%",
+      "changePositive": true
+    },
+    {
+      "pair": "LTC/USDT",
+      "topPrice": "44.24",
+      "lowPrice": "42.15",
+      "volume": "55 431 281,69",
+      "change": "2.40%",
+      "changePositive": true
+    }
+  ]
+  

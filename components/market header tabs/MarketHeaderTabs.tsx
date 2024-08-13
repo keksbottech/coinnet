@@ -8,8 +8,8 @@ const MarketHeaderTabs = () => {
       <FlatList
         data={marketHeaderData}
         keyExtractor={data=> String(data.id)}
-        renderItem={({items}) => <TouchableOpacity>
-            <Text>{items.name}</Text>
+        renderItem={({item}) => <TouchableOpacity>
+            <Text>{item.name}</Text>
         </TouchableOpacity>}
       />
     </View>

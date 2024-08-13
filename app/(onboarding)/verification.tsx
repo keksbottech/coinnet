@@ -4,7 +4,7 @@ import PageHeader from '@/components/page header/PageHeader'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 
-const verification = () => {
+const Verification = () => {
     const router = useRouter()
 
   const navigateToCreateAccount = () => {
@@ -36,7 +36,7 @@ const verification = () => {
   )
 }
 
-export default verification
+export default Verification
 
 const styles = StyleSheet.create({
     input:{

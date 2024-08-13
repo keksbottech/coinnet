@@ -1,44 +1,132 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 
-const MarketCoinCards = () => {
+const marketData = [
+  {
+    pair: "SOL/USDT",
+    topPrice: "138.32",
+    lowPrice: "1.091",
+    volume: "55 431 281,69",
+    change: "0.72%",
+    changePositive: true
+  },
+  {
+    pair: "BTC/USDT",
+    topPrice: "31,221.89",
+    lowPrice: "1,113",
+    volume: "55 431 281,69",
+    change: "2.76%",
+    changePositive: true
+  },
+  {
+    pair: "ETH/USDT",
+    topPrice: "1,801.10",
+    lowPrice: "1,515",
+    volume: "24 900 280,04",
+    change: "-1.02%",
+    changePositive: false
+  },
+  {
+    pair: "BNB/USDT",
+    topPrice: "690.15",
+    lowPrice: "690.15",
+    volume: "53 431 281,69",
+    change: "2.01%",
+    changePositive: true
+  },
+  {
+    pair: "LTC/USDT",
+    topPrice: "44.24",
+    lowPrice: "42.15",
+    volume: "55 431 281,69",
+    change: "2.40%",
+    changePositive: true
+  }
+];
+
+const MarketItem = ({ item }) => {
   return (
-    <View>
-    <View>
-        <View>
-            <Text>SOL</Text>
-            <Text>/</Text>
-            <Text>USDT</Text>
-        </View>
-        <View>
-            <Text>Vol 51 439 0309,03</Text>
-        </View>
+    <View style={styles.marketItem}>
+      <View style={styles.header}>
+        <Text style={styles.pair}>{item.pair}</Text>
+        <Text
+          style={[
+            styles.change,
+            item.changePositive ? styles.positive : styles.negative
+          ]}
+        >
+          {item.changePositive ? "+" : ""}{item.change}
+        </Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.priceText}>Top price: {item.topPrice}</Text>
+        <Text style={styles.priceText}>Low price: {item.lowPrice}</Text>
+      </View>
+      <Text style={styles.volumeText}>Vol: {item.volume}</Text>
     </View>
-    <View>
-        <View>
-            <Text>Top prace 118,12</Text>
-        </View>
+  );
+};
 
-        <View>
-            
-        </View>
+const MarketList = () => {
+  return (
+    <FlatList
+      data={marketData}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item }) => <MarketItem item={item} />}
+      contentContainerStyle={styles.container}
+    />
+  );
+};
 
-        <View>
-            <Text>Low price 1,001</Text>
-        </View>
-    </View>
-    <View>
-        <View>
-            <Text>0.0060</Text>
-        </View>
-        <View>
-            <Text>+0.72%</Text>
-        </View>
-    </View>
-    </View>
-  )
-}
+const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+  },
+  marketItem: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  pair: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  change: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+  },
+  positive: {
+    color: '#28a745',
+  },
+  negative: {
+    color: '#dc3545',
+  },
+  body: {
+    marginBottom: 10,
+  },
+  priceText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 5,
+  },
+  volumeText: {
+    fontSize: 14,
+    color: '#888',
+  },
+});
 
-export default MarketCoinCards
-
-const styles = StyleSheet.create({})
+export default MarketList;

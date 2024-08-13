@@ -1,42 +1,38 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import PageHeader from '@/components/page header/PageHeader'
-import Entypo from '@expo/vector-icons/Entypo';
-import { Input } from '@rneui/themed';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import ContinueWithOauth from '@/components/continue with oauth/ContinueWithOauth';
+import Button from '@/components/ui/button/Button'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import NumberStepProgress from '@/components/number step progress/NumberStepProgress'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import ShieldImage from '@/assets/svg/shield.svg'
+import { useRouter } from 'expo-router'
 
 const PasswordReset4 = () => {
+  const router = useRouter()
+
+  const navigateToHome = () =>{
+    router.push('/(tabs)/')
+  }
   return (
-    <SafeAreaProvider>
-        <SafeAreaView>
-    <View>
-      <PageHeader/>
-
+    <SafeAreaView style={{flex:1,padding:10}}>
+    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} label={<NumberStepProgress/>}/>
+       
+    <View className='h-full pt-20 flex flex-col items-center '>
+ 
       <View>
-        <Text>Please enter the code</Text>
-        <Text>We sent email to tomododj@kd.com</Text>
+        <ShieldImage/>
       </View>
 
-      <View>
-      <Entypo name="mail" size={24} color="black" />
-      </View>
+      <Text className='font-bold text-4xl'>
+        Congratulations!
+      </Text>
 
-      <View>
-        <Input/>
-        <Input/>
-        <Input/>
-        <Input/>
-        <Input/>
-        <Input/>
-      </View>
+      <Text className='text-center font-bold text-lg' style={{marginTop:10}}>You have successfully created a new password, click continue to enter the application</Text>
 
-      <Text>Didn't get a main? <TouchableOpacity><Text>Send again</Text></TouchableOpacity></Text>
+      <Button onClick={navigateToHome} styles={{bottom:100}} label='Continue'/>
     </View>
-
-    <ContinueWithOauth/>
     </SafeAreaView>
-</SafeAreaProvider>
   )
 }
 

@@ -1,0 +1,22 @@
+[
+    {
+      "id":0,
+      "name":"1Hour",
+     " isSelected":true
+    },
+    {
+      "id":1,
+      "name":"1Day",
+     " isSelected":false
+    },
+    {
+      "id":2,
+      "name":"1Month",
+     " isSelected":true
+    },
+    {
+      "id":3,
+      "name":"1Year",
+     " isSelected":true
+    }
+  ]
