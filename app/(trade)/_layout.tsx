@@ -15,6 +15,8 @@ const TradeLayout = () => {
    
    <Stack.Screen name='selltradingcoin' options={{headerShown:false}}/>
    <Stack.Screen name='transactionauthenticationcode' options={{headerShown:false}}/>
+   <Stack.Screen name='withdraw' options={{headerShown:false}}/>
+   <Stack.Screen name='confirmwithdraw' options={{headerShown:false}}/>
    <Stack.Screen name='transactionhistory' options={{headerShown:false}}/>
    </Stack>
   )

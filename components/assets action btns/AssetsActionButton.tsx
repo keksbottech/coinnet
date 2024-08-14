@@ -1,10 +1,11 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ActionButton = ({ iconName, label }) => {
+const ActionButton = ({ iconName, label, onClick }) => {
   return (
-    <TouchableOpacity style={styles.buttonContainer}>
+    <TouchableOpacity onPress={onClick} style={styles.buttonContainer}>
       <View style={styles.iconBackground}>
         <Ionicons name={iconName} size={24} color="white" />
       </View>
@@ -14,12 +15,26 @@ const ActionButton = ({ iconName, label }) => {
 };
 
 const AssetsActionButton = () => {
+    const router = useRouter()
+
+    const navigateToWithdraw = () => {
+        router.push('(trade)/withdraw')
+    }
+    const navigateToReceiveCoin = () => {
+        router.push('(other)/receivecoin')
+    }
+    const navigateToSendCoin = () => {
+        router.push('(other)/sendcoin')
+    }
+    const navigateToDepositCoin = () => {
+        router.push('(other)/deposit')
+    }
   return (
     <View style={styles.container}>
-      <ActionButton iconName="add-outline" label="Deposit" />
-      <ActionButton iconName="arrow-up-outline" label="Send" />
-      <ActionButton iconName="arrow-down-outline" label="Receive" />
-      <ActionButton iconName="cash-outline" label="Withdraw" />
+      <ActionButton iconName="add-outline" onClick={navigateToDepositCoin} label="Deposit" />
+      <ActionButton iconName="arrow-up-outline" onClick={navigateToSendCoin} label="Send" />
+      <ActionButton iconName="arrow-down-outline" onClick={navigateToReceiveCoin} label="Receive" />
+      <ActionButton iconName="cash-outline" onClick={navigateToWithdraw} label="Withdraw" />
     </View>
   );
 };

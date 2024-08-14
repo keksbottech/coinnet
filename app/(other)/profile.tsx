@@ -4,34 +4,21 @@ import PageHeader from '@/components/page header/PageHeader'
 import Input from '@/components/ui/input/Input'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Button from '@/components/ui/button/Button';
+import ProfileScreen from '@/components/profile/Profile';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 const Profile = () => {
   return (
-    <View>
-      <PageHeader label='Profile'/>
-<View>
-<AntDesign name="checkcircleo" size={24} color="black" />
-    <Text>Verified</Text>
-</View>
-      <View>
-      <Image/>
-      <AntDesign name="camerao" size={24} color="black" />
-      </View>
-   
-      <Text>Nate Samson</Text>
-
-      <View>
-        <Input placeholder='Dmutro Nweke'/>
-
-        <View>
-            <Text>nate@email.com</Text>
-            <AntDesign name="checkcircleo" size={24} color="black" />
-        </View>
-      </View>
-
-      <Button label='Logout'/>
+    <SafeAreaView style={{flex:1,padding:10}}>
+      <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />}  label={<Text className='font-bold text-3xl'>Profile</Text>} />
+          
+  
+    <View style={{paddingTop:30}}>
+<ProfileScreen/>
     </View>
+  </SafeAreaView>
   )
 }
 

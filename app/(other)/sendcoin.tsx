@@ -5,68 +5,23 @@ import { Label } from 'tamagui'
 import Input from '@/components/ui/input/Input'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Button from '@/components/ui/button/Button'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
+import SendCoins from '@/components/send coins/SendCoins'
 
-const SendCoins = () => {
+const SendCoinsPage = () => {
   return (
-    <View>
-      <PageHeader label='Send Coin'/>
+    <SafeAreaView style={{flex:1, padding:10}}>
+                  <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />}  label={<Text className='font-bold text-3xl'>Send Coin</Text>} />
+      <View className='h-full' style={{paddingTop:50}}>
 
-      <View>
-      <Text>Select Coin</Text>
-      
-      <View>
-
+<SendCoins/>
+      <Button styles={{bottom:50}} label='Confirm'/>
       </View>
-
-      <View>
-        <View>
-          <Image/>
-          <View>
-            <Text>Bitcoin</Text>
-            <Text>BTC</Text>
-          </View>
-        </View>
-
-        <View>
-            <Text>Available Balance</Text>
-            <Text>2.23456 BTC</Text>
-          </View>
-      </View>
-
-      <View>
-        <View>
-          <Text>Enter Address</Text>
-          <Input/>
-        </View>
-
-        <Ionicons name="qr-code-outline" size={24} color="black" />
-      </View>
-
- 
-        <View>
-          <Text>Amount</Text>
-          <Input/>
-        </View>
-
-         
-        <View>
-          <Text>Note</Text>
-          <Input/>
-        </View>
-
-      <View>
-        <View>
-          <Text>Transaction fees: 0.0000 BTC</Text>
-          <Text>Min: 0.000061 BTC - Max 2.00006 BTC</Text>
-        </View>
-      </View>
-
-      <Button label='Confirm'/>
-      </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
-export default SendCoins
+export default SendCoinsPage
 
 const styles = StyleSheet.create({})

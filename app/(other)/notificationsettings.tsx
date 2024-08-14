@@ -1,65 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import PageHeader from '@/components/page header/PageHeader'
 import { Switch } from 'tamagui'
+import NotificationsScreen from '@/components/notification/Notification'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { FontAwesome } from '@expo/vector-icons'
 
 const NotificationSettings = () => {
   return (
-    <View>
-        <PageHeader label='Notification Settings'/>
+    <SafeAreaView style={{flex:1,padding:10}}>
+    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Notification settings</Text>} />
+        
+    <View style={{paddingTop:40}}>
 
-        <View>
-            <Text>Push notification</Text>
-
-            <View>
-                <View>
-                    <Text>
-                        Take a break
-                    </Text>
-                    <Text>
-                        Pause notifications for a short time
-                    </Text>
-                </View>
-
-                <Switch/>
-            </View>
-
-            <View>
-                <Text>Customize notifications</Text>
-                <Text>Choose the messages you'd like to receive </Text>
-            </View>
-
-            <View>
-                <Text>General Notification</Text>
-                <Switch/>
-            </View>
-
-            <View>
-                <Text>Sound</Text>
-                <Switch/>
-            </View>
-
-            <View>
-                <Text>Vibrate</Text>
-                <Switch/>
-            </View>
-            <View>
-                <Text>App Updates</Text>
-                <Switch/>
-            </View>
-
-            <View>
-                <Text>New Services Available</Text>
-                <Switch/>
-            </View>
-
-            <View>
-                <Text>New Tips Available</Text>
-                <Switch/>
-            </View>
-        </View>
-      <Text>NotificationSettings</Text>
+<NotificationsScreen/>
     </View>
+    </SafeAreaView>
   )
 }
 

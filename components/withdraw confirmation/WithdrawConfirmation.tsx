@@ -1,46 +1,57 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import Button from '../ui/button/Button'
-import { Separator } from 'tamagui'
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 const WithdrawConfirmation = () => {
   return (
-    <View>
-      <View>
-        <Text>Bank Account </Text>
-        <Text>monobank </Text>
+    <View style={styles.container}>
+      <View style={styles.row}>
+        <Text style={styles.label}>Bank Account</Text>
+        <Text style={styles.value}>monobank</Text>
       </View>
-      <Separator/>
-      <View>
-        <Text>Account Number </Text>
-        <Text>08389383939</Text>
+      <View style={styles.row}>
+        <Text style={styles.label}>Account Number</Text>
+        <Text style={styles.value}>972754628400</Text>
       </View>
-      <Separator/>
-      <View>
-        <Text>Account Name </Text>
-        <Text>Nweke chisom</Text>
+      <View style={styles.row}>
+        <Text style={styles.label}>Account Name</Text>
+        <Text style={styles.value}>Nweke Chisom</Text>
       </View>
-      <Separator/>
-      <View>
-        <Text>Withdrawal Amount </Text>
-        <Text>$400</Text>
+      <View style={styles.row}>
+        <Text style={styles.label}>Withdrawal Amount</Text>
+        <Text style={styles.value}>$400</Text>
       </View>
-      <Separator/>
-      <View>
-        <Text>Transaction fee (2%)</Text>
-        <Text>$8.0</Text>
+      <View style={styles.row}>
+        <Text style={styles.label}>Transaction Fee (2%)</Text>
+        <Text style={styles.value}>$8.0</Text>
       </View>
-      <Separator/>
-      <View>
-        <Text>Total Withdrawal Amount </Text>
-        <Text>$408</Text>
+      <View style={styles.row}>
+        <Text style={styles.label}>Total Withdrawal Amount</Text>
+        <Text style={styles.value}>$408</Text>
       </View>
-
-      <Button label='Withdraw'/>
     </View>
-  )
-}
+  );
+};
 
-export default WithdrawConfirmation
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#F5F5F5',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 30,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  label: {
+    color: 'gray',
+    fontSize: 16,
+    fontFamily:'MonsterMid'
+  },
+  value: {
+    fontSize: 16,
+    fontFamily:'MonsterBold'
+  },
+});
 
-const styles = StyleSheet.create({})
+export default WithdrawConfirmation;

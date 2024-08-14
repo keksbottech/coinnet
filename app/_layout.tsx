@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import config from '../tamagui.config';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,6 +36,7 @@ export default function RootLayout() {
 
 
   return ( 
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
     <TamaguiProvider config={config}>
       <Stack initialRouteName='(tabs)'>
@@ -45,11 +47,10 @@ export default function RootLayout() {
       <Stack.Screen name="(trade)" options={{headerShown:false}}/>
       <Stack.Screen name="(market)" options={{headerShown:false}}/>
        <Stack.Screen name="+not-found" />
-      
-
       </Stack>   
     </TamaguiProvider>
     </ThemeProvider> 
+    </GestureHandlerRootView>
   );
 }
 

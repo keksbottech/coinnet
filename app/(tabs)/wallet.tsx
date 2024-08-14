@@ -10,12 +10,21 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AssetsActionButton from '@/components/assets action btns/AssetsActionButton'
 import AssetsCategories from '@/components/assets categories/AssetsCategories'
 import BottomDrawer from '@/components/bottom drawer/BottomDrawer'
-
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { useRouter } from 'expo-router'
 
 const Wallet = () => {
+  const router = useRouter()
+
+  const navigateToSettings = () => {
+    router.push('(other)/settings')
+  }
   return (
     <SafeAreaView style={{flex:1,padding:10}}>
-      <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<Feather name="clipboard" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Wallet</Text>} />
+      <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={
+        <TouchableOpacity onPress={navigateToSettings}>
+        <Feather name="clipboard" size={24} color="black" />
+      </TouchableOpacity>} label={<Text className='font-bold text-3xl'>Wallet</Text>} />
           
   
     <View style={{paddingTop:30}}>
@@ -26,7 +35,7 @@ const Wallet = () => {
       <AssetWalletBalance/>
 
 <AssetsActionButton/>
-      <BottomDrawer/>
+      {/* <BottomDrawer/> */}
       <Text>Wallet</Text>
     </View>
     </SafeAreaView>

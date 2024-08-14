@@ -4,27 +4,20 @@ import PageHeader from '@/components/page header/PageHeader'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Button as ThemeButton } from '@rneui/themed';
 import Button from '@/components/ui/button/Button';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import ReceiveCoin from '@/components/receive coin/ReceiveCoin';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Feather } from '@tamagui/lucide-icons';
 
 const receivecoin = () => {
   return (
-    <View>
-      <PageHeader/>
-      <View>
-        <View>
-        <Ionicons name="qr-code-outline" size={24} color="black" />
-        </View>
-
-        <View>
-            <View>
-                <Text>Wallet Address</Text>
-                <Text>93830ddojjdojdojdo....odjpdodod</Text>
-            </View>
-            <ThemeButton title='Copy'/>
-        </View>
-
-        <Button label='Share address'/>
-      </View>
+    <SafeAreaView style={{flex:1, padding:10}}>
+                  <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />}  label={<Text className='font-bold text-3xl'>Receive Bitcoin</Text>} />
+          
+    <View className='h-full' style={{marginTop:50}}>
+<ReceiveCoin/>
     </View>
+    </SafeAreaView>
   )
 }
 

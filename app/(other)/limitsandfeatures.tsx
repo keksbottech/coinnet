@@ -3,44 +3,22 @@ import React from 'react'
 import PageHeader from '@/components/page header/PageHeader'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import LimitsAndFeatures from '@/components/limits and features/LimitsAndFeatures';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const LimitsAndFeatures = () => {
+const LimitsAndFeaturesPage = () => {
   return (
-    <View>
-      <PageHeader label='Limits and Features'/>
+    <SafeAreaView style={{padding:10,flex:1}}>
+    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Limits and Features</Text>} />
 
-      <View>
-        <View>
-          <View>
-          <AntDesign name="creditcard" size={24} color="black" />
-          <Text>3D Secure Purchases</Text>
-          </View>
-          <Text>SGD 150/week</Text>
-        </View>
-
-        <View>
-          <View>
-          <FontAwesome name="send-o" size={24} color="black" />
-          <Text>Send cryptocurrency</Text>
-          </View>
-          <Text>Enabled </Text>
-        </View>
-
-        <View>
-          <View>
-          <FontAwesome name="qrcode" size={24} color="black" />
-          <Text>Receive cryptocurrency</Text>
-          </View>
-          <Text>Enabled</Text>
-        </View>
-      </View>
-      <View>
-        <Text>You currently have the highest level of account limits and features available</Text>
-      </View>
+    <View style={{paddingTop:30}}>
+  <LimitsAndFeatures/>
     </View>
+
+  </SafeAreaView>
   )
 }
 
-export default LimitsAndFeatures
+export default LimitsAndFeaturesPage
 
 const styles = StyleSheet.create({})

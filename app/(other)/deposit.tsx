@@ -4,67 +4,21 @@ import PageHeader from '@/components/page header/PageHeader'
 import Input from '@/components/ui/input/Input'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Button from '@/components/ui/button/Button';
+import CardForm from '@/components/desposit/Deposit';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 const Deposit = () => {
   return (
-    <View>
-      <PageHeader label='Deposit'/>
+    <SafeAreaView style={{flex:1, padding:10}}>
+                  <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />}  label={<Text className='font-bold text-3xl'>Deposit</Text>} />
+    <View className='h-full' style={{paddingTop:50}}>
+<CardForm/>
 
-      <View>
-        <View>
-        <Text>Deposit</Text>
-        <Text>Method</Text>
-        </View>
-
-        <View>
-            <Image/>
-            <Image/>
-            <Image/>
-            <Image/>
-        </View>
-       
-      </View>
-
-      <View>
-        <Text>Name on card</Text>
-        <Input  placeholder='John Doe'/>
-      </View>
-
-      <View>
-        <Text>Name on card</Text>
-        <Input  placeholder='John Doe'/>
-      </View>
-
-
-<View>
-    <Text>Card expiration</Text>
-    <View>
-      <View>
-        <Text>Name on card</Text>
-        <Input  placeholder='John Doe'/>
-      </View>
-
-      <View>
-        <Text>Name on card</Text>
-        <Input  placeholder='John Doe'/>
-      </View>
+<Button styles={{bottom:40}} label='Confirm'/>
     </View>
-</View>
-
-<View>
-        <Text>Card Security Code</Text>
-        <Input  placeholder='Code'/>
-        <AntDesign name="questioncircleo" size={24} color="black" />
-      </View>
-
-<TouchableOpacity>
-    <Text>Change Deposit Method</Text>
-</TouchableOpacity>
-
-
-<Button label='Confirm'/>
-    </View>
+    </SafeAreaView>
   )
 }
 

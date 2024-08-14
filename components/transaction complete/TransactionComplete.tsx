@@ -3,12 +3,15 @@ import React from 'react'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import CheckCompleteImage from '@/assets/svg/complete.svg'
-const TransactionComplete = () => {
+
+
+const TransactionComplete = ({title, leftLabel, rightLabel, leftPrice,rightPrice}) => {
+
   return (
     <View style={styles.container}>
         <CheckCompleteImage />
         
-      <Text className='text-center font-bold text-4xl' style={[styles.label]}>Exchange Successful</Text>
+      <Text className='text-center text-4xl' style={styles.label}>Exchange Successful</Text>
       <Text className='text-cener' style={styles.label}>You have successfully initiated the transaction. Amount will reflect in wallet within 1 hour</Text>
 
       <View style={styles.section}>
@@ -46,7 +49,7 @@ marginTop:40,
 width:'100%'
   },
   label:{
-    fontFamily:'MonsteratBold',
+    fontFamily:'MonsterBold',
     textAlign:'center',
   marginVertical:5
   },
@@ -57,7 +60,7 @@ width:'100%'
     borderRadius:5
   },
   text:{
-    fontFamily:'MonsteratBold',
+    fontFamily:'MonsterBold',
     
   }
 })
