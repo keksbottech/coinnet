@@ -7,69 +7,163 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Chart from '@/components/trading chart/Chart'
+import { useRouter } from 'expo-router'
 
 const Home = () => {
+  const router = useRouter()
+
+  const navigateToSettings = () => {
+    router.push('(other)/settings')
+  }
+  const navigateToProfile = () => {
+    router.push('(other)/profile')
+  }
+
   return (
-    <SafeAreaView style={{padding:1, flex:1}}>
-    <View className='h-full flex flex-col items-center '>
-      <PageHeader icon={<EvilIcons name="user" size={35} color="black" />} other={<Ionicons name="settings-outline" size={24} color="black" />} label={
-        <View className='flex flex-row items-center'>
-           <Image 
-        source={require('@/assets/images/logo/logo.png')} 
-        style={{ width: 50, height: 50 }}
-      />
-      <Text style={{marginLeft:5}} className='font-bold text-3xl text-yellow-300'>Coinnet</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <PageHeader 
+          icon={
+            <TouchableOpacity onPress={navigateToProfile}> 
+              <EvilIcons name="user" size={35} color="black" />
+            </TouchableOpacity>
+          } 
+          other={
+            <TouchableOpacity onPress={navigateToSettings}>
+              <Ionicons name="settings-outline" size={24} color="black" />
+            </TouchableOpacity>
+          } 
+          label={
+            <View style={styles.headerLabel}>
+              <Image 
+                source={require('@/assets/images/logo/logo.png')} 
+                style={styles.logo}
+              />
+              <Text style={styles.headerText}>Coinnet</Text>
+            </View>
+          }
+        />
+        
+        <ScrollView showsVerticalScrollIndicator={false}>
+
+        <View style={styles.balanceContainer}>
+          <Text style={styles.balanceTitle}>Portfolio Balance</Text>
+          <Text style={styles.balanceAmount}>$2,760.23</Text>
+          <Text style={styles.balanceChange}>+2.60%</Text>
+        </View>
+
+        <Chart />
+
+          <View style={styles.marketMoversHeader}>
+            <Text style={styles.marketMoversTitle}>Market Movers</Text>
+            <TouchableOpacity>
+              <Text style={styles.moreText}>More</Text>
+            </TouchableOpacity>
           </View>
-      }/>
+          <FlatList
+            style={styles.flatList}
+            scrollEnabled={true}
+            horizontal
+            data={[0, 0, 0, 0, 0]}
+            renderItem={({ item }) => <MarketMovers />}
+            showsHorizontalScrollIndicator={false}
+          />
 
+          <View style={styles.portfolioHeader}>
+            <Text style={styles.portfolioTitle}>Portfolio</Text>
+            <TouchableOpacity>
+              <Text style={styles.moreText}>More</Text>
+            </TouchableOpacity>
+          </View>
 
-      <View className='flex flex-col items-center justify-center w-full'>
-        <Text className='font-bold text-lg'>Portfolio Balance</Text>
-        <Text className='font-bold text-4xl' style={{marginTop:6}}>$2,760.23</Text>
-        <Text className='font-bold'style={{marginTop:5}}>+2.60%</Text>
+          <View style={styles.portfolioContainer}>
+            {[0, 0, 0, 0].map((coins, index) => (
+              <Portfolio key={index} />
+            ))}
+          </View>
+        </ScrollView>
       </View>
-<Chart/>
-
-<ScrollView>
-<View style={{paddingHorizontal:10}} className='flex flex-row w-full justify-between'>
-    <Text className='font-bold text-xl'>Market Movers</Text>
-    <TouchableOpacity>
-        <Text className='font-bold text-lg text-yellow-500'>More</Text>
-    </TouchableOpacity>
-    </View>
-    <FlatList
-    style={{padding:10}}
-    scrollEnabled={true}
-    horizontal
-    data={[0,0,0,0,0]}
-    renderItem={({items}) => <MarketMovers/>}
-    showsHorizontalScrollIndicator={false}
-    />
-
-
-<View style={{paddingHorizontal:10}} className='flex flex-row w-full justify-between'>
-    <Text className='font-bold text-xl'>Portfolio</Text>
-    <TouchableOpacity>
-        <Text className='font-bold text-lg text-yellow-500'>More</Text>
-    </TouchableOpacity>
-    </View>
-
-<View style={{padding:10}} >
-
-{
- [0,0,0,0].map(coins =>     <Portfolio/>)
-}
-</View>
-
-
-</ScrollView>
-
-    </View>
-    
-  </SafeAreaView>
+    </SafeAreaView>
   )
 }
 
 export default Home
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  safeArea: {
+    padding: 1,
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: '100%',
+  },
+  headerLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    fontFamily:'MonsterBold'
+  },
+  logo: {
+    width: 50,
+    height: 50,
+  },
+  headerText: {
+    marginLeft: 5,
+    fontFamily:'MonsterBold',
+    fontSize: 24, // Adjust the size if needed
+  },
+  balanceContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    marginTop:15
+  },
+  balanceTitle: {
+    fontSize: 18,
+        fontFamily:'MonsterBold'
+  },
+  balanceAmount: {
+  
+    fontSize: 32,
+    marginTop: 6,
+        fontFamily:'MonsterBold'
+  },
+  balanceChange: {
+      fontFamily:'MonsterBold',
+    marginTop: 5,
+  },
+  marketMoversHeader: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  marketMoversTitle: {
+  fontFamily:'MonsterBold',
+    fontSize: 17,
+  },
+  moreText: {
+    fontSize: 17,
+    color: 'orangered',
+    fontFamily:'MonsterBold'
+  },
+  flatList: {
+    padding: 10,
+  },
+  portfolioHeader: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  portfolioTitle: {
+  fontFamily:'MonsterBold',
+    fontSize: 17,
+  },
+  portfolioContainer: {
+    padding: 10,
+  },
+})

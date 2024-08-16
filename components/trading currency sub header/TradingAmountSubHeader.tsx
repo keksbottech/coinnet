@@ -34,7 +34,7 @@ const FilterOptions: React.FC = () => {
           onValueChange={(itemValue) => setSelectedPaymentMethod(itemValue as string)}
         >
           {paymentMethods.map((method) => (
-            <Picker.Item key={method} label={method} value={method} />
+            <Picker.Item key={method} style={{fontFamily:'MonsterReg'}} label={method} value={method} />
           ))}
         </Picker>
       </View>
@@ -59,10 +59,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: '#555',
+    fontFamily:'MonsterReg'
   },
   picker: {
     flex: 1,
     height: 40,
+       fontFamily:'MonsterReg'
   },
 });
 

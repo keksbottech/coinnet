@@ -13,29 +13,59 @@ import MarketList from '@/components/market coin cards/MarketCoinCards'
 
 const Market = () => {
   return (
-    <SafeAreaView style={{flex:1}}>
-              <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<AntDesign name="infocirlceo" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Trading</Text>} />
-          
-    <View>
+    <SafeAreaView style={styles.safeAreaView}>
+      <PageHeader 
+        icon={<FontAwesome name="angle-left" size={24} color="black" />} 
+        other={<AntDesign name="infocirlceo" size={24} color="black" />} 
+        label={<Text style={styles.pageHeaderText}>Market</Text>} 
+      />
 
-      <View style={{flexDirection:'row', alignItems:'center'}}>
-        <AntDesign style={{position:'absolute', left:20}} name='search1' color={'black'} size={18}/>
-        <Input style={{width:'100%', paddingLeft:50, borderRadius:10}} placeholder='Cryptocoin search'/>
-      </View>
-      <PopularTradeHeads data={['All Coins', 'Most Trade', 'Most Lose', 'New Coin']}/>
+      <View style={styles.container}>
 
-      <View>
-    <MarketSubHeaderPairsTabs/>
-      </View>
-    
-      <SwipeSide />
+        <View style={styles.searchContainer}>
+          <AntDesign style={styles.searchIcon} name='search1' color={'black'} size={18}/>
+          <Input style={styles.input} placeholder='Cryptocoin search'/>
+        </View>
+        <PopularTradeHeads data={['All Coins', 'Most Trade', 'Most Lose', 'New Coin']}/>
+
+        <View style={{paddingHorizontal:-20}}>
+          <MarketSubHeaderPairsTabs/>
+        </View>
       
-     {/* <MarketList/> */}
-    </View>
+        <SwipeSide />
+        
+       {/* <MarketList/> */}
+      </View>
     </SafeAreaView>
   )
 }
 
 export default Market
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    padding:10
+  },
+  pageHeaderText: {
+  fontFamily:'MonsterBold',
+    fontSize: 24, // Adjust the size if needed
+  },
+  container: {
+    
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  searchIcon: {
+    position: 'absolute',
+    left: 20,
+  },
+  input: {
+    width: '100%',
+    paddingLeft: 50,
+    borderRadius: 10,
+  },
+})

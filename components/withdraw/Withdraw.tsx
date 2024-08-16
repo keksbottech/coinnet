@@ -4,7 +4,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 
-const Withdraw = () => {
+const Withdraw = ({enableBottomSheet}) => {
   return (
     <View style={styles.container}>
       <View className='items-center'>
@@ -43,7 +43,7 @@ const Withdraw = () => {
       </View>
 
       <Text style={styles.label}>Withdraw to</Text>
-      <TouchableOpacity style={styles.withdrawToContainer}>
+      <TouchableOpacity onPress={enableBottomSheet} style={styles.withdrawToContainer}>
         <View className='flex flex-row items-center'>
      <FontAwesome name="bank" size={24} color="black" />
      <View>

@@ -18,89 +18,128 @@ import { useRouter } from 'expo-router'
 import tradePeriodsData from '@/app json/tradingperiodtime.json'
 import TradingHeaderPeriod from '@/components/trading header period/TradingHeaderPeriod'
 
-
-
-
 const Trading = () => {
   const router = useRouter()
 
   const navigateToBuyTrading = () => {
     router.push('(trade)/buytrading')
   }
+
+  const navigateToSellTrading = () => {
+    router.push('(trade)/selltradingcoin')
+  }
+
   return (
-    <SafeAreaView style={{padding:10, flex:1}}>
+    <SafeAreaView style={styles.safeArea}>
+      <View>
+        <PageHeader 
+          icon={<FontAwesome name="angle-left" size={24} color="black" />} 
+          other={<Feather name="clipboard" size={24} color="black" />} 
+          label={<Text style={styles.pageHeaderText}>Trading</Text>} 
+        />
 
-    <View>
-    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<Feather name="clipboard" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Trading</Text>} />
-          
-  
-      <TradingHeaderPeriod data={tradePeriodsData}/>
+        <TradingHeaderPeriod data={tradePeriodsData} style={undefined} />
 
-      <Portfolio style={{backgroundColor: 'transparent',     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 9,
-    elevation: 0}}/>
-<Chart styles={{marginTop:0}} withVerticalLabels={true}/>
-<TradingTools/>
-<View>
-  <PopularPairs/>
-  <TradingHistory/>
-  <Separator style={{marginTop:40}}/>
+        <Portfolio style={styles.portfolio} />
+        <Chart style={styles.chart} withVerticalLabels={true} />
+        <TradingTools />
+        <View>
+          <PopularPairs />
+          <TradingHistory />
+          <Separator style={styles.separator} />
 
-  <View className='flex justify-center items-center w-full flex-row ' style={{marginTop:15}}>
-    <TouchableOpacity style={[styles.button, , styles.button1]}>
-      <View style={[styles.icon, styles.icon1]}>
-    <Feather name="arrow-down-left" size={24}  color="red" />
-    </View>
-      <Text style={{color:'orangered'}}>SELL</Text>
-    </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={navigateToSellTrading} style={[styles.button, styles.button1]}>
+              <View style={[styles.icon, styles.icon1]}>
+                <Feather name="arrow-down-left" size={24} color="red" />
+              </View>
+              <Text style={styles.sellText}>SELL</Text>
+            </TouchableOpacity>
 
-    <TouchableOpacity onPress={navigateToBuyTrading} style={[styles.button]}>
-      <View style={styles.icon}>
-    <Feather name="arrow-up-right" size={24} color="white" />
-    </View>
-      <Text style={{color:'white'}}>BUY</Text>
-    </TouchableOpacity>
-  </View>
-</View>
-    </View>
-  </SafeAreaView>
+            <TouchableOpacity onPress={navigateToBuyTrading} style={styles.button}>
+              <View style={styles.icon}>
+                <Feather name="arrow-up-right" size={24} color="white" />
+              </View>
+              <Text style={styles.buyText}>BUY</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
   )
 }
 
 export default Trading
 
 const styles = StyleSheet.create({
-  button:{
-    alignItems:'center',
-    flexDirection:'row',
-    padding:10,
-    backgroundColor:'orangered',
-    marginRight:10,
-    borderRadius:10,
-    width:150,
-    justifyContent:'center'
+  safeArea: {
+    padding: 10,
+    flex: 1,
+    backgroundColor:'white'
   },
-  button1:{
-    borderColor:'orangered',
-    backgroundColor:'transparent',
-    borderWidth:3
+  pageHeaderText: {
+   fontFamily:'MonsterBold',
+    fontSize: 24, // Adjust the size if needed
   },
-  icon:{
-    marginRight:5,
-    borderColor:'white',
-    backgroundColor:'transparent',
-    borderWidth:1,
+  portfolio: {
+    backgroundColor: 'transparent',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 9,
+    elevation: 0,
   },
-  icon1:{
-    color:'yellow',
-    borderColor:'orangered',
-    backgroundColor:'transparent',
-    borderWidth:1,
-    alignItems:'center',
-    justifyContent:'center',
-    flexDirection:'row',
-    borderRadius:3
-  }
+  chart: {
+    marginTop: 0,
+  },
+  separator: {
+    marginTop: 40,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 15,
+  },
+  button: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 10,
+    backgroundColor: 'orangered',
+    marginRight: 10,
+    borderRadius: 10,
+    width: 150,
+    justifyContent: 'center',
+  },
+  button1: {
+    borderColor: 'orangered',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+  },
+  icon: {
+    marginRight: 8,
+    borderColor: 'white',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderRadius:6
+  },
+  icon1: {
+    color: 'yellow',
+    borderColor: 'orangered',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 6,
+  },
+  sellText: {
+    color: 'orangered',
+      fontFamily:'MonsterReg'
+  },
+  buyText: {
+    color: 'white',
+      fontFamily:'MonsterReg'
+  },
 })

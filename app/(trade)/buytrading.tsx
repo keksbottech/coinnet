@@ -18,18 +18,20 @@ const BuyTrading = () => {
 
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex:1,backgroundColor:'white', padding:10}}>
     <View>
-    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<Feather name="clipboard" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Trading</Text>} />
+    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<Feather name="clipboard" size={24} color="black" />} label={<Text className='text-2xl' style={{fontFamily:'MonsterBold'}}>Trading</Text>} />
           
   
-  <TradingHeader data={tradingHeaderData} />
+  <TradingHeader style={{marginTop:20}}  data={tradingHeaderData} />
   <TradingCurrencySubHeader/>
 <TradingAmountSubHeader/>
 <FlatList
-    data={[0,0,0,0]}
-    keyExtractor={data => 0}
-    renderItem={({items}) =>  <BuyCoinsP2P/>}
+showsVerticalScrollIndicator={false}
+    data={[0,1,2,3,4, 5]}
+    keyExtractor={data => String(data)}
+    renderItem={({item}) =>  <BuyCoinsP2P/>}
+    contentContainerStyle={{paddingBottom:250}}
 />
 
     </View>

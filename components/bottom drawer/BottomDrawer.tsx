@@ -1,35 +1,46 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import BottomSheet from 'reanimated-bottom-sheet';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 
-const BottomDrawer = () => {
-  const sheetRef = useRef(null);
+const BottomDrawer = ({ui, enablePanDownToClose = true}) => {
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const renderContent = () => (
-    <View style={styles.bottomSheetContent}>
-      <Text style={styles.sheetText}>Swipe down to close</Text>
-    </View>
-  );
+  // snapPoints
+  const snapPoints = useMemo(() => ['25%', '50%', '90%', '100%'], []);
 
+  // callbacks
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
+  // renders
   return (
-    <BottomSheet
-      ref={sheetRef}
-      snapPoints={['50%', '25%', '0%']} // Control the drawer's height
-      borderRadius={10}
-      renderContent={renderContent}
-    />
+    <View style={styles.container}>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={1} // Starting from the lowest snap point
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        enablePanDownToClose={enablePanDownToClose} // Enable dragging down to close
+        animateOnMount={true}
+        enableDynamicSizing={true}
+      >
+        <BottomSheetView style={styles.contentContainer}>
+  {ui}
+        </BottomSheetView>
+      </BottomSheet>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  bottomSheetContent: {
-    backgroundColor: 'white',
-    padding: 16,
-    height: 450,
+  container: {
+    flex: 1,
+    justifyContent: 'flex-end', 
   },
-  sheetText: {
-    fontSize: 18,
-    textAlign: 'center',
+  contentContainer: {
+    flex: 1,
   },
 });
 

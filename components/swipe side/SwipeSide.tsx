@@ -62,6 +62,8 @@ const SwipeSide = () => {
     <SwipeListView
     showsVerticalScrollIndicator={false}
     scrollEnabled={true}
+    contentContainerStyle={{paddingHorizontal:0, borderRadius:10,paddingBottom:250}}
+
       data={marketData}
       renderItem={({item}, rowMap) => (
         <View style={styles.marketItem}>
@@ -76,7 +78,7 @@ const SwipeSide = () => {
         </View>
 
 <View style={{flexDirection:'row', alignItems:'center'}}>
-  <Text style={{right:10, fontFamily:'MonsterMid'}}>{item.changeVol}</Text>
+  <Text style={{right:15, fontFamily:'MonsterMid'}}>{item.changeVol}</Text>
         <Text
             style={[
               styles.change,
@@ -97,7 +99,7 @@ const SwipeSide = () => {
         </View>
       )}
       // leftOpenValue={95}
-      rightOpenValue={-105}
+      rightOpenValue={-135}
     />
   );
 };
@@ -109,15 +111,20 @@ const styles = StyleSheet.create({
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
     justifyContent: 'center',
-    height: 80
+    height: 80,
+    borderRadius:8,
+    marginVertical:5
   },
   rowBack: {
     alignItems: 'center',
     backgroundColor: '#DDD',
     // flex: 1,
     justifyContent: 'center',
-    paddingLeft: 15,
-    height:140
+    // paddingLeft: 15,
+    height:140,
+    borderRadius:8,
+    
+    marginVertical:5
   },
   backRightBtn: {
     alignItems: 'center',
@@ -125,22 +132,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
-    width: 105,
+    width: 135,
     backgroundColor: 'orange',
     right: 0,
+    borderRadius:8
   },
   backTextWhite: {
     color: '#FFF',
     // marginTop:10
+        fontFamily:'MonsterBold'
   },
   container: {
-    padding: 10,
+    // padding: 10,
   },
   marketItem: {
     backgroundColor: '#fff',
-    padding: 15,
+    padding: 25,
     borderRadius: 8,
-    marginBottom: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -150,36 +158,39 @@ const styles = StyleSheet.create({
     justifyContent:'space-between',
     alignItems:'center',
     height:140,
-    paddingVertical:25
+    paddingVertical:25,
+    marginVertical:5
   },
   header: {
     marginBottom: 10,
+    right:10
   },
   pair: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    
-    fontFamily:'MonsterBold'
+    fontFamily:'MonsterBold',
+    fontSize: 16,
   },
   change: {
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 14,
     borderRadius: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
     paddingVertical: 5,
-
+        fontFamily:'MonsterBold',
+right:10
   },
   positive: {
     backgroundColor: '#28a745',
     color:'white',
+        fontFamily:'MonsterBold'
   },
   negative: {
     backgroundColor: '#dc3545',
     color:'white',
+        fontFamily:'MonsterBold'
   },
   body: {
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'center',
+   right:10
   },
   priceText: {
     fontSize: 14,

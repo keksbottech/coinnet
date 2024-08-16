@@ -5,6 +5,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Href, useRouter } from 'expo-router';
 import { Button } from '@/tamagui.config';
+import BottomDrawer from '@/components/bottom drawer/BottomDrawer';
 const OnboardingScreen = () => {
   const router = useRouter()
 
@@ -14,6 +15,7 @@ const OnboardingScreen = () => {
   }
   return (
     <SafeAreaView style={{flex:1}}>
+
           <View className='flex items-center justify-center bg-yellow-300 flex-col h-full'>
       <Image 
         source={require('@/assets/images/logo/logo.png')} 
@@ -21,7 +23,7 @@ const OnboardingScreen = () => {
       />
 
         <TouchableOpacity style={styles.button} onPress={navigateToSignin}>
- <Text className='font-bold text-xl'>   Get Started</Text>
+ <Text className='font-bold text-xl'>  Get Started</Text>
           </TouchableOpacity>
       </View>
 

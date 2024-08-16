@@ -63,24 +63,26 @@ const styles = StyleSheet.create({
     marginLeft:10
   },
   cryptoName: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 17,
+    fontFamily:'MonsterBold',
     color: '#333',
   },
   cryptoSymbol: {
     fontSize: 14,
     color: '#666',
+      fontFamily:'MonsterReg'
   },
   rightSection: {
     alignItems: 'flex-end',
   },
   price: {
     fontSize: 18,
-    fontWeight: 'bold',
     color: '#333',
+      fontFamily:'MonsterBold'
   },
   change: {
     fontSize: 14,
+      fontFamily:'MonsterReg',
     color: '#4CAF50', // Green color for positive change
   },
 });

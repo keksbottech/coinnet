@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PageHeader from '@/components/page header/PageHeader';
@@ -6,41 +6,63 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import {View, TextField, Text, Button} from 'react-native-ui-lib';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors } from '@/constants/Colors';
 
 
 const Signin = () => {
     const router = useRouter()
+    const [oldPasswordVisible, setOldPasswordVisible] = useState(false);
+    const [newPasswordVisible, setNewPasswordVisible] = useState(false);
+    const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  
 
     const navigateToVerification = () => {
         router.push('/(onboarding)/verification')
     }
+
+
   return (
-    <SafeAreaView style={{alignItems:'center',flex:1, padding:10}}>
+    <SafeAreaView style={{alignItems:'center',flex:1, padding:10, backgroundColor:'#fff'}}>
       <View style={styles.container} >
         <PageHeader label=''/>
         <View style={styles.wrapper}>
-          <Text style={{fontWeight:'700'}} className='text-3xl mt-10'>Sign in to Coinnet</Text>
+          <Text style={styles.title} className='text-3xl mt-10'>Sign in to Coinnet</Text>
 
-          <View className='mt-20 mb-5'>
-            <Text className='font-bold'>Email/Phone number</Text>
+          <View className='mt-10 mb-5'>
+            <Text style={styles.text}>Email/Phone number</Text>
             <TextInput style={styles.input} placeholder='mobbin.cms2@gmail.com'/>
           </View>
           <View>
 
-            <Text className='font-bold'>Password</Text>
-        <View style={styles.inputWrapper}>
-            <TextInput className='w-full' style={styles.input} placeholder='Enter your password' secureTextEntry={true}/>
-            <AntDesign style={styles.icon} name="eyeo" size={24} color="black" />
-         </View>
+            <Text style={styles.text}>Password</Text>
+            
+            <View style={styles.inputWrapper}>
+        <TextInput
+          style={styles.input}
+          placeholder="Old Password"
+          secureTextEntry={!oldPasswordVisible}
+        />
+        <TouchableOpacity
+        style={styles.pwdicon}
+          onPress={() => setOldPasswordVisible(!oldPasswordVisible)}
+        >
+          <Ionicons
+            name={oldPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+            size={24}
+            color="gray"
+          />
+        </TouchableOpacity>
+      </View>
      </View>
 
      <View className='flex items-center flex-row mt-10 justify-between text-yellow-400'>
-        <Text className='text-yellow-400 text-lg'>Forgotten Password</Text>
-        <Text className='text-yellow-400 text-lg'>Privacy policy</Text>
+        <Text style={styles.text} className='text-yellow-400 text-lg'>Forgotten Password</Text>
+        <Text style={styles.text} className='text-yellow-400 text-lg'>Privacy policy</Text>
      </View>
 
      <TouchableOpacity onPress={navigateToVerification} style={styles.button} className='bg-yellow-300 mt-20'>
-        <Text>Sign in</Text>
+        <Text style={{fontFamily:'MonsterBold'}}>Sign in</Text>
      </TouchableOpacity>
    </View>
  </View>
@@ -53,6 +75,7 @@ export default Signin;
 
 const styles = StyleSheet.create({
     wrapper:{
+paddingTop:50,
 
     },
     inputWrapper:{
@@ -75,7 +98,9 @@ const styles = StyleSheet.create({
         borderStyle:'solid',
         padding:12,
         marginTop:10,
-        borderRadius:5
+        borderRadius:5,
+        fontFamily:'MonsterReg',
+        width:'100%'
     },
     button:{
         backgroundColor:'yellow', 
@@ -85,5 +110,16 @@ const styles = StyleSheet.create({
         alignItems:'center',
         marginTop:40,
         borderRadius:10
+    },
+    title:{
+      fontFamily:'MonsterBold'
+    },
+    text:{
+    fontFamily:'MonsterBold'
+    },
+    pwdicon:{
+    position:'absolute',
+    right:10,
+    top:25
     }
 })

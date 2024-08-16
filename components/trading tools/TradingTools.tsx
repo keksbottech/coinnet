@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderRadius: 10,
-    backgroundColor: '#F5F5F5', // Change to the background color from the image
+    backgroundColor: 'white', // Change to the background color from the image
     borderTopWidth: 1,
     borderColor: '#E0E0E0',
   },

@@ -66,13 +66,14 @@ const styles = StyleSheet.create({
     width:100
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#888',
-    textAlign:'center'
+    textAlign:'center',
+    fontFamily:'MonsterBold'
   },
   selectedButtonText: {
     color: '#4A4A4A',
-    fontWeight: 'bold',
+    fontFamily:'MonsterBold'
   },
 });
 

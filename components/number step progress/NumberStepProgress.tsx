@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const NumberStepProgress = () => {
-  const [currentStep, setCurrentStep] = useState(1);
-
+const NumberStepProgress = ({currentStep}) => {
+  
   const handleNextStep = () => {
     if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
+      // setCurrentStep(currentStep + 1);
     }
   };
 

@@ -69,8 +69,9 @@ const AssetWalletBalance = () => {
             alignmentBaseline="middle"
             fontSize={16}
             fill="#2ECC71"
+            fontFamily='MonsterBold'
           >
-            +2.60%
+           2.60%
           </SVGText>
         </G>
       </PieChart>

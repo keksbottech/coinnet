@@ -19,15 +19,15 @@ const SellTradingCoin = () => {
         router.push('/')
     }
   return (
-    <SafeAreaView style={{flex:1, padding:10}}>
+    <SafeAreaView style={{flex:1, padding:10, backgroundColor:'white'}}>
     <View className='h-full'>
-        <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<Feather name="clipboard" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Trading</Text>} />
+        <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<Feather name="clipboard" size={24} color="black" />} label={<Text className=' text-2xl' style={{fontFamily:'MonsterBold'}}>Trading</Text>} />
           
   
           <TradingHeader style={{marginTop:20}}  data={tradingHeaderData}/>
 
 <SellCoinsForm/>
-<Button label='Sell'/>
+<Button styles={{position:'relative'}} label='Sell'/>
     </View>
     </SafeAreaView>
   )

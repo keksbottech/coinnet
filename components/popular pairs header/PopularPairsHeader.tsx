@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 
 type TabProps = {
   label: string;
@@ -25,14 +25,18 @@ const PopularTradeHeads: React.FC = ({data}) => {
 
   return (
     <View style={styles.tabsContainer}>
-      {data.map((tab) => (
-        <Tab
-          key={tab}
-          label={tab}
-          active={activeTab === tab}
-          onPress={() => setActiveTab(tab)}
-        />
-      ))}
+      <FlatList
+      horizontal
+      contentContainerStyle={{paddingVertical:5}}
+      showsHorizontalScrollIndicator={false}
+  data={data}
+  renderItem={({item}) => <Tab
+  key={item}
+  label={item}
+  active={activeTab === item}
+  onPress={() => setActiveTab(item)}
+/>}
+      />
     </View>
   );
 };
@@ -61,6 +65,7 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: '#555',
+    fontFamily:'MonsterReg'
   },
   activeTabText: {
     color: '#000', // Text color for active tab

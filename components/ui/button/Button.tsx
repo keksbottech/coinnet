@@ -9,7 +9,7 @@ type ButtonPropTypes = {
 const Button = ({label, styles, onClick}:ButtonPropTypes) => {
   return (
  <TouchableOpacity onPress={onClick} style={[style.button, styles]}>
-    <Text className='font-bold text-xl'>{label}</Text>
+    <Text style={style.text} className='text-xl'>{label}</Text>
     </TouchableOpacity>
   )
 }
@@ -26,5 +26,8 @@ const style = StyleSheet.create({
         borderRadius:10,
         position:'absolute',
         bottom:30,
+    },
+    text:{
+      fontFamily:'MonsterBold'
     }
 })

@@ -35,12 +35,14 @@ export default function RootLayout() {
 
 
 
+
   return ( 
     <GestureHandlerRootView style={{ flex: 1 }}>
     <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
     <TamaguiProvider config={config}>
       <Stack initialRouteName='(tabs)'>
-      <Stack.Screen name="(tabs)" options={{headerShown:false}}/>
+
+    <Stack.Screen name="(tabs)" options={{headerShown:false}}/>
         <Stack.Screen name='index' options={{headerShown:false}}/>
       <Stack.Screen name="(onboarding)" options={{headerShown:false}}/>
       <Stack.Screen name="(other)" options={{headerShown:false}}/>

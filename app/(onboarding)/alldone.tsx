@@ -19,8 +19,8 @@ const AllDoneAccountCreation = () => {
 
 <View>
   
-<Text className='text-center text-3xl font-bold mt-10'>All done</Text>
-<Text className=' text-xl text-gray-500 text-center' style={{width:300, marginTop:10}}>Congrulations! Your account has been successfully added</Text>
+<Text className='text-center text-3xl mt-10' style={{fontFamily:'MonsterBold'}}>All done</Text>
+<Text className=' text-xl text-gray-500 text-center' style={{width:300, marginTop:10, fontFamily:'MonsterReg'}}>Congrulations! Your account has been successfully added</Text>
 </View>
 
 <Button onClick={navigateToPasswordReset} label='Done'/>

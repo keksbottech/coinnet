@@ -20,8 +20,8 @@ const Card = () => {
           <Text style={styles.iconText}>K</Text>
         </View>
         <View>
-          <View style={{flexDirection:'row'}}>
-        <Text style={styles.nameText} className='font-bold text-xl'>Kcee</Text>
+          <View style={{flexDirection:'row',alignItems:'center'}}>
+        <Text style={styles.nameText} className=' text-lg'>Kcee</Text>
   
         <AntDesign style={{marginLeft:5}}  name="checkcircle" size={15} color="green" />
       </View>
@@ -49,8 +49,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
-    elevation: 2,
-    marginHorizontal: 10,
+    elevation: 2.5,
     marginTop:10,
     alignItems:'center',
     justifyContent:'space-between',
@@ -70,11 +69,10 @@ const styles = StyleSheet.create({
   },
   iconText: {
     color: '#000',
-    fontWeight: 'bold',
   },
   nameText: {
     marginLeft: 5,
-    fontWeight: 'bold',
+    fontFamily:'MonsterBold'
   },
   checkIcon: {
     width: 15,
@@ -84,20 +82,24 @@ const styles = StyleSheet.create({
   timeText: {
     color: 'gray',
     fontSize: 12,
-    marginLeft:5
+    marginLeft:5,
+    fontFamily:'MonsterReg'
   },
   amountText: {
     fontSize: 20,
-    fontWeight: 'bold',
-    marginTop: 10,
+        marginTop: 10,
+      fontFamily:'MonsterBold',
+      
   },
   quantityText: {
     color: 'gray',
     marginTop: 5,
+    fontFamily:'MonsterReg'
   },
   limitsText: {
     color: 'gray',
     marginTop: 5,
+      fontFamily:'MonsterReg'
   },
   dayButton: {
     backgroundColor: '#28a745',
@@ -108,9 +110,9 @@ const styles = StyleSheet.create({
   },
   buyButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
     paddingHorizontal:30,
-    paddingVertical:5
+    paddingVertical:5,
+    fontFamily:'MonsterBold'
   },
 });
 

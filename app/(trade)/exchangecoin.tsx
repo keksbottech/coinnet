@@ -13,20 +13,20 @@ import { useRouter } from 'expo-router'
 const ExchangeCoin = () => {
     const router = useRouter()
 
-    const navigateToConvertExchange = () => {
+    const navigateToConfirmExchange = () => {
         router.navigate('/(trade)/confirmexchange')
     }
   return (
-    <SafeAreaView style={{flex:1,padding:10}}>
-    <View className='h-full'>
-        <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<AntDesign name="infocirlceo" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Trading</Text>} />
+    <SafeAreaView style={{flex:1,padding:10, backgroundColor:'white'}}>
+              <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<AntDesign name="infocirlceo" size={24} color="black" />} label={<Text className='text-2xl' style={{fontFamily:'MonsterBold'}}>Trading</Text>} />
           
-  
-        <TradingHeader data={tradingHeaderData}/>
+              <TradingHeader style={{marginTop:20}}  data={tradingHeaderData}/>
 
+    <View className='h-full'>
+   
         <ExchangeCrypto/>
 
-<Button label='Buy' onClick={navigateToConvertExchange}/>
+<Button styles={{bottom:150}} label='Buy' onClick={navigateToConfirmExchange}/>
     </View>
     </SafeAreaView>
   )

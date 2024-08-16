@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    elevation: 1,
+    elevation: 2,
     marginVertical: 10,
     marginRight:10
   },
@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
     marginTop:10
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontFamily:'MonsterBold',
     color: '#4A4A4A',
   },
   icon: {
@@ -79,16 +79,16 @@ const styles = StyleSheet.create({
     height: 24,
   },
   price: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 23,
+    fontFamily:'MonsterBold',
     color: '#000',
     marginVertical: 0,
   },
   change: {
     color: '#4CAF50', // Green color for positive change
-    fontWeight: 'bold',
     marginBottom: 5,
-    marginTop:6
+    marginTop:6,
+      fontFamily:'MonsterReg'
   },
   chart: {
     marginVertical: 5,
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#A9A9A9',
     marginTop: 5,
+    fontFamily:'MonsterBold'
   },
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 
-const ProgressBar = ({ currentStep = 1, totalSteps = 3}:any) => {
+const ProgressBar = ({ currentStep, totalSteps = 3}:any) => {
   const stepWidth = 100 / totalSteps;
 
   return (
@@ -12,7 +12,7 @@ const ProgressBar = ({ currentStep = 1, totalSteps = 3}:any) => {
           style={[
             styles.step,
             {
-              backgroundColor: index < currentStep ? 'yellow' : '#ccc',
+              backgroundColor: index < currentStep ? 'orangered' : '#ccc',
               width: `${stepWidth}%`,
             },
           ]}

@@ -39,8 +39,8 @@ const Chart = ({data = [], withHorizontalLabels = true, withVerticalLabels = fal
     withInnerLines={false}
     yAxisInterval={1} // optional, defaults to 1
     chartConfig={{
-      backgroundColor: "#e26a00",
-      backgroundGradientFrom: "#eaeaea",
+      backgroundColor: "white",
+      backgroundGradientFrom: "white",
       backgroundGradientTo: "#ffffff",
       decimalPlaces: 2, // optional, defaults to 2dp
       color: (opacity = 1) => `rgba(18, 85, 255, ${opacity})`,

@@ -6,7 +6,7 @@ import PopularPairsHeader from '../popular pairs header/PopularPairsHeader'
 const PopularPairs = () => {
   return (
     <View>
-      <Text className='font-bold text-2xl'>Popular Pairs</Text>
+      <Text className=' text-xl' style={styles.text}>Popular Pairs</Text>
       <PopularPairsHeader data={['BTC/USD', 'ETH/USD', 'LTC/USD', 'XRP/USD']}/>
     </View>
   )
@@ -14,4 +14,8 @@ const PopularPairs = () => {
 
 export default PopularPairs
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  text:{
+    fontFamily:'MonsterBold'
+  }
+})

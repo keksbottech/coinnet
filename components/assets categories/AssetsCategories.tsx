@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     color: '#fff',
-    fontWeight: 'bold',
+   fontFamily:'MonsterReg'
   },
 });
 

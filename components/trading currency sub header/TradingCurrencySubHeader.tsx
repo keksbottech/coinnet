@@ -72,10 +72,11 @@ const styles = StyleSheet.create({
   tabText: {
     color: '#555',
     fontSize: 16,
+    fontFamily:'MonsterReg'
   },
   activeTabText: {
     color: '#000',
-    fontWeight: 'bold',
+    fontFamily:'MonsterBold'
   },
   picker: {
     position: 'absolute',

@@ -17,7 +17,11 @@ const OtherLayout = () => {
    <Stack.Screen name='changepassword' options={{headerShown:false}}/>  
    <Stack.Screen name='support' options={{headerShown:false}}/>  
    <Stack.Screen name='profile' options={{headerShown:false}}/>   
-   <Stack.Screen name='sharewithfriends' options={{headerShown:false}}/>   
+   <Stack.Screen name='sharewithfriends' options={{headerShown:false}}/>  
+   <Stack.Screen name='transfercoinnetuser' options={{headerShown:false}}/>  
+      <Stack.Screen name='transferinput' options={{headerShown:false}}/>  
+      <Stack.Screen name='confirmtransfer' options={{headerShown:false}}/>  
+      <Stack.Screen name='receivemoneyfromcoinnet' options={{headerShown:false}}/>   
    </Stack>
   )
 }

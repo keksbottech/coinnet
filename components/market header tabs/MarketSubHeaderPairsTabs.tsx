@@ -40,13 +40,14 @@ const styles = StyleSheet.create({
 
   },
   headerText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
     color: '#333333',
+    fontFamily:'MonsterBold'
   },
   subText: {
     fontSize: 10,
     color: '#888888',
+        fontFamily:'MonsterBold'
   },
 });
 

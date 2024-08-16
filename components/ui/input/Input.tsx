@@ -23,5 +23,6 @@ const styles = StyleSheet.create({
         borderWidth:.5,
         borderStyle:'solid',
         padding:10,
+        fontFamily:'MonsterReg'
     }
 })

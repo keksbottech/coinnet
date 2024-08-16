@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import Feather from '@expo/vector-icons/Feather';
 
@@ -8,27 +8,37 @@ const ProfileScreen = () => {
   const [imageUri, setImageUri] = useState(null);
   const [selectedGender, setSelectedGender] = useState("male");
 
-  const selectImage = () => {
-    launchImageLibrary(
-      {
-        mediaType: 'photo',
-        includeBase64: false,
-      },
-      (response) => {
-        if (response.didCancel || response.error) {
-          console.log('User cancelled image picker');
-        } else {
-          setImageUri(response.assets[0].uri);
-        }
-      }
-    );
+  const selectImage = async () => {
+    // Request permission to access media library
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this app to access your photos!");
+      return;
+    }
+
+    // Launch the image library
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
+        {imageUri ? (
+          <Image source={{ uri: imageUri }} style={styles.image} />
+        ) : (
           <Image source={require('@/assets/images/dummy.png')} style={styles.image} />
-          <TouchableOpacity onPress={selectImage} style={styles.editBtn}>
+        )}
+        <TouchableOpacity onPress={selectImage} style={styles.editBtn}>
           <Feather name="camera" size={14} color="black" />
         </TouchableOpacity>
       </View>
@@ -43,7 +53,6 @@ const ProfileScreen = () => {
         />
       </View>
       <Picker
-        
         selectedValue={selectedGender}
         style={styles.picker}
         onValueChange={(itemValue) => setSelectedGender(itemValue)}
@@ -61,7 +70,7 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems:'center'
+    alignItems: 'center',
   },
   imageContainer: {
     width: 100,
@@ -71,21 +80,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#eee',
     marginBottom: 20,
-    flexDirection:'row',
-    position:'relative'
+    flexDirection: 'row',
+    position: 'relative',
   },
   image: {
     width: '100%',
     height: '100%',
     borderRadius: 50,
   },
-  placeholder: {
-    color: '#aaa',
-  },
   label: {
     fontSize: 22,
     marginBottom: 10,
-    fontFamily:'MonsterBold'
+    fontFamily: 'MonsterBold',
   },
   input: {
     width: '100%',
@@ -94,8 +100,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     paddingHorizontal: 10,
-    fontFamily:'MonsterReg',
-    paddingVertical:16
+    fontFamily: 'MonsterReg',
+    paddingVertical: 16,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -105,7 +111,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 10,
-    paddingVertical:15
+    paddingVertical: 15,
   },
   flag: {
     padding: 10,
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     paddingHorizontal: 10,
-    fontFamily:'MonsterReg',
+    fontFamily: 'MonsterReg',
   },
   picker: {
     width: '100%',
@@ -122,8 +128,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
     marginBottom: 10,
-    backgroundColor:'#eee',
-    paddingVertical:15
+    backgroundColor: '#eee',
+    paddingVertical: 15,
   },
   logoutButton: {
     width: '100%',
@@ -135,16 +141,16 @@ const styles = StyleSheet.create({
   },
   logoutButtonText: {
     color: '#000',
-    fontFamily:'MonsterBold',
+    fontFamily: 'MonsterBold',
   },
-  editBtn:{
-    position:'absolute',
-    right:-5,
-    borderRadius:50,
-    backgroundColor:'#eee',
-    padding:10,
-    bottom:0
-  }
+  editBtn: {
+    position: 'absolute',
+    right: -5,
+    borderRadius: 50,
+    backgroundColor: '#eee',
+    padding: 10,
+    bottom: 0,
+  },
 });
 
 export default ProfileScreen;

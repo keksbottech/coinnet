@@ -55,18 +55,17 @@ const ConvertForm = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#f5f5f5',
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily:'MonsterBold',
     marginTop: 20,
   },
   amountText: {
     fontSize: 30,
-    fontWeight: 'bold',
     marginTop: 5,
+    fontFamily:'MonsterBold'
   },
   receiveContainer: {
     flexDirection: 'row',
@@ -82,14 +81,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     marginRight: 10,
+    
+    fontFamily:'MonsterReg'
   },
   input: {
     flex: 1,
     fontSize: 16,
+    
+    fontFamily:'MonsterReg'
   },
   currencyText: {
     fontSize: 16,
-    fontWeight: 'bold',
+
+    fontFamily:'MonsterBold',
     marginLeft: 10,
   },
   exchangeContainer: {
@@ -119,7 +123,8 @@ const styles = StyleSheet.create({
   },
   coinName: {
     fontSize: 16,
-    fontWeight: 'bold',
+    
+    fontFamily:'MonsterBold'
   },
   exchangeIconWrapper: {
     padding: 10,
