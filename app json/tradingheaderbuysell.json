@@ -1,0 +1,17 @@
+[
+    {
+        "id":0,
+        "name":"Buy",
+        "screen": "buytrading"
+    },
+    {
+        "id":1,
+        "name":"Sell",
+        "screen": "selltradingcoin"
+    },
+    {
+        "id":2,
+        "name":"Exchange",
+        "screen": "exchangecoin"
+    }
+]

@@ -1,0 +1,22 @@
+[
+    {
+        "id":0,
+        "name":"BTC/USD",
+        "screen": "/"
+    },
+    {
+        "id":1,
+        "name":"ETH/USD",
+        "screen": "/"
+    },
+    {
+        "id":2,
+        "name":"LTC/USD",
+        "screen": "/"
+    },
+    {
+        "id":3,
+        "name":"XRP/USD",
+        "screen": "/"
+    }
+]
