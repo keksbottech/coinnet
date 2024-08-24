@@ -7,9 +7,11 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 import EmailImage from '@/assets/svg/mail.svg'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
+import { useAppSelector } from '@/hooks/useAppSelector'
 
 const ConfirmationEmail = () => {
   const router = useRouter()
+  const userEmail = useAppSelector(state => state.user.userForgottenEmail)
 
   const navigateToPasswordReset2 = () => {
     router.push('/(onboarding)/passwordreset2')
@@ -30,7 +32,7 @@ const ConfirmationEmail = () => {
 
 <View className='w-full flex flex-col items-center'>
             <Text style={styles.title} className=' text-center text-4xl '>Confirm your email</Text>
-            <Text style={[{marginTop:10, width:230}, styles.text]} className='text-center  text-lg' >We just sent you an email to tomisjkls199@gmail.com</Text>
+            <Text style={[{marginTop:10, width:230}, styles.text]} className='text-center  text-lg' >We just sent you an email to {userEmail}</Text>
         </View>
         </View>
 <View>

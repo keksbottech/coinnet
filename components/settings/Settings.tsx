@@ -3,20 +3,31 @@ import { View, Text, StyleSheet, TouchableOpacity, Switch, ScrollView, Alert } f
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';  // Import Clipboard API
 import { useRouter } from 'expo-router';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { Image } from 'react-native';
 
 
 const SettingsScreen = () => {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
   const router = useRouter()
   const toggleDarkMode = () => setIsDarkMode(previousState => !previousState);
+  const userData = useAppSelector(state => state.user.user)
 
-
-  const userId = 'ID 28954761';
+  const userId = `ID ${userData._id}`;
 
   // Function to copy the user ID to the clipboard
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(userId);
     Alert.alert('Copied to Clipboard', 'User ID has been copied to your clipboard.');
+  };
+
+  const formatEmail = () => {
+    if (!userData?.email) return '';
+  
+    const [localPart, domain] = userData.email.split('@');
+    const formattedLocal = `${localPart.charAt(0)}***${localPart.charAt(localPart.length - 1)}`;
+    const formattedDomain = `${domain.charAt(0)}***${domain.charAt(domain.length - 1)}`;
+    return `${formattedLocal}@${formattedDomain}`;
   };
 
   const navigateToNotification = () => {
@@ -43,10 +54,15 @@ const SettingsScreen = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Ionicons name="person-circle-outline" size={50} color="gray" />
+      {userData?.profileImage ? (
+          <Image source={{ uri: userData.profileImage }} style={styles.image} />
+        ) : (
+          <Ionicons name="person-circle-outline" size={50} color="gray" />
+        )}
+  
         <View style={styles.userInfo}>
-          <Text style={styles.username}>Dmutro</Text>
-          <Text style={styles.email}>t***@g***.com</Text>
+          <Text style={styles.username}>{`${userData.firstName} ${userData.lastName}`}</Text>
+          <Text style={styles.email}>{formatEmail()}</Text>
           <View style={styles.idContainer}>
             <Text style={styles.id}>{userId}</Text>
             <TouchableOpacity onPress={copyToClipboard}>
@@ -200,6 +216,11 @@ const styles = StyleSheet.create({
   label:{
     fontFamily:'MonsterMid',
     marginLeft:5
+  },
+  image:{
+    width:50,
+    height:50,
+    borderRadius:50
   }
 });
 

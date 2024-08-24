@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     borderRadius: 2,
     overflow: 'hidden',
-    width:250
+    width:250,
+    zIndex:-10
   },
   step: {
     height: '100%',

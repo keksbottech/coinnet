@@ -15,7 +15,7 @@ const ChangePasswordPage = () => {
     <View className='h-full' style={{paddingTop:50}}>
         <ChangePassword/>
 
-        <Button styles={{bottom:50}} label='Change password'/>
+
     </View>
     </SafeAreaView>
   )

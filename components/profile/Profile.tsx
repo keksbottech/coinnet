@@ -3,10 +3,22 @@ import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from 'reac
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import Feather from '@expo/vector-icons/Feather';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import Toast from 'react-native-toast-message';
+import Loading from '../loading/Loading';
+import { axios } from '@/lib/axios';
+import { useRouter } from 'expo-router';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 
 const ProfileScreen = () => {
   const [imageUri, setImageUri] = useState(null);
   const [selectedGender, setSelectedGender] = useState("male");
+  const userData = useAppSelector(state => state.user.user)
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const dispatch = useAppDispatch()
+
 
   const selectImage = async () => {
     // Request permission to access media library
@@ -16,6 +28,7 @@ const ProfileScreen = () => {
       alert("You've refused to allow this app to access your photos!");
       return;
     }
+
 
     // Launch the image library
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -27,13 +40,96 @@ const ProfileScreen = () => {
 
     if (!result.canceled) {
       setImageUri(result.assets[0].uri);
+      await uploadImage(result.assets[0].uri); // Upload image to Cloudinary
     }
   };
 
+
+  
+  const uploadImage = async (uri: string) => {
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      const fileType = uri.split('.').pop();
+
+      formData.append('file', {
+        uri,
+        type: `image/${fileType}`,
+        name: `upload.${fileType}`,
+      } as any); // Correct way to handle file
+
+      formData.append('upload_preset', 'coinnet');
+
+      const response = await fetch(
+        'https://api.cloudinary.com/v1_1/dcgirmxbm/upload',
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        console.log(data.secure_url)
+        setImageUri(data.secure_url); // Store the Cloudinary URL
+        Toast.show({
+          type: 'success',
+          text1: 'Image uploaded successfully!',
+        });
+      } else {
+        throw new Error('Failed to upload image');
+      }
+    } catch (error) {
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Image upload failed',
+        text2: error.message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+  const logoutUser = async () => {
+    try{
+      setIsLoading(true)
+
+      const body = {
+        userId: userData?.userAuthId
+      }
+
+      const response = await axios.post('user/logout', body)
+
+      dispatch(getUserSession(null))
+
+
+      Toast.show({
+        type:'success',
+        text1:'Logged out successfully'
+      })
+
+      setTimeout(() => {
+        router.push('(onboarding)/signin')
+      }, 2000);
+    }
+    catch(err){
+      console.log(err)
+    }
+    finally{
+      setIsLoading(false)
+    }
+  }
+  
+
   return (
+    <>
+    {isLoading && <Loading/>}
+    <Toast/>
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        {imageUri ? (
+        {userData?.profileImage ? (
           <Image source={{ uri: imageUri }} style={styles.image} />
         ) : (
           <Image source={require('@/assets/images/dummy.png')} style={styles.image} />
@@ -42,13 +138,14 @@ const ProfileScreen = () => {
           <Feather name="camera" size={14} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.label}>Nate Samson</Text>
-      <TextInput style={styles.input} placeholder="Dmutro Nweke" />
+      <Text style={styles.label}>{`${userData?.firstName} ${userData?.lastName}`}</Text>
+      <TextInput readOnly style={styles.input} placeholder={`${userData?.firstName} ${userData?.lastName}`} />
       <View style={styles.inputContainer}>
         <Text style={styles.flag}>🇳🇬 +234</Text>
         <TextInput
+        readOnly
           style={styles.phoneInput}
-          placeholder="8047686364"
+          placeholder={`${userData?.phone}`} 
           keyboardType="numeric"
         />
       </View>
@@ -58,13 +155,13 @@ const ProfileScreen = () => {
         onValueChange={(itemValue) => setSelectedGender(itemValue)}
       >
         <Picker.Item label="Male" value="male" />
-        <Picker.Item label="Female" value="female" />
       </Picker>
-      <TextInput style={styles.input} placeholder="nate@email.com" />
-      <TouchableOpacity style={styles.logoutButton}>
+      <TextInput readOnly style={styles.input} placeholder={`${userData?.email}`}  />
+      <TouchableOpacity onPress={logoutUser} style={styles.logoutButton}>
         <Text style={styles.logoutButtonText}>Logout</Text>
       </TouchableOpacity>
     </View>
+    </>
   );
 };
 
@@ -138,10 +235,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'yellow',
     borderRadius: 5,
+    top:100
   },
   logoutButtonText: {
     color: '#000',
     fontFamily: 'MonsterBold',
+  
   },
   editBtn: {
     position: 'absolute',

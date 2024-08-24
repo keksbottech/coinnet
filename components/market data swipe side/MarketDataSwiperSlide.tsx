@@ -1,103 +1,75 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Chart from '../trading chart/Chart';
 import { LineChart } from 'react-native-chart-kit';
 import MarketChart from '../market chart/MarketChart';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getFavoriteData } from '@/lib/store/reducers/storeFavorites';
+
 
 const screenWidth:any = Dimensions.get('window')
 
 
-const marketData = [
-  {
-    pair: "SOL/USDT",
-    topPrice: "138.32",
-    lowPrice: "1.091",
-    volume: "55 431 281,69",
-    change: "0.72%",
-    changePositive: true,
-    changeVol: "0.06",
-  },
-  {
-    pair: "BTC/USDT",
-    topPrice: "31,221.89",
-    lowPrice: "1,113",
-    volume: "55 431 281,69",
-    change: "2.76%",
-    changePositive: true,
-    changeVol: "0.06",
-  },
-  {
-    pair: "ETH/USDT",
-    topPrice: "1,801.10",
-    lowPrice: "1,515",
-    volume: "24 900 280,04",
-    change: "-1.02%",
-    changePositive: false,
-    changeVol: "0.06",
-  },
-  {
-    pair: "BNB/USDT",
-    topPrice: "690.15",
-    lowPrice: "690.15",
-    volume: "53 431 281,69",
-    change: "2.01%",
-    changePositive: true,
-    changeVol: "0.06",
-  },
-  {
-    pair: "LTC/USDT",
-    topPrice: "44.24",
-    lowPrice: "42.15",
-    volume: "55 431 281,69",
-    change: "2.40%",
-    changePositive: true,
-    changeVol: "0.06",
-  }
-];
+const MarketDataSwipeSide = ({marketData}) => {
+  const dispatch = useAppDispatch()
+  const [favoriteArray, setFavoriteArray] = useState([])
 
-const SwipeSide = () => {
+  useEffect(() => {
+    console.log(favoriteArray)
+    dispatch(getFavoriteData(favoriteArray))  
+  }, [favoriteArray])
+
+
+  const storeMarketDataToFavorites = (item) => {
+    setFavoriteArray(prev => [...prev, item])
+    console.log(item)
+  }
+
   return (
     <SwipeListView
     showsVerticalScrollIndicator={false}
     scrollEnabled={true}
     contentContainerStyle={{paddingHorizontal:0, borderRadius:10,paddingBottom:250}}
-
       data={marketData}
-      renderItem={({item}, rowMap) => (
+      renderItem={({item}) => (
         <View style={styles.marketItem}>
         <View style={styles.header}>
-          <Text style={styles.pair}>{item.pair}</Text>
-          <Text style={styles.volumeText}>Vol: {item.volume}</Text>
+          <Text style={styles.pair}>{item?.symbol}/USD</Text>
+          <Text style={styles.volumeText}>Vol:</Text>
+          <Text style={styles.volumeText}>{parseFloat(item.volumeUsd24Hr).toFixed(2)}</Text>
         </View>
         <View style={styles.body}>
-          <Text style={styles.priceText}>Top price: {item.topPrice}</Text>
+          <Text style={styles.priceText}>Top price: {parseFloat(item.priceUsd).toFixed(2)}</Text>
           <MarketChart/>
-          <Text style={styles.priceText}>Low price: {item.lowPrice}</Text>
+          <Text style={styles.priceText}>Low price:  {parseFloat(item.priceUsd).toFixed(2)}</Text>
         </View>
 
 <View style={{flexDirection:'row', alignItems:'center'}}>
-  <Text style={{right:15, fontFamily:'MonsterMid'}}>{item.changeVol}</Text>
+  <Text style={{right:15, fontFamily:'MonsterMid'}}>{parseFloat(item.vwap24Hr).toFixed(2)}</Text>
         <Text
             style={[
               styles.change,
-              item.changePositive ? styles.positive : styles.negative
+              item.changePercent24Hr ? styles.positive : styles.negative
             ]}
           >
-            {item.changePositive ? "+" : ""}{item.change}
+            {item.changePercent24Hr ? "+" : ""}{parseFloat(item.changePercent24Hr).toFixed(2)}
           </Text>
         </View>
       </View>
       )}
-      renderHiddenItem={(data, rowMap) => (
+      renderHiddenItem={(data, rowMap) => {
+        // console.log(data, 'favorites')
+
+         return(
         <View style={styles.rowBack}>
-          <TouchableOpacity style={styles.backRightBtn}>
+          <TouchableOpacity style={styles.backRightBtn} onPress={() => storeMarketDataToFavorites(data)}>
           <AntDesign name="staro" size={24} color="white" />
             <Text style={styles.backTextWhite}>Add to Favorites</Text>
           </TouchableOpacity>
         </View>
-      )}
+      )}}
       // leftOpenValue={95}
       rightOpenValue={-135}
     />
@@ -206,4 +178,4 @@ right:10
   },
 });
 
-export default SwipeSide;
+export default MarketDataSwipeSide;

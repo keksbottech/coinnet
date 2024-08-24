@@ -7,6 +7,7 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import MarketSubHeaderPairsTabs from '@/components/market header tabs/MarketSubHeaderPairsTabs'
 
 const Favorites = () => {
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
     <PageHeader 

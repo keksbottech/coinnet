@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as LocalAuthentication from 'expo-local-authentication';
+import * as SecureStore from 'expo-secure-store';
 
 import PageHeader from '@/components/page header/PageHeader';
 import Button from '@/components/ui/button/Button';
@@ -11,16 +13,73 @@ import ContinueWithOauth from '@/components/continue with oauth/ContinueWithOaut
 import Input from '@/components/ui/input/Input';
 import ToggleSwitch from '@/components/switch/Switch';
 import NumberStepProgress from '@/components/number step progress/NumberStepProgress';
+import { axios } from '@/lib/axios';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import Loading from '@/components/loading/Loading';
+import Toast from 'react-native-toast-message';
 
 const PasswordReset3 = () => {
   const [isFingerprintEnabled, setIsFingerprintEnabled] = useState(false);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false)
+  const userData = useAppSelector(state => state.user.user)
+  
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm({
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  });
 
-  const navigateToPasswordReset4 = () => {
-    router.push('/(onboarding)/passwordreset4');
+  const password = watch('password');
+
+  const onSubmit = async (data) => {
+    try{
+      setIsLoading(true)
+    if (isFingerprintEnabled) {
+      await handleToggleSwitch(data.password)
+    }
+
+    const body = {
+      userId:userData?.userAuthId,
+      password: data.password
+    }
+
+    const response = await axios.patch('user/update/password', body)
+
+    console.log(response)
+
+    Toast.show({
+      type:'success',
+      text1: 'Password Updated',
+      text2:'Redirecting'
+    })
+
+    setTimeout(() => {
+         router.push('/(onboarding)/passwordreset4'); 
+    }, 2000);
+  
+  }
+  catch(err){
+    console.log(err)
+    Toast.show({
+      type:'error',
+      text1: 'Unable to update password',
+      text2:'Check your connection and try again'
+    })
+  }
+  finally{
+    setIsLoading(false)
+  }
   };
 
-  const handleToggleSwitch = async () => {
+  const handleToggleSwitch = async (password) => {
+ 
     if (!isFingerprintEnabled) {
       const hasHardware = await LocalAuthentication.hasHardwareAsync();
       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
@@ -40,18 +99,42 @@ const PasswordReset3 = () => {
       });
 
       if (result.success) {
+        const res = await SecureStore.setItemAsync('userToken', password); // Store the token securely
+
+        console.log(res)
         setIsFingerprintEnabled(true);
-        console.log(result)
         Alert.alert('Success', 'Fingerprint authentication has been enabled.');
       } else {
         Alert.alert('Authentication failed', 'Fingerprint authentication could not be enabled.');
       }
     } else {
       setIsFingerprintEnabled(false);
+      await SecureStore.deleteItemAsync('userToken'); // Optional: delete token if disabling fingerprint
+    }
+  };
+
+  const authenticateWithBiometrics = async () => {
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: 'Authenticate to log in',
+    });
+
+    if (result.success) {
+      const token = await SecureStore.getItemAsync('userToken');
+      if (token) {
+        // Proceed with the login using the token
+        console.log('Authenticated with token:', token);
+        router.push('/(onboarding)/passwordreset4');
+      } else {
+        Alert.alert('No token found. Redirect to password login.');
+      }
+    } else {
+      Alert.alert('Biometric authentication failed.');
     }
   };
 
   return (
+    <>
+    {isLoading && <Loading/>}
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -63,6 +146,7 @@ const PasswordReset3 = () => {
             label={<NumberStepProgress currentStep={3} />}
           />
 
+<Toast/>
           <View style={styles.content}>
             <View style={styles.headerContent}>
               <Text style={styles.headerTitle}>Create a password</Text>
@@ -75,29 +159,69 @@ const PasswordReset3 = () => {
             <View style={styles.formContainer}>
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
-                <Input style={styles.input} placeholder="Password" />
+                <Controller
+                  control={control}
+                  rules={{
+                    required: 'Password is required',
+                    minLength: {
+                      value: 8,
+                      message: 'Password must be at least 8 characters long',
+                    },
+                    pattern: {
+                      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/,
+                      message: 'Password must include an uppercase letter, a number, and a special character',
+                    },
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      style={styles.input}
+                      placeholder="Password"
+                      secureTextEntry
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="password"
+                />
+                {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
               </View>
 
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Confirm Password</Text>
-                <Input style={styles.input} placeholder="Confirm Password" />
+                <Controller
+                  control={control}
+                  rules={{
+                    required: 'Confirm Password is required',
+                    validate: (value) => value === password || 'Passwords do not match',
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      style={styles.input}
+                      placeholder="Confirm Password"
+                      secureTextEntry
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                  )}
+                  name="confirmPassword"
+                />
+                {errors.confirmPassword && (
+                  <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>
+                )}
               </View>
 
               <View style={styles.toggleContainer}>
                 <Text style={styles.label}>Unlock with Touch ID?</Text>
-                
                 <ToggleSwitch
                   isToggled={isFingerprintEnabled}
-                  onValueChange={handleToggleSwitch}
+                  onValueChange={() => handleToggleSwitch(password)}
                 />
               </View>
             </View>
 
-            <Button
-              onClick={navigateToPasswordReset4}
-              styles={styles.button}
-              label="Continue"
-            />
+            <Button onClick={handleSubmit(onSubmit)} styles={styles.button} label="Continue" />
             <Text style={styles.termsText}>
               By registering you accept our Terms & Conditions and Privacy Policy.
               Your data will be securely encrypted with TLS.
@@ -110,6 +234,7 @@ const PasswordReset3 = () => {
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </>
   );
 };
 
@@ -154,6 +279,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontFamily: 'MonsterReg',
   },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    fontFamily: 'MonsterBold',
+  },
   toggleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -163,7 +293,7 @@ const styles = StyleSheet.create({
   button: {
     position: 'relative',
     marginTop: 50,
-    backgroundColor:'lightgray'
+    backgroundColor: 'lightgray',
   },
   termsText: {
     textAlign: 'center',

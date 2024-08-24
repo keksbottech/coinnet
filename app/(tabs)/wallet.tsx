@@ -11,6 +11,7 @@ import AssetsCategories from '@/components/assets categories/AssetsCategories'
 import BottomDrawer from '@/components/bottom drawer/BottomDrawer'
 import { useRouter } from 'expo-router'
 import MarketChart from '@/components/market chart/MarketChart'
+import WebView from 'react-native-webview'
 
 const assets = [
   { id: '1', name: 'BTC', fullName: 'Bitcoin', price: 30113.80, change: 2.76, holdings: 0.042148, value: 1270.10 },

@@ -1,6 +1,8 @@
 import { StyleSheet, View } from 'react-native'
 import React, { ReactNode } from 'react'
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useRouter } from 'expo-router';
+import { TouchableOpacity } from 'react-native';
 
 type PageHeaderPropTypes = {
     label?: string | ReactNode;
@@ -10,11 +12,16 @@ type PageHeaderPropTypes = {
 }
 const PageHeader = ({label,icon = <AntDesign name="arrowleft" size={24} color="black" />, className,other}: PageHeaderPropTypes) => {
 
+  const router = useRouter()
+
+  const navigateBack = () => router.back()
+
+
   return (
     <View style={styles.container}>
-        <View>
+        <TouchableOpacity onPress={navigateBack}>
 {icon}
-</View>
+</TouchableOpacity>
       <View>{label}</View>
 
       <View>{other}</View>
@@ -30,6 +37,6 @@ const styles = StyleSheet.create({
      justifyContent:'space-between',
      flexDirection:'row',
      padding:10,
-     width:'100%'
+     width:'100%',
     }
 })

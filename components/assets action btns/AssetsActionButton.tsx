@@ -27,7 +27,7 @@ const AssetsActionButton = () => {
         router.push('(other)/sendcoin')
     }
     const navigateToDepositCoin = () => {
-        router.push('(other)/deposit')
+        router.push('/(other)/webview')
     }
   return (
     <View style={styles.container}>

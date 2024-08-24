@@ -1,27 +1,31 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const TradingHistory = () => {
+const TradingHistory = ({priceUsd, timestamp}) => {
+
+  function formatTime() {
+    const seconds = Math.floor(timestamp / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+  
+    const remainingSeconds = seconds % 60;
+    const remainingMinutes   
+   = minutes % 60;
+  
+    const formattedTime = `${hours.toString().padStart(2, '0')}:${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2,   
+   '0')}`;
+  
+    return formattedTime;
+  }
+  
+  
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Trading History</Text>
-
+   
       <View style={styles.row}>
-        <View>
-          <Text style={styles.label}>Price</Text>
-          <Text style={[styles.value, styles.redText]}>30,122.83</Text>
-          <Text style={[styles.value, styles.redText]}>30,122.83</Text>
-        </View>
-        <View>
-          <Text style={styles.label}>Amount</Text>
+          <Text style={[styles.value, styles.redText]}>{parseFloat(priceUsd).toFixed(2)}</Text>   
           <Text style={styles.value}>1,122.83</Text>
-          <Text style={styles.value}>1,122.83</Text>
-        </View>
-        <View>
-          <Text style={styles.label}>Time</Text>
-          <Text style={styles.value}>09:31:12</Text>
-          <Text style={styles.value}>09:31:12</Text>
-        </View>
+          <Text style={styles.value}>{formatTime()}</Text>
       </View>
     </View>
   )
@@ -31,7 +35,7 @@ export default TradingHistory
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    marginTop: 10,
   },
   title: {
     fontSize: 17, // Adjust the size if needed
@@ -41,7 +45,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 10,
   },
   label: {
        fontFamily:'MonsterBold',

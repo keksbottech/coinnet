@@ -5,21 +5,25 @@ import BitcoinImage from '@/assets/svg/bitcoin.svg'
 const screenWidth = Dimensions.get('window').width;
 
 type PortfolioTypes = {
-  style?: {}
+  style?: {},
+  priceUsd: string,
+  name: string,
+  symbol:string,
+  changePercent24Hr: string
 }
-const Portfolio = ({style}:PortfolioTypes) => {
+const Portfolio = ({style, name, symbol, priceUsd, changePercent24Hr}:PortfolioTypes) => {
   return (
     <View style={[styles.container, style]}>
         <View style={styles.leftSection}>
           <BitcoinImage/>
           <View style={styles.textContainer}>
-            <Text style={styles.cryptoName} >Bitcoin</Text>
-            <Text style={styles.cryptoSymbol}>BTC</Text>
+            <Text style={styles.cryptoName} >{name}</Text>
+            <Text style={styles.cryptoSymbol}>{symbol}</Text>
           </View>
         </View>
         <View style={styles.rightSection}>
-          <Text style={styles.price}>$1,270.10</Text>
-          <Text style={styles.change}>+2.76%</Text>
+          <Text style={styles.price}>${parseFloat(priceUsd).toFixed(2)}</Text>
+          <Text style={styles.change}>{parseFloat(changePercent24Hr).toFixed(2)}%</Text>
         </View>
     </View>
   );

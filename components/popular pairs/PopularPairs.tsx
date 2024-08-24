@@ -4,10 +4,13 @@ import TradingHistory from '../trading history/TradingHistory'
 import PopularPairsHeader from '../popular pairs header/PopularPairsHeader'
 
 const PopularPairs = () => {
+
+  const changePairType = () => {}
   return (
     <View>
       <Text className=' text-xl' style={styles.text}>Popular Pairs</Text>
-      <PopularPairsHeader data={['BTC/USD', 'ETH/USD', 'LTC/USD', 'XRP/USD']}/>
+
+      <PopularPairsHeader data={['BTC/USD', 'ETH/USD', 'LTC/USD', 'USDT/USD']}/>
     </View>
   )
 }

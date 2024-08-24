@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import Entypo from '@expo/vector-icons/Entypo';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -11,15 +11,121 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MailTwo from '@/assets/svg/mail1.svg';
 import Button from '@/components/ui/button/Button';
 import { useRouter } from 'expo-router';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import Toast from 'react-native-toast-message';
+import { axios } from '@/lib/axios';
+import Loading from '@/components/loading/Loading';
+import { TextInput } from 'react-native';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getUserSession } from '@/lib/store/reducers/storeUserSession';
+import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 
 const Passwordreset2 = () => {
   const router = useRouter();
+  const userData = useAppSelector(state => state.user.user)
+  const [isLoading, setIsLoading] = useState(false)
+  const otpInputRef = useRef<TextInput[]>([]);
+  const [otpValue, setOtpValue] = useState(null);
+  const userEmail = useAppSelector(state => state.user.userForgottenEmail)
+  const dispatch = useAppDispatch()
 
-  const navigateToPasswordReset3 = () => {
-    router.push('/(onboarding)/passwordreset3');
+  const handleOtpChange = (otp: string) => {
+    setOtpValue(otp);
   };
 
+
+  const navigateToPasswordReset3 = async () => {
+    try{
+        if(!otpValue) {
+         
+        Toast.show({
+          type:'error',
+          text1:'Empty Input',
+          text2:'The input should not be empty.'
+        }) 
+        }
+        else{
+
+        
+        setIsLoading(true)
+
+        const getUserInfoDetails = await axios.post('user/get/info', {email: userEmail})
+
+        const body = {
+          userId:getUserInfoDetails.data.message?.otpId,
+          otp: otpValue
+         }
+    
+        const verifyOtp = await axios.post('user/otp/verify', body)
+
+        dispatch(getUserInfo(getUserInfoDetails.data.message))
+         
+        dispatch(getUserSession(verifyOtp.data.message))
+
+        Toast.show({
+          type:'success',
+          text1:'Otp Sent Successfully',
+          text2:'Redirecting...'
+        })
+
+        
+        setTimeout(() => {
+          router.push('/(onboarding)/passwordreset3');
+        }, 2000);
+      }
+    }
+    catch(err){
+      console.log(err)
+      Toast.show({
+        type:'error',
+        text1:'Invalid Otp',
+        text2:'The code you provided is incorrect'
+      })
+    }
+    finally{
+      setIsLoading(false)
+    }
+  };
+
+
+  const resendEmailOtpForConfirmation =  async () => {
+    try{
+      setIsLoading(true)
+    
+      const body ={
+   email: userData?.email
+      }
+
+      const sendOtp = await axios('user/otp/email/send', body)
+
+      Toast.show({
+        type:'success',
+        text1:'Otp Sent Successfully',
+        text2:'Redirecting...'
+      })
+
+      setTimeout(() => {
+        router.navigate('(onboarding)/confirmationemail')
+      }, 2000);
+    }
+    catch(err){
+      // console.log(err)
+      
+      Toast.show({
+        type:'error',
+        text1:'Otp Failed To Send',
+        text2:'Something went wrong... Try again'
+      })
+
+    }
+    finally{
+      setIsLoading(false)
+    }
+  }
+
   return (
+    <>
+    {isLoading && <Loading/>}
     <SafeAreaView style={{ flex: 1, padding: 10, backgroundColor:'white' }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -30,12 +136,13 @@ const Passwordreset2 = () => {
             icon={<FontAwesome name="angle-left" size={24} color="black" />}
             label={<NumberStepProgress currentStep={2}/>}
           />
+          <Toast/>
 
           <View style={styles.content}>
             <View>
               <Text style={styles.title}>Please enter the code</Text>
               <Text style={styles.subtitle}>
-                We sent an email to tomododj@kd.com
+                We sent an email to {userData?.email}
               </Text>
             </View>
 
@@ -44,12 +151,12 @@ const Passwordreset2 = () => {
             </View>
 
             <View style={styles.otpContainer}>
-              <OTPInput />
+              <OTPInput ref={otpInputRef} onOtpChange={handleOtpChange}/>
             </View>
 
             <View style={styles.resendContainer}>
               <Text style={styles.resendText}>Didn't get an email?</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={resendEmailOtpForConfirmation}>
                 <Text style={styles.resendLink}>Send again</Text>
               </TouchableOpacity>
             </View>
@@ -64,6 +171,7 @@ const Passwordreset2 = () => {
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </>
   );
 };
 

@@ -18,6 +18,7 @@ const TradeLayout = () => {
    <Stack.Screen name='withdraw' options={{headerShown:false}}/>
    <Stack.Screen name='confirmwithdraw' options={{headerShown:false}}/>
    <Stack.Screen name='transactionhistory' options={{headerShown:false}}/>
+   <Stack.Screen name='moremarketdata' options={{headerShown:false}}/>
    </Stack>
   )
 }

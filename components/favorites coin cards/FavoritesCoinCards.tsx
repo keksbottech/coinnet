@@ -3,6 +3,9 @@ import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-nati
 import { SwipeListView } from 'react-native-swipe-list-view';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MarketChart from '../market chart/MarketChart';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getFavoriteData } from '@/lib/store/reducers/storeFavorites';
 
 const screenWidth:any = Dimensions.get('window')
 
@@ -56,6 +59,8 @@ const initialMarketData = [
 
 const FavoritesCoinCards = () => {
   const [marketData, setMarketData] = useState(initialMarketData);
+  const favoriteData = useAppSelector(state => state.favorite.favorites)
+  const dispatch = useAppDispatch()
 
   const moveItem = (index, direction) => {
     const newMarketData = [...marketData];
@@ -69,9 +74,9 @@ const FavoritesCoinCards = () => {
   };
 
   const removeItem = (index) => {
-    const newMarketData = [...marketData];
-    newMarketData.splice(index, 1);
-    setMarketData(newMarketData);
+    const favoriteArray = [...favoriteData];
+    favoriteArray.splice(index, 1);
+    dispatch(getFavoriteData(favoriteArray))
   };
 
   return (
@@ -79,31 +84,34 @@ const FavoritesCoinCards = () => {
       showsVerticalScrollIndicator={false}
       scrollEnabled={true}
       contentContainerStyle={{ paddingHorizontal: 0, borderRadius: 10, paddingBottom: 250 }}
-      data={marketData}
-      renderItem={({ item }, rowMap) => (
+      data={favoriteData}
+      renderItem={({ item }, rowMap) => {
+        console.log(item)
+        return(
         <View style={styles.marketItem}>
           <View style={styles.header}>
-            <Text style={styles.pair}>{item.pair}</Text>
-            <Text style={styles.volumeText}>Vol: {item.volume}</Text>
+            <Text style={styles.pair}>{item?.item.symbol}</Text>
+            <Text style={styles.volumeText}>Vol:</Text>
+            <Text style={styles.volumeText}>{parseFloat(item.item.volumeUsd24Hr).toFixed(2)}</Text>
           </View>
           <View style={styles.body}>
-            <Text style={styles.priceText}>Top price: {item.topPrice}</Text>
+            <Text style={styles.priceText}>Top price: {parseFloat(item.item.priceUsd).toFixed(2)}</Text>
             <MarketChart />
-            <Text style={styles.priceText}>Low price: {item.lowPrice}</Text>
+            <Text style={styles.priceText}>Low price: {parseFloat(item.item.priceUsd).toFixed(2)}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ right: 15, fontFamily: 'MonsterMid' }}>{item.changeVol}</Text>
+            <Text style={{ right: 15, fontFamily: 'MonsterMid' }}>{parseFloat(item.item.vwap24Hr).toFixed(2)}</Text>
             <Text
               style={[
                 styles.change,
-                item.changePositive ? styles.positive : styles.negative
+                item.item.changePercent24Hr ? styles.positive : styles.negative
               ]}
             >
-              {item.changePositive ? "+" : ""}{item.change}
+              {item.item.changePercent24Hr ? "+" : ""}{parseFloat(item.item.changePercent24Hr).toFixed(2)}
             </Text>
           </View>
         </View>
-      )}
+      )}}
       renderHiddenItem={({ item, index }, rowMap) => (
         <View style={styles.rowBack}>
           <TouchableOpacity

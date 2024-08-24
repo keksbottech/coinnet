@@ -1,72 +1,130 @@
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import PageHeader from '@/components/page header/PageHeader'
-import MarketMovers from '@/components/market movers/MarketMovers'
-import Portfolio from '@/components/portfolio/Portfolio'
+import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, BackHandler } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import PageHeader from '@/components/page header/PageHeader';
+import MarketMovers from '@/components/market movers/MarketMovers';
+import Portfolio from '@/components/portfolio/Portfolio';
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Chart from '@/components/trading chart/Chart'
-import { useRouter } from 'expo-router'
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Chart from '@/components/trading chart/Chart';
+import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
+import { Wave } from 'react-native-animated-spinkit';
 
 const Home = () => {
-  const router = useRouter()
+  const router = useRouter();
+  const [marketData, setMarketData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
 
   const navigateToSettings = () => {
-    router.push('(other)/settings')
-  }
+    router.push('(other)/settings');
+  };
+
+
+
+  useEffect(() => {
+
+    fetchPrice();
+  }, []);
+
   const navigateToProfile = () => {
-    router.push('(other)/profile')
-  }
+    router.push('(other)/profile');
+  };
+
+  
+  const fetchPrice = async () => {
+      try {
+        setIsLoading(true)
+        const response = await axios.get('https://api.coincap.io/v2/assets');
+        console.log(response.data)
+        setMarketData(response.data.data);
+      } catch (error) {
+        console.error('Error fetching price:', error.message);
+      }
+      finally{
+        setIsLoading(false)
+      }
+    
+    }
+
+    const navigateToMoreMarketData = () => {
+      router.push('/(tabs)/market')
+    }
 
   return (
+  
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <PageHeader 
+        <PageHeader
           icon={
-            <TouchableOpacity onPress={navigateToProfile}> 
+            <TouchableOpacity onPress={navigateToProfile}>
               <EvilIcons name="user" size={35} color="black" />
             </TouchableOpacity>
-          } 
+          }
           other={
             <TouchableOpacity onPress={navigateToSettings}>
               <Ionicons name="settings-outline" size={24} color="black" />
             </TouchableOpacity>
-          } 
+          }
           label={
             <View style={styles.headerLabel}>
-              <Image 
-                source={require('@/assets/images/logo/logo.png')} 
+              <Image
+                source={require('@/assets/images/logo/logo.png')}
                 style={styles.logo}
               />
               <Text style={styles.headerText}>Coinnet</Text>
             </View>
           }
         />
-        
+
         <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceTitle}>Portfolio Balance</Text>
+            <Text style={styles.balanceAmount}>$2,760.23</Text>
+            <Text style={styles.balanceChange}>+2.60%</Text>
+          </View>
 
-        <View style={styles.balanceContainer}>
-          <Text style={styles.balanceTitle}>Portfolio Balance</Text>
-          <Text style={styles.balanceAmount}>$2,760.23</Text>
-          <Text style={styles.balanceChange}>+2.60%</Text>
-        </View>
-
-        <Chart />
+          <Chart />
 
           <View style={styles.marketMoversHeader}>
             <Text style={styles.marketMoversTitle}>Market Movers</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={navigateToMoreMarketData}>
               <Text style={styles.moreText}>More</Text>
             </TouchableOpacity>
+          </View>
+          <View style={{alignItems:'center'}}>
+          {isLoading &&   <Wave size={48} color="black"/>}
           </View>
           <FlatList
             style={styles.flatList}
             scrollEnabled={true}
             horizontal
-            data={[0, 0, 0, 0, 0]}
-            renderItem={({ item }) => <MarketMovers />}
+            data={marketData}
+            renderItem={({ item, index }) => {
+              if(index >= 0 && index < 10){
+              return <MarketMovers  volume={item.volumeUsd24Hr} priceUsd={item.priceUsd} changePercent24Hr={item.changePercent24Hr} symbol={item.symbol}/>
+              }
+              else {
+                return null
+              }
+          
+            }}
             showsHorizontalScrollIndicator={false}
+       
           />
 
           <View style={styles.portfolioHeader}>
@@ -84,10 +142,10 @@ const Home = () => {
         </ScrollView>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -103,7 +161,7 @@ const styles = StyleSheet.create({
   headerLabel: {
     flexDirection: 'row',
     alignItems: 'center',
-    fontFamily:'MonsterBold'
+    fontFamily: 'MonsterBold',
   },
   logo: {
     width: 50,
@@ -111,7 +169,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginLeft: 5,
-    fontFamily:'MonsterBold',
+    fontFamily: 'MonsterBold',
     fontSize: 24, // Adjust the size if needed
   },
   balanceContainer: {
@@ -119,20 +177,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    marginTop:15
+    marginTop: 15,
   },
   balanceTitle: {
     fontSize: 18,
-        fontFamily:'MonsterBold'
+    fontFamily: 'MonsterBold',
   },
   balanceAmount: {
-  
     fontSize: 32,
     marginTop: 6,
-        fontFamily:'MonsterBold'
+    fontFamily: 'MonsterBold',
   },
   balanceChange: {
-      fontFamily:'MonsterBold',
+    fontFamily: 'MonsterBold',
     marginTop: 5,
   },
   marketMoversHeader: {
@@ -142,13 +199,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   marketMoversTitle: {
-  fontFamily:'MonsterBold',
+    fontFamily: 'MonsterBold',
     fontSize: 17,
   },
   moreText: {
     fontSize: 17,
     color: 'orangered',
-    fontFamily:'MonsterBold'
+    fontFamily: 'MonsterBold',
   },
   flatList: {
     padding: 10,
@@ -160,10 +217,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   portfolioTitle: {
-  fontFamily:'MonsterBold',
+    fontFamily: 'MonsterBold',
     fontSize: 17,
   },
   portfolioContainer: {
     padding: 10,
   },
-})
+});

@@ -11,11 +11,11 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const Profile = () => {
   return (
-    <SafeAreaView style={{flex:1,padding:10}}>
+    <SafeAreaView style={{flex:1}}>
       <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />}  label={<Text className='font-bold text-3xl'>Profile</Text>} />
           
   
-    <View style={{paddingTop:30}}>
+    <View style={{paddingTop:30,padding:10}} className='h-full'>
 <ProfileScreen/>
     </View>
   </SafeAreaView>

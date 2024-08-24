@@ -10,7 +10,7 @@ const AllDoneAccountCreation = () => {
   const router = useRouter()
 
   const navigateToPasswordReset = () =>{
-    router.push('/(onboarding)/passwordreset1')
+    router.push('(tabs)')
   }
   return (
     <SafeAreaView style={{flex:1, padding:10, backgroundColor:'white'}}>

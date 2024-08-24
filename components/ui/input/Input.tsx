@@ -6,11 +6,18 @@ type InputPropTypes ={
     style?: {},
     placeholder?: string
 }
-const Input = ({style,placeholder}:InputPropTypes) => {
+const Input = ({style,placeholder,secureTextEntry, onSubmit, onBlur, value, onChangeText}:InputPropTypes) => {
+    console.log(value,'dkd')
   return (
       <TextInput
       placeholder={placeholder}
-      style={[styles.input, style]}/>
+      style={[styles.input, style]}
+      onChangeText={onChangeText}
+      value={`${value}`}
+      onBlur={onBlur}
+      secureTextEntry={secureTextEntry}
+      onEndEditing={onSubmit}
+      />
 
   )
 }

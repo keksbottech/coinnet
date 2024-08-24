@@ -21,7 +21,8 @@ const OtherLayout = () => {
    <Stack.Screen name='transfercoinnetuser' options={{headerShown:false}}/>  
       <Stack.Screen name='transferinput' options={{headerShown:false}}/>  
       <Stack.Screen name='confirmtransfer' options={{headerShown:false}}/>  
-      <Stack.Screen name='receivemoneyfromcoinnet' options={{headerShown:false}}/>   
+      <Stack.Screen name='receivemoneyfromcoinnet' options={{headerShown:false}}/>  
+      <Stack.Screen name='webview' options={{headerShown:false}}/>   
    </Stack>
   )
 }
