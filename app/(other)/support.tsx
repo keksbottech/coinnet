@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import PageHeader from '@/components/page header/PageHeader'
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import PageHeader from '@/components/page header/PageHeader';
 import Feather from '@expo/vector-icons/Feather';
 import Input from '@/components/ui/input/Input';
 import { TextArea } from 'tamagui';
@@ -11,16 +11,31 @@ import ContactUs from '@/components/support/Support';
 
 const Support = () => {
   return (
-    <SafeAreaView style={{flex:1,padding:10}}>
-    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Support</Text>} />
-        
-    <View className='h-full' style={{paddingTop:50}}>
-      <ContactUs/>
-         </View>
-      </SafeAreaView>
-  )
-}
+    <SafeAreaView style={styles.safeAreaView}>
+      <PageHeader
+        icon={<FontAwesome name="angle-left" size={24} color="black" />}
+        label={<Text style={styles.headerText}>Support</Text>}
+      />
+      <View style={styles.container}>
+        <ContactUs />
+      </View>
+    </SafeAreaView>
+  );
+};
 
-export default Support
+export default Support;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    padding: 10,
+  },
+  headerText: {
+    fontFamily: 'MonsterBold',
+    fontSize: 24,
+  },
+  container: {
+    flex: 1,
+    paddingTop: 50,
+  },
+});

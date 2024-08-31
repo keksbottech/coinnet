@@ -6,12 +6,18 @@
       "@/*": [
         "./*"
       ]
-    },
+    }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "components/header tabs/HeaderTabs.jsx", "components/ui/checkbox/Checkbox.jsx", "components/select/Select.tsx", "components/trading chart/Chart.jsx", "localization.js"  ]
+    "expo-env.d.ts",
+    "components/header tabs/HeaderTabs.jsx",
+    "components/ui/checkbox/Checkbox.jsx",
+    "components/select/Select.tsx",
+    "components/trading chart/Chart.jsx",
+    "localization.js",
+    "declarations.d.ts" // Include your declarations file here
+  ]
 }

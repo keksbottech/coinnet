@@ -4,25 +4,22 @@ import { Separator } from 'tamagui';
 
 const MarketSubHeaderPairsTabs = () => {
   return (
-    <>
-        <View style={styles.headerContainer}>
+    <View style={styles.headerContainer}>
       <View style={styles.column}>
         <Text style={styles.headerText}>Pair</Text>
         <Text style={styles.headerText}>USDT</Text>
       </View>
-      <View className='flex items-center justify-center flex-row'>
-      <View style={styles.column}>
-        <Text style={styles.headerText}>Last</Text>
-        <Text style={styles.headerText}>Price</Text>
-      </View>
-      <View style={[styles.column, {marginLeft:15}]}>
-        <Text style={styles.headerText}>24H </Text>
-        <Text style={styles.headerText}>Change </Text>
-      </View>
+      <View style={styles.row}>
+        <View style={styles.column}>
+          <Text style={styles.headerText}>Last</Text>
+          <Text style={styles.headerText}>Price</Text>
+        </View>
+        <View style={[styles.column, styles.marginLeft]}>
+          <Text style={styles.headerText}>24H</Text>
+          <Text style={styles.headerText}>Change</Text>
+        </View>
       </View>
     </View>
-    
-    </>
   );
 };
 
@@ -32,22 +29,25 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: '#F8F8F8',
-    borderBottomWidth: .5,
+    borderBottomWidth: 0.5,
     borderBottomColor: 'black',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
   },
   column: {
-
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerText: {
     fontSize: 16,
     color: '#333333',
-    fontFamily:'MonsterBold'
+    fontFamily: 'MonsterBold',
   },
-  subText: {
-    fontSize: 10,
-    color: '#888888',
-        fontFamily:'MonsterBold'
+  marginLeft: {
+    marginLeft: 15,
   },
 });
 

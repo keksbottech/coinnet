@@ -17,7 +17,7 @@ const CardForm = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Deposit Method</Text>
+        <Text style={styles.headerText}>Deposit With MasterCard</Text>
         <View style={styles.icons}>
           <Mastercard/>
           <Visacard/>

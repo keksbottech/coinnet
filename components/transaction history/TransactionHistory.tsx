@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import SendImage from '@/assets/svg/send.svg'
 
 
-const TransactionHistory = ({ transaction }) => {
+const TransactionHistory = ({ transaction }:any) => {
 
   return (
     <View>

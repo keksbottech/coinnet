@@ -88,13 +88,14 @@ const CreateAccount: React.FC = () => {
   dispatch(getUserInfo(response.data.message[0]))
 
   setTimeout(() => {
-    router.push('(onboarding)/twostepverification')
+    router.push('/(onboarding)/twostepverification')
   }, 2000);
 
 
     }
-    catch(err){
+    catch(err:any){
       if(err.response.data.message === 'User email exists in our database'){
+        console.log(true)
         Toast.show({
           type:'error',
           text1:'Signup Failed',
@@ -109,6 +110,7 @@ const CreateAccount: React.FC = () => {
         })
       }
       else if(err.response.data.message === 'AppwriteException: A user with the same id, email, or phone already exists in this project.'){
+        await logoutUser()
         Toast.show({
           type:'error',
           text1:'Signup Failed',
@@ -128,6 +130,27 @@ const CreateAccount: React.FC = () => {
       setIsLoading(false)
     }
   };
+
+  const logoutUser = async () => {
+    try{
+      setIsLoading(true)
+
+      const body = {
+        userId: userData?.userAuthId
+      }
+
+      const response = await axios.post('user/logout', body)
+
+      dispatch(getUserSession(null))
+    }
+    catch(err){
+      console.log(err)
+    }
+    finally{
+      setIsLoading(false)
+    }
+  }
+
 
   return (
     <>

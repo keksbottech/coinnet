@@ -1,50 +1,65 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { TouchableOpacity } from 'react-native'
-import EvilIcons from '@expo/vector-icons/EvilIcons'
-import AntDesign from '@expo/vector-icons/AntDesign'
-import { Separator } from 'tamagui'
-import GoogleImage from '@/assets/svg/google.svg'
-import AppleImage from '@/assets/svg/apple.svg'
-import FacebookImage from '@/assets/svg/facebook.svg'
-
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React from 'react';
+import EvilIcons from '@expo/vector-icons/EvilIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { Separator } from 'tamagui';
+import GoogleImage from '@/assets/svg/google.svg';
+import AppleImage from '@/assets/svg/apple.svg';
+import FacebookImage from '@/assets/svg/facebook.svg';
 
 type ContinueWithOauthTypes = {
   styles?: {}
 }
 
-const ContinueWithOauth = ({styles}: ContinueWithOauthTypes) => {
-
-
+const ContinueWithOauth = ({ styles }: ContinueWithOauthTypes) => {
   return (
-  
-    <View style={styles} className='flex flex-col items-center justify-center'>
-    <View className='flex flex-row items-center' style={{marginBottom:30}}>
-       
-        <Separator/>
-        <Text style={{marginHorizontal:10}} className='font-bold text-lg'>or continue with</Text>
-       
-        <Separator/>
+    <View style={[styles, localStyles.container]}>
+      <View style={localStyles.separatorContainer}>
+        <Separator />
+        <Text style={localStyles.text}>or continue with</Text>
+        <Separator />
+      </View>
+
+      <View style={localStyles.iconContainer}>
+        <TouchableOpacity style={localStyles.iconButton}>
+          <FacebookImage />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={localStyles.iconButton}>
+          <AppleImage />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={localStyles.iconButton}>
+          <GoogleImage />
+        </TouchableOpacity>
+      </View>
     </View>
-
-    <View className='flex flex-row items-center'>
-
-    <TouchableOpacity style={{marginRight:10}}>
-    <FacebookImage/>
-    </TouchableOpacity>
-
-    <TouchableOpacity style={{marginRight:10}}>
-    <AppleImage/>
-    </TouchableOpacity>      
-    
-      <TouchableOpacity style={{marginRight:10}}>
-        <GoogleImage/>
-    </TouchableOpacity>
-</View>
-  </View>
-  )
+  );
 }
 
-export default ContinueWithOauth
+export default ContinueWithOauth;
 
-const styles = StyleSheet.create({})
+const localStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  separatorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  text: {
+    marginHorizontal: 10,
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconButton: {
+    marginRight: 10,
+  },
+});

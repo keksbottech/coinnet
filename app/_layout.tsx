@@ -2,7 +2,6 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { TamaguiProvider } from 'tamagui';
-import "@/global.css";
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -12,6 +11,10 @@ import { store } from '@/lib/store/store';
 import { Provider } from 'react-redux';
 import { useRouter } from 'expo-router';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { axios } from '@/lib/axios';
+import { Users } from '@tamagui/lucide-icons';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -49,21 +52,30 @@ export default function RootLayout() {
     </Provider>
   );
 }
-export function SessionHandler({layoutReady}) {
+export function SessionHandler({layoutReady}:any) {
   const [isSessionChecked, setIsSessionChecked] = useState(false);
   const router = useRouter();
   const userSession = useAppSelector((state) => state.session.session);
+  const dispatch = useAppDispatch()
 
   if (layoutReady) {
     useEffect(() => {
-console.log(userSession)
-      const checkSession = () => {
+      
+// console.log(userSession)
+      const checkSession = async () => {
+        try{
+
         if (!userSession) {
           router.replace('/(onboarding)/signin')
         } else {
-          router.replace('(tabs)'); 
+          router.replace('/(tabs)'); 
         }
         setIsSessionChecked(true);
+        }
+        catch(err){
+          console.log(err)
+          router.replace('/(onboarding)/signin')
+        }
       };
   
       checkSession();
@@ -76,7 +88,6 @@ console.log(userSession)
       <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
       <Stack.Screen name="(other)" options={{ headerShown: false }} />
       <Stack.Screen name="(trade)" options={{ headerShown: false }} />
-      <Stack.Screen name="(market)" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

@@ -31,25 +31,25 @@ const SettingsScreen = () => {
   };
 
   const navigateToNotification = () => {
-    router.push('(other)/notificationsettings')
+    router.push('/(other)/notificationsettings')
   }
   const navigateToLanguage = () => {
-    router.push('(other)/changelanguage')
+    router.push('/(other)/changelanguage')
   }
   const navigateToLimitsAndFeatures = () => {
-    router.push('(other)/limitsandfeatures')
+    router.push('/(other)/limitsandfeatures')
   }
   const navigateToSecurity = () => {
-    router.push('(other)/changepassword')
+    router.push('/(other)/changepassword')
   }
   const navigateToSupport = () => {
-    router.push('(other)/support')
+    router.push('/(other)/support')
   }
   const navigateToProfile = () => {
-    router.push('(other)/profile')
+    router.push('/(other)/profile')
   }
   const navigateToReferals = () => {
-    router.push('(other)/sharewithfriends')
+    router.push('/(other)/sharewithfriends')
   }
   return (
     <ScrollView style={styles.container}>

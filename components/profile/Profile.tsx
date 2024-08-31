@@ -12,7 +12,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 
 const ProfileScreen = () => {
-  const [imageUri, setImageUri] = useState(null);
+  const [imageUri, setImageUri] = useState<any>(null);
   const [selectedGender, setSelectedGender] = useState("male");
   const userData = useAppSelector(state => state.user.user)
   const [isLoading, setIsLoading] = useState(false)
@@ -79,7 +79,7 @@ const ProfileScreen = () => {
       } else {
         throw new Error('Failed to upload image');
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error(error);
       Toast.show({
         type: 'error',
@@ -111,7 +111,7 @@ const ProfileScreen = () => {
       })
 
       setTimeout(() => {
-        router.push('(onboarding)/signin')
+        router.push('/(onboarding)/signin')
       }, 2000);
     }
     catch(err){

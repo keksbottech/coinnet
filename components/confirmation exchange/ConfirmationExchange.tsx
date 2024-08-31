@@ -1,59 +1,94 @@
+import { useAppSelector } from '@/hooks/useAppSelector';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Separator } from 'tamagui';
+import Loading from '../loading/Loading';
+import Button from '../ui/button/Button';
+import { useRouter } from 'expo-router';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getauthenticationInfo } from '@/lib/store/reducers/storeAuthenticationInfo';
+import { getTransactionData } from '@/lib/store/reducers/storeTransactionAuthentication';
 
 const ConfirmationExchange = () => {
-  const [quantity, setQuantity] = useState('0.689612');
+  const exchangeData = useAppSelector(state => state.exchange.exchange);
+  const marketStoredData = useAppSelector(state => state.market.marketData);
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const dispatch = useAppDispatch()
 
+  // Ensure exchangeData and marketStoredData are defined
+  const fromCoinName = exchangeData.selectFrom ? exchangeData.selectFrom.toLowerCase() : '';
+  const toCoinName = exchangeData.selectedFrom ? exchangeData.selectedTo.toLowerCase() : '';
+
+  // Find coin data based on names
+  const fromCoinData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name.toLowerCase() === fromCoinName);
+  const toCoinData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name.toLowerCase() === toCoinName);
+
+  // Calculate the accumulated price in USD
+  const accumulatedPriceUSD = fromCoinData && toCoinData 
+    ? (parseFloat(exchangeData.toAmount) * toCoinData.RAW.USD.PRICE).toFixed(2)
+    : '0.00';
+
+
+    const navigateToAuthenticationCode = () => {
+      dispatch(getTransactionData('exchange'))
+      router.navigate('/(trade)/transactionauthenticationcode')
+  }
   return (
+    <>
+    {/* {isLoading && <Loading/>} */}
     <View style={styles.container}>
       {/* You Convert Section */}
       <View style={styles.section}>
-        <Text style={styles.label} className='text-center font-bold'>You Convert</Text>
-        <Text style={styles.amount} className='text-center font-bold'>$1,000</Text>
+        <Text style={styles.label}>You Convert</Text>
+        <Text style={styles.amount}>{exchangeData.fromAmount} {exchangeData.selectFrom}</Text>
       </View>
 
       {/* You Receive Section */}
-      <View style={styles.section} className='pt-10'>
-        <Text style={styles.label} className='font-bold'>You Receive</Text>
+      <View style={styles.section} >
+        <Text style={styles.label}>You Receive</Text>
         <View style={styles.receiveContainer}>
           <View>
-          <Text style={styles.quantityText}>Quantity</Text>
-         <Text>0.478940</Text>
-         </View>
-          <Text style={styles.currencyText} className='font-bold'>ETH</Text>
+            <Text style={styles.quantityText}>Quantity</Text>
+            <Text style={styles.label}>{exchangeData.toAmount}</Text>
+          </View>
+          <Text style={styles.currencyText}>{exchangeData.selectedToCoin}</Text>
         </View>
       </View>
 
       {/* Order Details Section */}
       <View style={styles.section}>
-        <Text style={styles.label} className='font-bold'>Order</Text>
+        <Text style={styles.label}>Order</Text>
         <View style={styles.orderDetails}>
           <View style={styles.orderRow}>
             <Text style={styles.orderLabel}>From</Text>
-            <Text>Bitcoin 0.040141 BTC</Text>
+            <Text style={styles.orderLabel}>{exchangeData.fromAmount} {exchangeData.selectFrom}</Text>
           </View>
 
-          <Separator/>
+          <Separator />
           <View style={styles.orderRow}>
             <Text style={styles.orderLabel}>To</Text>
-            <Text>Ethereum 0.689612 ETH</Text>
+            <Text style={styles.orderLabel}>{exchangeData.toAmount} {exchangeData.selectedToCoin}</Text>
           </View>
-          
-          <Separator/>
+
+          <Separator />
           <View style={styles.orderRow}>
             <Text style={styles.orderLabel}>Transaction Fee (0.0%)</Text>
-            <Text>$0.0</Text>
+            <Text style={styles.orderLabel}>$0.00</Text>
           </View>
-          
-          <Separator/>
+
+          <Separator />
           <View style={styles.orderRow}>
             <Text style={styles.orderLabel}>Total</Text>
-            <Text>0.040141 BTC $1001</Text>
+            <Text style={styles.orderLabel}>{exchangeData.toAmount} {exchangeData.selectedToCoin} ${accumulatedPriceUSD}</Text>
           </View>
         </View>
+
       </View>
+      
+      <Button onClick={navigateToAuthenticationCode} styles={{bottom:50}} label='Confirm Exchange'/>
     </View>
+  </>
   );
 };
 
@@ -63,15 +98,19 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 20,
+    paddingTop:10
   },
   label: {
     fontSize: 18,
-     marginBottom: 5,
+    marginBottom: 5,
+    fontFamily: 'MonsterReg',
+    alignItems:'center'
   },
   amount: {
     fontSize: 36,
-    fontWeight: 'bold',
+    fontFamily: 'MonsterBold',
     color: '#000',
+    alignItems:'center'
   },
   receiveContainer: {
     flexDirection: 'row',
@@ -80,34 +119,32 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 10,
-    justifyContent:'space-between'
+    justifyContent: 'space-between',
   },
   quantityText: {
     fontSize: 16,
     color: '#333',
     marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    color: '#000',
+    fontFamily: 'MonsterBold',
   },
   currencyText: {
     fontSize: 18,
     color: '#000',
+    fontFamily: 'MonsterReg',
   },
   orderDetails: {
     padding: 10,
+    fontFamily: 'MonsterReg',
   },
   orderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical:20
+    paddingVertical: 20,
   },
   orderLabel: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#888',
+    fontFamily: 'MonsterBold',
   },
 });
 

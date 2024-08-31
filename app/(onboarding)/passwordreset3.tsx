@@ -38,7 +38,7 @@ const PasswordReset3 = () => {
 
   const password = watch('password');
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data:any) => {
     try{
       setIsLoading(true)
     if (isFingerprintEnabled) {
@@ -78,7 +78,7 @@ const PasswordReset3 = () => {
   }
   };
 
-  const handleToggleSwitch = async (password) => {
+  const handleToggleSwitch = async (password:any) => {
  
     if (!isFingerprintEnabled) {
       const hasHardware = await LocalAuthentication.hasHardwareAsync();

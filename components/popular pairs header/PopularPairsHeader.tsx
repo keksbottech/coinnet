@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import { getMarketData } from '@/lib/store/reducers/storeMarketData'; // Import selector
+import { getMarketData, getPopularPairsData } from '@/lib/store/reducers/storeMarketData'; // Import selector
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 
@@ -27,7 +27,7 @@ const PopularTradeHeads: React.FC<{data: string[]}> = ({ data }) => {
 
   const changeMarketHeaderPair = (item: string) => {
     // setActiveTab(item);
-    dispatch(getMarketData(item)); // Dispatch the action with the selected item
+    dispatch(getPopularPairsData(item)); // Dispatch the action with the selected item
   };
 
   return (

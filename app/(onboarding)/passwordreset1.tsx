@@ -71,10 +71,10 @@ const Passwordreset = () => {
       })
 
       setTimeout(() => {
-        router.navigate('(onboarding)/confirmationemail')
+        router.navigate('/(onboarding)/confirmationemail')
       }, 2000);
     }
-    catch(err){
+    catch(err:any){
       console.log(err)
       if(err.response.data.message === 'User does not have a email or does not exist'){
         Toast.show({

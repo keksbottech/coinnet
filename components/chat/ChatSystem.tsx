@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const MarketIndex = () => {
+const ChatSystem = () => {
   return (
     <View>
-      <Text>MarketIndex</Text>
+      <Text>ChatSystem</Text>
     </View>
   )
 }
 
-export default MarketIndex
+export default ChatSystem
 
 const styles = StyleSheet.create({})

@@ -4,13 +4,13 @@ import { Button } from 'react-native'
 import { useEffect } from 'react';
 
 
-export default function Toastify({type, title, content}) {
+export default function Toastify({type, title, content}:any) {
 
 useEffect(() => {
 Toast.show({
     type,
     text1: title,
-    text2: ContentVisibilityAutoStateChangeEvent
+    text2: content
   });
 }, [])
 

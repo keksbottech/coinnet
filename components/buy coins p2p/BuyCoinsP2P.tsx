@@ -2,16 +2,25 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import FormatDate from '../format date/FormatDate';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getOrderSellerIdData, getSelectedOrderData } from '@/lib/store/reducers/storeOrders';
 
-const Card = () => {
+const Card = ({fullname, time, sellersRate,sellerId, quantity, limits, coin, offerId}:any) => {
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
   const navigateToSellCoin = () => {
-    router.push('(trade)/confirmbuy')
+    router.push(`/(trade)/chats/${sellerId}`,)
+  }
+  const navigateToP2pNegotiate = () => {
+    dispatch(getOrderSellerIdData(sellerId))
+    dispatch(getSelectedOrderData({fullname, time, sellersRate, sellerId, limits, coin, offerId}))
+    router.push(`/(trade)/buytradingform`,)
   }
 
-  
+  console.log(limits)
   return (
     <View style={styles.container}>
       <View>
@@ -21,20 +30,20 @@ const Card = () => {
         </View>
         <View>
           <View style={{flexDirection:'row',alignItems:'center'}}>
-        <Text style={styles.nameText} className=' text-lg'>Kcee</Text>
+        <Text style={styles.nameText}>{fullname}</Text>
   
         <AntDesign style={{marginLeft:5}}  name="checkcircle" size={15} color="green" />
       </View>
-        <Text style={styles.timeText}>1m ago</Text>
+        <FormatDate date={time}/>
         </View>
       </View>
-      <Text style={styles.amountText}>$1,000</Text>
-      <Text style={styles.quantityText}>Quantity: 212.9288 USDT</Text>
+      <Text style={styles.amountText}>${sellersRate}</Text>
+      <Text style={styles.quantityText}>Quantity: {quantity} {coin}</Text>
       
-      <Text style={styles.limitsText}>Limits: USDT</Text>
+      <Text style={styles.limitsText}>Limits: {limits}</Text>
       </View>
-      <TouchableOpacity onPress={navigateToSellCoin} style={styles.dayButton}>
-        <Text style={styles.buyButtonText}>Buy</Text>
+      <TouchableOpacity onPress={navigateToP2pNegotiate} style={styles.dayButton}>
+      <Text style={styles.buyButtonText}>Buy</Text>
       </TouchableOpacity>
     </View>
   );
@@ -72,7 +81,8 @@ const styles = StyleSheet.create({
   },
   nameText: {
     marginLeft: 5,
-    fontFamily:'MonsterBold'
+    fontFamily:'MonsterBold',
+    fontSize:18
   },
   checkIcon: {
     width: 15,

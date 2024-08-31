@@ -1,34 +1,56 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import PageHeader from '@/components/page header/PageHeader'
-import TransactionComplete from '@/components/transaction complete/TransactionComplete'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import AntDesign from '@expo/vector-icons/AntDesign'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import PageHeader from '@/components/page header/PageHeader';
+import TransactionComplete from '@/components/transaction complete/TransactionComplete';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import Button from '@/components/ui/button/Button';
 
 const TransactionCompletePage = () => {
-const router = useRouter()
+  const router = useRouter();
 
-const navigateToTransactionHistory = () => {
-  router.push('(trade)/transactionhistory')
-}
+  const navigateToTransactionHistory = () => {
+    router.push('/(trade)/transactionhistory');
+  };
+
   return (
-    <SafeAreaView style={{flex:1,padding:10}}>
-              <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<AntDesign name="infocirlceo" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Trasaction Completed</Text>} />
-    <View className='h-full' style={{paddingTop:80}}>
-      
-          
-   <TransactionComplete/>
-
-   <TouchableOpacity onPress={navigateToTransactionHistory}>
-    <Text>Transaction History</Text>
-   </TouchableOpacity>
-    </View>
+    <SafeAreaView style={styles.safeAreaView}>
+      <PageHeader
+        icon={<FontAwesome name="angle-left" size={24} color="black" />}
+        other={<AntDesign name="infocirlceo" size={24} color="black" />}
+        label={<Text style={styles.headerText}>Transaction Completed</Text>}
+      />
+      <View style={styles.container}>
+        <TransactionComplete />
+        <Button
+          label="Transaction History"
+          styles={styles.button}
+          onClick={navigateToTransactionHistory}
+        />
+      </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default TransactionCompletePage
+export default TransactionCompletePage;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    padding: 10,
+  },
+  container: {
+    flex: 1,
+    paddingTop: 80,
+  },
+  headerText: {
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  button: {
+    position: 'absolute',
+    bottom: 120,
+  },
+});

@@ -9,21 +9,24 @@ type PortfolioTypes = {
   priceUsd: string,
   name: string,
   symbol:string,
-  changePercent24Hr: string
+  changePercent24Hr: any;
+  image:string
 }
-const Portfolio = ({style, name, symbol, priceUsd, changePercent24Hr}:PortfolioTypes) => {
+const Portfolio = ({style, name, symbol, image ='', priceUsd, changePercent24Hr}:PortfolioTypes) => {
   return (
     <View style={[styles.container, style]}>
         <View style={styles.leftSection}>
-          <BitcoinImage/>
+        <Image source={{uri:`https://cryptocompare.com${image}`}} width={50} height={50}/>
           <View style={styles.textContainer}>
             <Text style={styles.cryptoName} >{name}</Text>
             <Text style={styles.cryptoSymbol}>{symbol}</Text>
           </View>
         </View>
         <View style={styles.rightSection}>
-          <Text style={styles.price}>${parseFloat(priceUsd).toFixed(2)}</Text>
-          <Text style={styles.change}>{parseFloat(changePercent24Hr).toFixed(2)}%</Text>
+          <Text style={styles.price}>{priceUsd}</Text>
+          <Text style={[{ color: changePercent24Hr > 0 ? 'green' : 'red' }, {fontFamily:'MonsterBold'}]}>
+                    {`${changePercent24Hr > 0 ? '+' : ''}${changePercent24Hr.toFixed(2)}%`}
+                  </Text>
         </View>
     </View>
   );

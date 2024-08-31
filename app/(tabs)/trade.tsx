@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PageHeader from '@/components/page header/PageHeader'
 import EvilIcons from '@expo/vector-icons/EvilIcons'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -21,41 +21,55 @@ import axios from 'axios'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import { ScrollView } from 'react-native'
 import { Wave } from 'react-native-animated-spinkit'
+import { useFocusEffect } from '@react-navigation/native'
 
 const Trading = () => {
   const router = useRouter()
-  const [marketData, setMarketData] = useState(null)
+  const [marketData, setMarketData] = useState<any>(null)
   const popularPair = useAppSelector(state => state.market.popularPairs)
   const [marketHistoryData, setMarketHistoryData] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const marketStoredData = useAppSelector(state => state.market.marketData)
+  
 
-  useEffect(() =>{
-    fetchSingleMarketDetails()
-    fetchMarketPairTradingHistory()
-  }, [popularPair])
+  // useEffect(() =>{
+  //   fetchSingleMarketDetails()
+  //   fetchMarketPairTradingHistory()
+  // }, [popularPair])
+
+  
+  useFocusEffect(
+    useCallback(() => {
+      fetchSingleMarketDetails()
+      fetchMarketPairTradingHistory()
+      return () => {
+        console.log('Screen is unfocused, cleaning up...');
+      };
+    }, [popularPair])
+  );
 
   const fetchSingleMarketDetails = async () =>{
     try{
+      const btcData = marketStoredData.find((coin: { CoinInfo: { Name: string } }) => coin.CoinInfo.Name === 'BTC');
+      const ethData = marketStoredData.find((coin: { CoinInfo: { Name: string } }) => coin.CoinInfo.Name === 'ETH');
+      const usdCData = marketStoredData.find((coin: { CoinInfo: { Name: string } }) => coin.CoinInfo.Name === 'USDC');
+      const bnbData = marketStoredData.find((coin: { CoinInfo: { Name: string } }) => coin.CoinInfo.Name === 'BNB');
+      const solData = marketStoredData.find((coin: { CoinInfo: { Name: string } }) => coin.CoinInfo.Name === 'SOL');
+
+
       switch(popularPair){
         case 'BTC/USD':
-          const btc = await axios.get('https://api.coincap.io/v2/assets/bitcoin')
-          console.log(btc.data)
-          setMarketData(btc.data.data)
+          console.log(btcData?.DISPLAY?.USD?.PRICE)
+          setMarketData({priceUsd: btcData?.DISPLAY?.USD?.PRICE, changePercent24Hr: btcData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: btcData?.CoinInfo?.ImageUrl})
           break;
         case 'ETH/USD':
-          const eth = await axios.get('https://api.coincap.io/v2/assets/ethereum')
-          console.log(eth.data)
-          setMarketData(eth.data.data)
+          setMarketData({priceUsd: ethData?.DISPLAY?.USD?.PRICE, changePercent24Hr: ethData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: ethData?.CoinInfo?.ImageUrl})
           break;
-       case 'LTC/USD':
-            const ltc = await axios.get('https://api.coincap.io/v2/assets/litecoin')
-            console.log(ltc.data)
-            setMarketData(ltc.data.data)
+       case 'SOL/USD':
+        setMarketData({priceUsd: solData?.DISPLAY?.USD?.PRICE, changePercent24Hr: solData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: solData?.CoinInfo?.ImageUrl})
             break;
-      case 'USDT/USD':
-            const xpr = await axios.get('https://api.coincap.io/v2/assets/tether')
-            console.log(xpr.data)
-            setMarketData(xpr.data.data)
+      case 'USDC/USD':
+        setMarketData({priceUsd: usdCData?.DISPLAY?.USD?.PRICE, changePercent24Hr: usdCData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: usdCData?.CoinInfo?.ImageUrl})
           default:
             return null
       }
@@ -88,7 +102,7 @@ const Trading = () => {
             console.log(ltc.data)
             setMarketHistoryData(ltc.data.data)
             break;
-      case 'USDT/USD':
+      case 'USDC/USD':
             const xpr = await axios.get('https://api.coincap.io/v2/assets/tether/history?interval=d1')
             console.log(xpr.data)
             setMarketHistoryData(xpr.data.data)
@@ -104,11 +118,11 @@ const Trading = () => {
     }
   }
   const navigateToBuyTrading = () => {
-    router.push('(trade)/buytrading')
+    router.push('/(trade)/buytrading')
   }
 
   const navigateToSellTrading = () => {
-    router.push('(trade)/selltradingcoin')
+    router.push('/(trade)/selltradingcoin')
   }
 
   return (
@@ -116,14 +130,14 @@ const Trading = () => {
       <View>
         <PageHeader 
           icon={<FontAwesome name="angle-left" size={24} color="black" />} 
-          other={<Feather name="clipboard" size={24} color="black" />} 
+          // other={<Feather name="clipboard" size={24} color="black" />} 
           label={<Text style={styles.pageHeaderText}>Trading</Text>} 
         />
 {/* 
         <TradingHeaderPeriod data={tradePeriodsData} style={undefined} /> */}
 
-        <Portfolio priceUsd={marketData?.priceUsd} style={styles.portfolio} name={marketData?.name} symbol={marketData?.symbol} changePercent24Hr={marketData?.changePercent24Hr} />
-        <Chart style={styles.chart} withVerticalLabels={true} />
+        <Portfolio priceUsd={marketData?.priceUsd} image={marketData?.image} style={styles.portfolio} name={marketData?.name} symbol={marketData?.symbol} changePercent24Hr={parseFloat(marketData?.changePercent24Hr)} />
+        <Chart styles={styles.chart} withVerticalLabels={true} />
         {/* <TradingTools /> */}
         <PopularPairs />
         <View style={{marginTop:15}}>
@@ -143,12 +157,12 @@ const Trading = () => {
           />
      
           
-          <Separator style={styles.separator} />
+          <Separator />
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={navigateToSellTrading} style={[styles.button, styles.button1]}>
               <View style={[styles.icon, styles.icon1]}>
-                <Feather name="arrow-down-left" size={24} color="red" />
+                <Feather name="arrow-down-left" size={24} color="#F9C74F" />
               </View>
               <Text style={styles.sellText}>SELL</Text>
             </TouchableOpacity>
@@ -162,6 +176,7 @@ const Trading = () => {
           </View>
         </View>
       </View>
+
       
     </SafeAreaView>
   )
@@ -205,16 +220,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     padding: 10,
-    backgroundColor: 'orangered',
+    backgroundColor: '#F9C74F',
     marginRight: 10,
     borderRadius: 10,
     width: 150,
     justifyContent: 'center',
+    
   },
   button1: {
-    borderColor: 'orangered',
+    borderColor: '#F9C74F',
     backgroundColor: 'transparent',
     borderWidth: 1,
+
   },
   icon: {
     marginRight: 8,
@@ -224,8 +241,8 @@ const styles = StyleSheet.create({
     borderRadius:6
   },
   icon1: {
-    color: 'yellow',
-    borderColor: 'orangered',
+    color: '#F9C74F',
+    borderColor: '#F9C74F',
     backgroundColor: 'transparent',
     borderWidth: 1,
     alignItems: 'center',
@@ -234,8 +251,8 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   sellText: {
-    color: 'orangered',
-      fontFamily:'MonsterReg'
+    color: '#F9C74F',
+      fontFamily:'MonsterBold'
   },
   buyText: {
     color: 'white',

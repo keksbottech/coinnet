@@ -10,9 +10,9 @@ import { FontAwesome } from '@expo/vector-icons'
 const ChangePasswordPage = () => {
   return (
     <SafeAreaView style={{flex:1,padding:10}}>
-    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Change Password</Text>} />
+    <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} label={<Text style={styles.label}>Change Password</Text>} />
         
-    <View className='h-full' style={{paddingTop:50}}>
+    <View  style={{paddingTop:50, height:'100%'}}>
         <ChangePassword/>
 
 
@@ -23,4 +23,9 @@ const ChangePasswordPage = () => {
 
 export default ChangePasswordPage
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  label:{
+    fontFamily:'MonsterBold',
+    fontSize:20
+  }
+})

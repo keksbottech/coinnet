@@ -7,14 +7,14 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useRouter } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function ConfirmationBuy({enableBottomDrawerFunc}) {
+export default function ConfirmationBuy({enableBottomDrawerFunc}:any) {
   const [selectedMethod, setSelectedMethod] = useState('Coinnet Wallet');
 
   const router = useRouter()
 
 
   const navigateToAuthenticationCode = () => {
-    router.push('(trade)/transactionauthenticationcode')
+    router.push('/(trade)/transactionauthenticationcode')
   }
 
 
@@ -24,7 +24,7 @@ export default function ConfirmationBuy({enableBottomDrawerFunc}) {
       <Text style={styles.title}>Your Buy</Text>
       <Text style={styles.amount}>0.040510</Text>
 
-      <Text style={styles.label} className=''>You Receive</Text>
+      <Text style={styles.label} >You Receive</Text>
 
       <View style={styles.sectionB}>
      
@@ -33,11 +33,11 @@ export default function ConfirmationBuy({enableBottomDrawerFunc}) {
           <Text style={styles.amountReceived}>0.040141 </Text>
         </View>
 
-        <Text className='text-xl' style={{fontFamily:'MonsterBold'}}>BTC</Text>
+        <Text  style={{fontFamily:'MonsterBold', fontSize:18}}>BTC</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label} className=''>Payment Methods Available</Text>
+        <Text style={styles.label} >Payment Methods Available</Text>
         <TouchableOpacity onPress={enableBottomDrawerFunc} style={styles.pickerContainer}>
           <View style={styles.wrap}>
         <FontAwesome name="bank" size={24} color="black" />

@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Picker } from '@react-native-picker/picker';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getSelectedCoinData } from '@/lib/store/reducers/storeSelectedCoin';
 
 const TradingCurrencySubHeader: React.FC = () => {
-  const [selectedCurrency, setSelectedCurrency] = useState<string>('USDT');
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('ALL');
   const [showFiatDropdown, setShowFiatDropdown] = useState<boolean>(false);
+  const dispatch = useAppDispatch()
   const [selectedFiat, setSelectedFiat] = useState<string>('USD');
 
-  const currencies = ['USDT', 'USDC', 'BTC', 'Litecoin', 'Tron', 'USD'];
+  const currencies = ['ALL', 'BTC', 'USDC', 'BNB', 'ETH', 'LTC'];
   const fiatCurrencies = ['USD', 'EUR', 'GBP'];
 
+  useEffect(() => {
+    dispatch(getSelectedCoinData('ALL'))
+  }, [])
+
   const handleCurrencyPress = (currency: string) => {
+    dispatch(getSelectedCoinData(currency))
+    console.log(currency)
     if (currency === 'USD') {
       setShowFiatDropdown(!showFiatDropdown);
+      setSelectedCurrency(currency);
     } else {
       setSelectedCurrency(currency);
       setShowFiatDropdown(false);

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface storeUserInfo {
-  user: object,
+  user: any,
   userForgottenEmail: string;
   userOtpId: string;
 }

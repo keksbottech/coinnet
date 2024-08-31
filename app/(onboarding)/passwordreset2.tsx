@@ -29,7 +29,7 @@ const Passwordreset2 = () => {
   const userEmail = useAppSelector(state => state.user.userForgottenEmail)
   const dispatch = useAppDispatch()
 
-  const handleOtpChange = (otp: string) => {
+  const handleOtpChange = (otp: any) => {
     setOtpValue(otp);
   };
 
@@ -92,7 +92,7 @@ const Passwordreset2 = () => {
     try{
       setIsLoading(true)
     
-      const body ={
+      const body :any={
    email: userData?.email
       }
 
@@ -105,7 +105,7 @@ const Passwordreset2 = () => {
       })
 
       setTimeout(() => {
-        router.navigate('(onboarding)/confirmationemail')
+        router.navigate('/(onboarding)/confirmationemail')
       }, 2000);
     }
     catch(err){

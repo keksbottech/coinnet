@@ -11,9 +11,9 @@ import LanguageSelector from '@/components/change language/ChangeLanguage';
 const ChangeLanguagePage = () => {
   return (
     <SafeAreaView style={{padding:10,flex:1}}>
-                  <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} label={<Text className='font-bold text-3xl'>Change Language</Text>} />
+                  <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} label={<Text style={styles.label}>Change Language</Text>} />
           
-    <View className='h-full' style={{paddingTop:30}}>
+    <View  style={{paddingTop:30, height:'100%'}}>
       <LanguageSelector/>
       <Button styles={{bottom:50}} label='Save'/>
     </View>
@@ -23,4 +23,9 @@ const ChangeLanguagePage = () => {
 
 export default ChangeLanguagePage
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  label:{
+    fontFamily:'MonsterBold',
+    fontSize:20
+  }
+})

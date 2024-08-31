@@ -14,7 +14,7 @@ const languages = [
 const LanguageSelector = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('');
 
-  const changeLanguage = (languageCode) => {
+  const changeLanguage = (languageCode:any) => {
     setSelectedLanguage(languageCode);
   };
 

@@ -3,7 +3,12 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const ActionButton = ({ iconName, label, onClick }) => {
+type ActioButtonTypes = {
+  iconName: string,
+  label:string,
+  onClick: ()=> void
+}
+const ActionButton = ({ iconName, label, onClick }:ActioButtonTypes) => {
   return (
     <TouchableOpacity onPress={onClick} style={styles.buttonContainer}>
       <View style={styles.iconBackground}>
@@ -18,16 +23,16 @@ const AssetsActionButton = () => {
     const router = useRouter()
 
     const navigateToWithdraw = () => {
-        router.push('(trade)/withdraw')
+        router.push('/(trade)/withdraw')
     }
     const navigateToReceiveCoin = () => {
-        router.push('(other)/receivecoin')
+        router.push('/(other)/receivecoin')
     }
     const navigateToSendCoin = () => {
-        router.push('(other)/sendcoin')
+        router.push('/(other)/sendcoin')
     }
     const navigateToDepositCoin = () => {
-        router.push('/(other)/webview')
+        router.push('/(other)/paymentmethods')
     }
   return (
     <View style={styles.container}>

@@ -12,13 +12,16 @@ const TradeLayout = () => {
    <Stack.Screen name='confirmbuy' options={{headerShown:false}}/>
    <Stack.Screen name='confirmexchange' options={{headerShown:false}}/>
    <Stack.Screen name='exchangecoin' options={{headerShown:false}}/>
-   
    <Stack.Screen name='selltradingcoin' options={{headerShown:false}}/>
    <Stack.Screen name='transactionauthenticationcode' options={{headerShown:false}}/>
    <Stack.Screen name='withdraw' options={{headerShown:false}}/>
    <Stack.Screen name='confirmwithdraw' options={{headerShown:false}}/>
    <Stack.Screen name='transactionhistory' options={{headerShown:false}}/>
    <Stack.Screen name='moremarketdata' options={{headerShown:false}}/>
+   <Stack.Screen name='chats/[id]' options={{headerShown:false}}/>
+   <Stack.Screen name='dispute' options={{headerShown:false}}/>
+   <Stack.Screen name='chatpreview' options={{headerShown:false}}/>
+   <Stack.Screen name='buytradingform' options={{headerShown:false}}/>
    </Stack>
   )
 }

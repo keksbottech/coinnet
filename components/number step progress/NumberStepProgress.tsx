@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const NumberStepProgress = ({currentStep}) => {
+const NumberStepProgress = ({currentStep} :any) => {
   
   const handleNextStep = () => {
     if (currentStep < 3) {
@@ -22,7 +22,7 @@ const NumberStepProgress = ({currentStep}) => {
                   borderColor: currentStep >= step ? 'yellow' : '#ccc',
                 },
               ]}
-              onPress={() => setCurrentStep(step)}
+              onPress={() => currentStep(step)}
             >
               <Text style={[styles.circleText, { color: currentStep >= step ? 'black' : '#ccc' }]}>{step}</Text>
             </TouchableOpacity>

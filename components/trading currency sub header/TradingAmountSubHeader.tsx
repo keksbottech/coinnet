@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { getSelectedCoinData } from '@/lib/store/reducers/storeSelectedCoin';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
 
 const FilterOptions: React.FC = () => {
   const [selectedAmount, setSelectedAmount] = useState<string>('Amount');
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('All Payment Methods');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('Select');
 
   const amountOptions = ['Amount', '1', '10', '100', '1000']; // Add more options as needed
-  const paymentMethods = ['All Payment Methods', 'Credit Card', 'Bank Transfer', 'PayPal']; // Add more options as needed
+  const paymentMethods = ['Bank Transfer', 'PayPal']; // Add more options as needed
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    console.log(selectedPaymentMethod)
+    dispatch(getSelectedCoinData(selectedPaymentMethod))
+  }, [selectedPaymentMethod])
+
 
   return (
     <View style={styles.container}>
       {/* Amount Dropdown */}
-      <View style={styles.pickerContainer}>
+      {/* <View style={styles.pickerContainer}>
 
         <Picker
           selectedValue={selectedAmount}
@@ -23,7 +32,7 @@ const FilterOptions: React.FC = () => {
             <Picker.Item key={option} label={option} value={option} />
           ))}
         </Picker>
-      </View>
+      </View> */}
 
       {/* Payment Methods Dropdown */}
       <View style={styles.pickerContainer}>

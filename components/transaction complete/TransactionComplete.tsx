@@ -1,66 +1,95 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, BackHandler } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import CheckCompleteImage from '@/assets/svg/complete.svg'
+import CheckCompleteImage from '@/assets/svg/complete.svg';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { useRouter } from 'expo-router';
 
+const TransactionComplete = () => {
+  const transactionData = useAppSelector((state) => state.transaction.transactionName);
+  const exchangeData = useAppSelector((state) => state.exchange.exchange);
+  const router = useRouter();
 
-const TransactionComplete = ({title, leftLabel, rightLabel, leftPrice,rightPrice}) => {
+  useEffect(() => {
+    const backAction = () => {
+      router.push('/(tabs)');
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [router]);
 
   return (
     <View style={styles.container}>
-        <CheckCompleteImage />
-        
-      <Text className='text-center text-4xl' style={styles.label}>Exchange Successful</Text>
-      <Text className='text-cener' style={styles.label}>You have successfully initiated the transaction. Amount will reflect in wallet within 1 hour</Text>
+      <CheckCompleteImage />
+      <Text style={styles.label}>{transactionData} Successful</Text>
+      <Text style={styles.message}>
+        You have successfully initiated the transaction. Amount will reflect in wallet within 1 hour.
+      </Text>
 
-      <View style={styles.section}>
-        <View>
-            <Text>Bitcoin BTC</Text>
-            <Text style={styles.text}>0.0401030</Text>
+      {transactionData === 'exchange' && (
+        <View style={styles.section}>
+          <View>
+            <Text>{exchangeData.selectFrom} </Text>
+            <Text style={styles.text}>{exchangeData.fromAmount}</Text>
+          </View>
+
+          <View style={styles.icon}>
+            <AntDesign name="arrowright" size={24} color="black" />
+          </View>
+
+          <View>
+            <Text>{exchangeData.selectTo}</Text>
+            <Text style={styles.text}>{exchangeData.toAmount}</Text>
+          </View>
         </View>
-
-<View style={styles.icon}>
-<AntDesign name="arrowright" size={24} color="black" />
-</View>
-
-<View>
-            <Text>Ethereum ETH</Text>
-            <Text style={styles.text}>0.0401030</Text>
-        </View>
-        
-      </View>
+      )}
     </View>
-  )
-}
+  );
+};
 
-export default TransactionComplete
+export default TransactionComplete;
 
 const styles = StyleSheet.create({
-  container:{
-    alignItems:'center',
-    justifyContent:'center',
-    width:'100%'
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    padding: 20,
   },
-  section:{
-flexDirection:'row',
-justifyContent:'space-between',
-marginTop:40,
-width:'100%'
+  section: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 40,
+    width: '100%',
+    paddingHorizontal: 20,
   },
-  label:{
-    fontFamily:'MonsterBold',
-    textAlign:'center',
-  marginVertical:5
+  label: {
+    fontFamily: 'MonsterBold',
+    textAlign: 'center',
+    marginVertical: 5,
+    textTransform: 'capitalize',
+    fontSize: 24,
   },
-  icon:{
-    borderColor:'black',
-    borderWidth:.5,
-    padding:5,
-    borderRadius:5
+  message: {
+    textAlign: 'center',
+    marginVertical: 10,
+    fontSize: 16,
+    fontFamily: 'MonsterReg',
   },
-  text:{
-    fontFamily:'MonsterBold',
-    
-  }
-})
+  icon: {
+    borderColor: 'black',
+    borderWidth: 0.5,
+    padding: 5,
+    borderRadius: 5,
+  },
+  text: {
+    fontFamily: 'MonsterBold',
+    fontSize: 18,
+  },
+});

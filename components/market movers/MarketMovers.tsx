@@ -1,24 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image, StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import BitcoinImage from '@/assets/svg/bitcoin.svg';
-import CryptoIcon from 'react-native-crypto-icons';
+
+// Define the types for the props
+interface CryptoCardProps {
+  symbol: string;
+  priceUsd: string;
+  volume: string;
+  changePercent24Hr: string;
+  width?: StyleProp<ViewStyle>;
+  image: string;
+}
 
 const screenWidth = Dimensions.get("window").width;
 
-const CryptoCard = ({ symbol, priceUsd, volume, changePercent24Hr, width }) => {
+const CryptoCard: React.FC<CryptoCardProps> = ({ symbol, priceUsd, volume, changePercent24Hr, width, image }) => {
   // Determine color based on changePercent24Hr
-  const changeColor = changePercent24Hr >= 0 ? '#4CAF50' : '#FF5252'; // Green for positive, red for negative
+  const changeColor = parseFloat(changePercent24Hr) >= 0 ? '#4CAF50' : '#FF5252'; // Green for positive, red for negative
 
   return (
     <View style={[styles.card, width]}>
       <View style={styles.header}>
         <Text style={styles.title}>{`${symbol}/USD`}</Text>
         <View>
-        <CryptoIcon name='btc' style={{ fontSize: 45, color: 'green' }} />
+          <Image
+            source={{ uri: `https://cryptocompare.com${image}` }}
+            style={{ width: 50, height: 50 }}
+          />
         </View>
       </View>
-      <Text style={styles.price}>{parseFloat(priceUsd).toFixed(2)}</Text>
+      <Text style={styles.price}>{priceUsd}</Text>
       <Text style={[styles.change, { color: changeColor }]}>
         {parseFloat(changePercent24Hr).toFixed(2)}%
       </Text>
@@ -34,7 +45,7 @@ const CryptoCard = ({ symbol, priceUsd, volume, changePercent24Hr, width }) => {
                 Math.random() * 100,
                 Math.random() * 100,
               ],
-              color: () => `#FFD700`, // Gold color for the line
+              color: () => '#FFD700', // Gold color for the line
               strokeWidth: 1,
             },
           ],
@@ -47,17 +58,17 @@ const CryptoCard = ({ symbol, priceUsd, volume, changePercent24Hr, width }) => {
         withInnerLines={false}
         withOuterLines={false}
         chartConfig={{
-          backgroundColor: "#ffffff",
-          backgroundGradientFrom: "#ffffff",
-          backgroundGradientTo: "#ffffff",
-          color: () => `#FFD700`, // Gold color for the line
+          backgroundColor: '#ffffff',
+          backgroundGradientFrom: '#ffffff',
+          backgroundGradientTo: '#ffffff',
+          color: () => '#FFD700', // Gold color for the line
           strokeWidth: 2,
         }}
         bezier
         style={styles.chart}
       />
       <Text style={styles.volume}>24H Vol.</Text>
-      <Text style={styles.volume}>{parseFloat(volume).toFixed(2)}</Text>
+      <Text style={styles.volume}>{volume}</Text>
     </View>
   );
 };
@@ -75,7 +86,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginVertical: 10,
     marginRight: 10,
-   },
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

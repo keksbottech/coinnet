@@ -12,7 +12,7 @@ const ProgressBar = ({ currentStep, totalSteps = 3}:any) => {
           style={[
             styles.step,
             {
-              backgroundColor: index < currentStep ? 'orangered' : '#ccc',
+              backgroundColor: index < currentStep ? '#F9C74F' : '#ccc',
               width: `${stepWidth}%`,
             },
           ]}

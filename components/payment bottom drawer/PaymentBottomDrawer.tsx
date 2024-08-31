@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import BottomDrawer from '@/components/bottom drawer/BottomDrawer';
@@ -7,22 +7,27 @@ import ApplePay from '@/assets/svg/applepay.svg'
 import PayPal from '@/assets/svg/paypal.svg'
 import MonoBank from '@/assets/svg/mastercard.svg'
 import VisaCard from '@/assets/svg/visa.svg'
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getPaymentMethod } from '@/lib/store/reducers/storePaymentUrl';
 
 const paymentMethods = [
-    { id: 1, name: 'Coinnet Wallet', icon: 
-      <ApplePay/>, number: 'XXXX5555' },
-    { id: 2, name: 'PayPal', icon: <PayPal/>, number: 'XXXX5555' },
-    { id: 3, name: 'Monobank', icon: <MonoBank/>, number: 'XXXX5555' },
-    { id: 4, name: 'Debit card', icon: <VisaCard/>, number: 'XXXX5555' },
+    { id: 1, name: 'PayPal', icon: <PayPal/>, number: 'XXXX5555' },
+    { id: 2, name: 'Bank Transfer', icon: <MonoBank/>, number: 'XXXX5555' },
   ];
 
   
 
 const PaymentBottomDrawer = () => {
     const [selectedMethod, setSelectedMethod] = useState(null);
+    const dispatch = useAppDispatch()
+
   
-  
+    const enableSelection = (method:any, id:any) => {
+      setSelectedMethod(id)
+      dispatch(getPaymentMethod(method))
+    }
   return (
+
 <BottomDrawer
     ui={
       <View style={styles.container}>
@@ -31,7 +36,7 @@ const PaymentBottomDrawer = () => {
         <TouchableOpacity
           key={method.id}
           style={styles.methodContainer}
-          onPress={() => setSelectedMethod(method.id)}
+          onPress={() => enableSelection(method, method.id)}
         >
           <View style={styles.methodDetails}>
             <View>

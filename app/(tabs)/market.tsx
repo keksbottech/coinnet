@@ -14,51 +14,62 @@ import MarketDataSwipeSide from '@/components/market data swipe side/MarketDataS
 import Loading from '@/components/loading/Loading';
 import { Wave } from 'react-native-animated-spinkit'
 import { TouchableOpacity } from 'react-native'
+import { getMarketData } from '@/lib/store/reducers/storeMarketData'
+import { useAppDispatch } from '@/hooks/useAppDispatch'
 
 
 const Market = () => {
 
-  const [marketData, setMarketData] = useState(null)  
+  const [marketData, setMarketData] = useState<any>(null)  
     const [isLoading, setIsLoading] = useState(false)  
     const [value, setValue] = useState('')
-
+    const dispatch = useAppDispatch()
+ 
     useEffect(()=>{
         fetchPrice()
     },[])
 
 
-    const getValuesFromInput = (value) => {
+    const getValuesFromInput = (value:any) => {
       setValue(value)
     }
 
     const fetchPrice = async () => {
-        try {
-            setIsLoading(true)
-          const response = await axios.get('https://api.coincap.io/v2/assets');
-          // console.log(response.data)
-          setMarketData(response.data.data);
-        } catch (error) {
-          console.error('Error fetching price:', error.message);
-        }
-        finally{
-            setIsLoading(false)
-        }
-      
+      try {
+        setIsLoading(true)
+        const apiKey = 'cdac7eceac8c9e80db25590f3a5886471f2e1a503f593df1b8b84bb8f5fe99b8';
+        const url = 'https://min-api.cryptocompare.com/data/top/totalvolfull?limit=50&tsym=USD';
+        
+       const response = await axios.get(url, {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+          }
+        })
+        dispatch(getMarketData(response.data.Data))
+        setMarketData(response.data.Data);
+      } catch (error) {
+        console.error('Error fetching price:', error);
       }
+      finally{
+        setIsLoading(false)
+      }
+    
+    }
+
+
 
    const getCoinBySearch = async () => {
     try{
       if(!value){
         setIsLoading(true)
-          const response = await axios.get('https://api.coincap.io/v2/assets');
-          // console.log(response.data)
-          setMarketData(response.data.data);
+        await fetchPrice()
       }
 
       setIsLoading(true)
 
-      const response = await axios.get(`https://api.coincap.io/v2/assets/${value.toLowerCase()}`);
+      const response = await axios.get(`https://data-api.cryptocompare.com/asset/v1/data/by/symbol?asset_symbol=${value}`);
     
+      console.log(response.data, 'search')
       setMarketData([response.data.data]); 
     }
     catch(err){
@@ -68,6 +79,7 @@ const Market = () => {
       setIsLoading(false)
     }
    }
+
 
 
 
@@ -83,7 +95,7 @@ const Market = () => {
 
         <View style={styles.searchContainer}>
           <AntDesign style={styles.searchIcon} name='search1' color={'black'} size={18}/>
-          <Input onSubmit={getCoinBySearch} value={value} onChangeText={getValuesFromInput} style={styles.input} placeholder='Cryptocoin search'/>
+          <Input onSubmit={getCoinBySearch} value={value} onChangeText={getValuesFromInput} style={styles.input} placeholder='Cryptocoin search... Search in Symbols (BTC)'/>
         </View>
         {/* , 'Most Trade', 'Most Lose', 'New Coin' */}
         {/* <PopularTradeHeads data={['All Coins']}/> */}
@@ -100,7 +112,7 @@ const Market = () => {
 
       </View>
 
-        <MarketDataSwipeSide marketData={marketData} />
+        <MarketDataSwipeSide fetchData={fetchPrice} marketData={marketData} />
         
        {/* <MarketList/> */}
       </View>

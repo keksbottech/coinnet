@@ -10,7 +10,7 @@ const initialState: storeFavoriteData = {
 }
 
 export const storeFavoriteDataSlice = createSlice({
-  name: 'market',
+  name: 'favorites',
   initialState,
   reducers: {
     getFavoriteData: (state, action: PayloadAction<any>) => {

@@ -1,35 +1,48 @@
-import { View, Text, TextInput } from 'react-native'
-import React from 'react'
-import { StyleSheet } from 'react-native'
+import React from 'react';
+import { View, TextInput, StyleSheet, TextInputProps, StyleProp, TextStyle } from 'react-native';
 
-type InputPropTypes ={
-    style?: {},
-    placeholder?: string
+interface InputPropTypes extends TextInputProps {
+  style?: StyleProp<TextStyle>;
+  readOnly?: boolean;
+  onSubmit?: () => void;
 }
-const Input = ({style,placeholder,secureTextEntry, onSubmit, onBlur, value, onChangeText}:InputPropTypes) => {
-    console.log(value,'dkd')
+
+const Input: React.FC<InputPropTypes> = ({
+  style,
+  placeholder,
+  secureTextEntry = false,
+  onSubmit,
+  onBlur,
+  value = '',
+  onChangeText,
+  readOnly = false,
+  keyboardType = 'default',
+  ...restProps
+}) => {
   return (
-      <TextInput
+    <TextInput
       placeholder={placeholder}
+      keyboardType={keyboardType}
       style={[styles.input, style]}
       onChangeText={onChangeText}
       value={`${value}`}
       onBlur={onBlur}
       secureTextEntry={secureTextEntry}
       onEndEditing={onSubmit}
-      />
+      editable={!readOnly}
+      {...restProps} // Spread other TextInputProps
+    />
+  );
+};
 
-  )
-}
-
-export default Input
+export default Input;
 
 const styles = StyleSheet.create({
-    input:{
-        borderColor:'black',
-        borderWidth:.5,
-        borderStyle:'solid',
-        padding:10,
-        fontFamily:'MonsterReg'
-    }
-})
+  input: {
+    borderColor: 'black',
+    borderWidth: 0.5,
+    borderStyle: 'solid',
+    padding: 10,
+    fontFamily: 'MonsterReg',
+  },
+});

@@ -1,71 +1,219 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Picker } from '@react-native-picker/picker';
-import BitcoinImage from '@/assets/svg/bitcoin.svg'
+import { useForm, Controller } from 'react-hook-form';
+import BitcoinImage from '@/assets/svg/bitcoin.svg';
+import Button from '../ui/button/Button';
+import { useRouter } from 'expo-router';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getExchangeData } from '@/lib/store/reducers/storeExchangeData';
 
+interface FormData {
+  fromAmount: string;
+  toAmount: string;
+  selectedFromCoin: string;
+  selectedToCoin: string;
+}
 
 const ConvertForm = () => {
-  const [selectedFromCoin, setSelectedFromCoin] = useState('bitcoin');
-  const [selectedToCoin, setSelectedToCoin] = useState('ethereum');
+  const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm<FormData>({
+    defaultValues: {
+      fromAmount: '',
+      selectedFromCoin: 'bitcoin',
+      selectedToCoin: 'ethereum',
+    },
+  });
+  const router = useRouter();
+  const marketStoredData = useAppSelector((state) => state.market.marketData);
+  const dispatch = useAppDispatch();
+
+  const coinShortForms: Record<string, string> = {
+    bitcoin: 'BTC',
+    ethereum: 'ETH',
+    usdt: 'USDC',
+    bnb: 'BNB',
+  };
+
+  const fromAmount = watch('fromAmount');
+  const selectedFromCoin = watch('selectedFromCoin');
+  const selectedToCoin = watch('selectedToCoin');
+
+  useEffect(() => {
+    if (fromAmount) {
+      const fromCoinData = marketStoredData.find(
+        (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name?.toLowerCase() === coinShortForms[selectedFromCoin].toLowerCase()
+      );
+      const toCoinData = marketStoredData.find(
+        (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name?.toLowerCase() === coinShortForms[selectedToCoin].toLowerCase()
+      );
+
+      if (fromCoinData && toCoinData) {
+        const rate = toCoinData.RAW?.USD?.PRICE / fromCoinData.RAW?.USD?.PRICE;
+        const calculatedToAmount = (parseFloat(fromAmount) * rate).toFixed(6);
+        setValue('toAmount', calculatedToAmount);
+      } else {
+        setValue('toAmount', '');
+      }
+    } else {
+      setValue('toAmount', '');
+    }
+  }, [fromAmount, selectedFromCoin, selectedToCoin, setValue, marketStoredData]);
+
+  const onSubmit = (data: FormData) => {
+    const { fromAmount, toAmount } = data;
+
+    const selectFrom = coinShortForms[selectedFromCoin];
+    const selectTo = coinShortForms[selectedToCoin];
+
+    const fromCoinData = marketStoredData.find(
+      (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name?.toLowerCase() === selectFrom.toLowerCase()
+    );
+    const toCoinData = marketStoredData.find(
+      (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name?.toLowerCase() === selectTo.toLowerCase()
+    );
+
+    if (fromCoinData && toCoinData) {
+      const rate = toCoinData.RAW?.USD?.PRICE / fromCoinData.RAW?.USD?.PRICE;
+      dispatch(getExchangeData({ fromAmount, selectFrom, selectTo, toAmount, rate }));
+      router.push('/(trade)/confirmexchange');
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      {/* You Convert */}
-      <Text style={styles.label} className='text-center'>You Convert</Text>
-      <Text style={styles.amountText} className='text-center'>$1,000</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.label}>You Convert</Text>
+        <Text style={styles.amountText}>
+          {fromAmount ? `${fromAmount} ${coinShortForms[selectedFromCoin]}` : `0.000 ${coinShortForms[selectedFromCoin]}`}
+        </Text>
 
-      {/* You Receive */}
-      <Text style={styles.label}>You Receive</Text>
-      <View style={styles.receiveContainer}>
-        <Text style={styles.quantityText}>Quantity</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="0.689612"
-          keyboardType="numeric"
+        <Text style={styles.label}>Convert From</Text>
+        <Controller
+          control={control}
+          name="selectedFromCoin"
+          render={({ field: { onChange, value } }) => (
+            <Picker selectedValue={value} onValueChange={onChange} style={styles.picker}>
+              <Picker.Item label="Bitcoin (BTC)" value="bitcoin" />
+              <Picker.Item label="Tether (USDC)" value="tether" />
+              <Picker.Item label="Binance Coin (BNB)" value="binance coin" />
+              <Picker.Item label="Ethereum (ETH)" value="ethereum" />
+            </Picker>
+          )}
         />
-        <Text style={styles.currencyText}>ETH</Text>
-      </View>
 
-      {/* Exchange */}
-      <Text style={styles.label}>Exchange</Text>
-      <View style={styles.exchangeContainer}>
-        <View style={styles.coinWrapper}>
-          <BitcoinImage/>
-          <View>
-          <Text style={styles.coinText}>From</Text>
-          <Text style={styles.coinName}>Bitcoin</Text>
+        <Text style={styles.label}>Convert To</Text>
+        <Controller
+          control={control}
+          name="selectedToCoin"
+          render={({ field: { onChange, value } }) => (
+            <Picker selectedValue={value} onValueChange={onChange} style={styles.picker}>
+              <Picker.Item label="Ethereum (ETH)" value="ethereum" />
+              <Picker.Item label="Bitcoin (BTC)" value="bitcoin" />
+              <Picker.Item label="Tether (USDC)" value="tether" />
+              <Picker.Item label="Binance Coin (BNB)" value="binance coin" />
+            </Picker>
+          )}
+        />
+
+        <Text style={styles.label}>You Receive</Text>
+        <View style={styles.receiveContainer}>
+          <Controller
+            control={control}
+            name="fromAmount"
+            rules={{
+              required: 'Amount is required',
+              pattern: {
+                value: /^\d+(\.\d{1,6})?$/,
+                message: 'Enter a valid amount with up to 6 decimal places',
+              },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="0.000"
+                keyboardType="numeric"
+                value={value}
+                onChangeText={onChange}
+              />
+            )}
+          />
+          <Text style={styles.currencyText}>{coinShortForms[selectedFromCoin]}</Text>
         </View>
+        {errors.fromAmount && <Text style={styles.errorText}>{errors.fromAmount.message}</Text>}
+
+        <Text style={styles.label}>Estimated Received</Text>
+        <View style={styles.receiveContainer}>
+          <Controller
+            control={control}
+            name="toAmount"
+            render={({ field: { value } }) => <Text style={styles.estimatedText}>{value}</Text>}
+          />
+          <Text style={styles.currencyText}>{coinShortForms[selectedToCoin]}</Text>
         </View>
-        <TouchableOpacity style={styles.exchangeIconWrapper}>
-          <Icon name="exchange" size={18} color="#000" />
-        </TouchableOpacity>
-        <View style={styles.coinWrapper}>
-          <View className='flex items-end justify-end' style={{alignItems:'flex-end'}}>
-          <Text style={styles.coinText} className='text-right'>To</Text>
-          <Text style={styles.coinName}>Ethereum</Text>
+
+        <Text style={styles.label}>Exchange</Text>
+        <View style={styles.exchangeContainer}>
+          <View style={styles.coinWrapper}>
+            <BitcoinImage />
+            <View>
+              <Text style={styles.coinText}>From</Text>
+              <Text style={styles.coinName}>{coinShortForms[selectedFromCoin]}</Text>
+            </View>
           </View>
-          <BitcoinImage/>
+          <TouchableOpacity style={styles.exchangeIconWrapper}>
+            <Icon name="exchange" size={18} color="#000" />
+          </TouchableOpacity>
+          <View style={styles.coinWrapper}>
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={styles.coinText}>To</Text>
+              <Text style={styles.coinName}>{coinShortForms[selectedToCoin]}</Text>
+            </View>
+            <BitcoinImage />
+          </View>
         </View>
-      </View>
-    </View>
+
+        <Button
+          styles={{ position: 'relative', top: 20 }}
+          label="Buy"
+          onClick={handleSubmit(onSubmit)}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#f5f5f5',
+    padding: 20,
   },
   label: {
     fontSize: 16,
-    fontFamily:'MonsterBold',
+    fontFamily: 'MonsterBold',
     marginTop: 20,
+    textAlign: 'center',
   },
   amountText: {
     fontSize: 30,
     marginTop: 5,
-    fontFamily:'MonsterBold'
+    fontFamily: 'MonsterBold',
+    textAlign: 'center',
   },
   receiveContainer: {
     flexDirection: 'row',
@@ -77,60 +225,59 @@ const styles = StyleSheet.create({
     marginTop: 10,
     backgroundColor: '#fff',
   },
-  quantityText: {
-    fontSize: 16,
-    color: '#333',
-    marginRight: 10,
-    
-    fontFamily:'MonsterReg'
-  },
   input: {
     flex: 1,
     fontSize: 16,
-    
-    fontFamily:'MonsterReg'
+    fontFamily: 'MonsterReg',
   },
   currencyText: {
     fontSize: 16,
-
-    fontFamily:'MonsterBold',
+    fontFamily: 'MonsterBold',
     marginLeft: 10,
+  },
+  estimatedText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'MonsterReg',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 5,
+  },
+  picker: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    marginTop: 10,
   },
   exchangeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
-    marginTop: 10,
-    backgroundColor: '#fff',
+    marginTop: 20,
+  },
+  exchangeIconWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   coinWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  coinIcon: {
-    width: 30,
-    height: 30,
-    marginRight: 10,
-  },
   coinText: {
     fontSize: 14,
-    color: '#555',
-    marginRight: 5,
+    fontFamily: 'MonsterReg',
+    color: '#888',
   },
   coinName: {
     fontSize: 16,
-    
-    fontFamily:'MonsterBold'
-  },
-  exchangeIconWrapper: {
-    padding: 10,
-    borderWidth:.5,
-    borderColor:'black',
-    borderRadius:10
+    fontFamily: 'MonsterBold',
   },
 });
 

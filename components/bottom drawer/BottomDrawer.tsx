@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 
-const BottomDrawer = ({ui, enablePanDownToClose = true}) => {
+const BottomDrawer = ({ui, enablePanDownToClose = true}:any) => {
   // ref
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -16,7 +16,7 @@ const BottomDrawer = ({ui, enablePanDownToClose = true}) => {
 
   // renders
   return (
-    <View style={styles.container}>
+  
       <BottomSheet
         ref={bottomSheetRef}
         index={1} // Starting from the lowest snap point
@@ -30,7 +30,7 @@ const BottomDrawer = ({ui, enablePanDownToClose = true}) => {
   {ui}
         </BottomSheetView>
       </BottomSheet>
-    </View>
+
   );
 };
 
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-end', 
+    zIndex:10
   },
   contentContainer: {
     flex: 1,

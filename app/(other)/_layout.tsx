@@ -23,6 +23,11 @@ const OtherLayout = () => {
       <Stack.Screen name='confirmtransfer' options={{headerShown:false}}/>  
       <Stack.Screen name='receivemoneyfromcoinnet' options={{headerShown:false}}/>  
       <Stack.Screen name='webview' options={{headerShown:false}}/>   
+      <Stack.Screen name='paywithpaystack' options={{headerShown:false}}/>
+      <Stack.Screen name='paywithflutterwave' options={{headerShown:false}}/>   
+      <Stack.Screen name='paywithpaypal' options={{headerShown:false}}/>     
+      <Stack.Screen name='paymentmethods' options={{headerShown:false}}/>     
+
    </Stack>
   )
 }

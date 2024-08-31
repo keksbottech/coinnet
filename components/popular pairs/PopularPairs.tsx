@@ -8,9 +8,9 @@ const PopularPairs = () => {
   const changePairType = () => {}
   return (
     <View>
-      <Text className=' text-xl' style={styles.text}>Popular Pairs</Text>
+      <Text style={styles.text}>Popular Pairs</Text>
 
-      <PopularPairsHeader data={['BTC/USD', 'ETH/USD', 'LTC/USD', 'USDT/USD']}/>
+      <PopularPairsHeader data={['BTC/USD', 'ETH/USD', 'SOL/USD', 'USDC/USD']}/>
     </View>
   )
 }
@@ -19,6 +19,7 @@ export default PopularPairs
 
 const styles = StyleSheet.create({
   text:{
-    fontFamily:'MonsterBold'
+    fontFamily:'MonsterBold',
+    fontSize:18
   }
 })

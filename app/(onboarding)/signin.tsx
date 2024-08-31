@@ -7,6 +7,8 @@ import PageHeader from '@/components/page header/PageHeader';
 import Loading from '@/components/loading/Loading';
 import { axios } from '@/lib/axios';
 import Toast from 'react-native-toast-message';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 
 // Define the shape of the form data
 interface FormValues {
@@ -18,69 +20,54 @@ const Signin: React.FC = () => {
   const router = useRouter();
   const [oldPasswordVisible, setOldPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormValues>();
 
-  // Define the submit handler with the form data type
-
-  const navigateToForgottenPassword = () => router.navigate('(onboarding)/passwordreset1')
+  const navigateToForgottenPassword = () => router.navigate('/(onboarding)/passwordreset1');
 
   const signInUserAndNavigateToEmailVerification: SubmitHandler<FormValues> = async (data) => {
     try {
-      setIsLoading(true);
       
-      const {password, email} = data
+      setIsLoading(true);
+
+      const { password, email } = data;
 
       const body = {
         email,
-        password
-      }
+        password,
+      };
+
       const response = await axios.post('user/signin', body);
-      // Handle the response if needed
+
+      console.log(response.data)
+      dispatch(getUserInfo(response.data.message[0]));
 
       Toast.show({
-        type:"success",
-        text1: "Login Successful",
-        text2:`Welcome back ${response.data.message[0].firstName + " " + response.data.message[0].lastName}`,
-        text1Style:{fontFamily:"MonsterBold", fontSize:15, fontWeight:'normal'},
-        text2Style:{fontFamily:"MonsterMid", fontSize:12, textTransform:"capitalize"}
+        type: 'success',
+        text1: 'Login Successful',
+        text2: `Welcome back ${response.data.message[0].firstName} ${response.data.message[0].lastName}`,
+        text1Style: { fontFamily: 'MonsterBold', fontSize: 15, fontWeight: 'normal' },
+        text2Style: { fontFamily: 'MonsterMid', fontSize: 12, textTransform: 'capitalize' },
       });
 
       setTimeout(() => {
         router.push('/(onboarding)/verification');
-      }, 3000)
+      }, 3000);
+    } catch (err: any) {
+      let errorMessage = 'Something went wrong... Try Again';
+      if (err.response.data.message === 'User does not exist. Please register to gain access' ||
+          err.response.data.message === 'AppwriteException: Invalid credentials. Please check the email and password.') {
+        errorMessage = 'You entered an invalid credential';
+      }
 
-
-    } catch (err) {
-      if(err.response.data.message === 'User does not exist. Please register to gain access'){
-        Toast.show({
-          type:"error",
-          text1: "Login Failed",
-          text2:"You entered an invalid credential",
-          text1Style:{fontFamily:"MonsterBold", fontSize:15, fontWeight:'normal'},
-          text2Style:{fontFamily:"MonsterMid", fontSize:10}
-        });
-  
-      }
-      else if(err.response.data.message === 'AppwriteException: Invalid credentials. Please check the email and password.'){
-        Toast.show({
-          type:"error",
-          text1: "Login Failed",
-          text2:"You entered an invalid credential",
-          text1Style:{fontFamily:"MonsterBold", fontSize:15, fontWeight:'normal'},
-          text2Style:{fontFamily:"MonsterMid", fontSize:10}
-        }); 
-      }
-      else{
-        Toast.show({
-          type:"error",
-          text1: "Login Failed",
-          text2:"Something went wrong... Try Again",
-          text1Style:{fontFamily:"MonsterBold", fontSize:15, fontWeight:'normal'},
-          text2Style:{fontFamily:"MonsterMid", fontSize:10}
-        });
-  
-      }
+      Toast.show({
+        type: 'error',
+        text1: 'Login Failed',
+        text2: errorMessage,
+        text1Style: { fontFamily: 'MonsterBold', fontSize: 15, fontWeight: 'normal' },
+        text2Style: { fontFamily: 'MonsterMid', fontSize: 10 },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -90,14 +77,13 @@ const Signin: React.FC = () => {
     <>
       {isLoading && <Loading />}
 
-      <SafeAreaView style={{ alignItems: 'center', flex: 1, padding: 10, backgroundColor: '#fff' }}>
+      <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
-          <PageHeader label='' />
           <Toast />
           <View style={styles.wrapper}>
-            <Text style={styles.title} className='text-3xl mt-10'>Sign in to Coinnet</Text>
+            <Text style={styles.title}>Sign in to Coinnet</Text>
 
-            <View className='mt-10 mb-5'>
+            <View style={[styles.inputContainer, {marginTop:50}]}>
               <Text style={styles.text}>Email/Phone number</Text>
               <Controller
                 control={control}
@@ -113,10 +99,10 @@ const Signin: React.FC = () => {
                   />
                 )}
               />
-              {errors.email && <Text style={{ color: 'red' }}>{errors.email.message}</Text>}
+              {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
             </View>
 
-            <View>
+            <View style={styles.inputContainer}>
               <Text style={styles.text}>Password</Text>
               <View style={styles.inputWrapper}>
                 <Controller
@@ -135,7 +121,7 @@ const Signin: React.FC = () => {
                   )}
                 />
                 <TouchableOpacity
-                  style={styles.pwdicon}
+                  style={styles.pwdIcon}
                   onPress={() => setOldPasswordVisible(!oldPasswordVisible)}
                 >
                   <Ionicons
@@ -145,80 +131,115 @@ const Signin: React.FC = () => {
                   />
                 </TouchableOpacity>
               </View>
-              {errors.password && <Text style={{ color: 'red' }}>{errors.password.message}</Text>}
+              {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
             </View>
 
-            <View className='flex items-center flex-row mt-10 justify-between text-yellow-400'>
+            <View style={styles.linkContainer}>
               <TouchableOpacity onPress={navigateToForgottenPassword}>
-              <Text style={styles.text} className='text-yellow-400 text-lg'>Forgotten Password</Text>
+                <Text style={styles.linkText}>Forgotten Password</Text>
               </TouchableOpacity>
               <TouchableOpacity>
-              <Text style={styles.text} className='text-yellow-400 text-lg'>Privacy policy</Text>
+                <Text style={styles.linkText}>Privacy policy</Text>
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity onPress={handleSubmit(signInUserAndNavigateToEmailVerification)} style={styles.button} className='bg-yellow-300 mt-20'>
-              <Text style={{ fontFamily: 'MonsterBold' }}>Sign in</Text>
+            <TouchableOpacity onPress={handleSubmit(signInUserAndNavigateToEmailVerification)} style={styles.button}>
+              <Text style={styles.buttonText}>Sign in</Text>
             </TouchableOpacity>
 
-            <View style={styles.wrapper}>
-              <Text style={{fontFamily:'MonsterBold'}}>Don't have an account? <Link style={{color:'orangered'}} href={'(onboarding)/create-account'}>Sign up</Link> </Text>
+            <View style={styles.signupContainer}>
+              <Text style={styles.signupText}>Don't have an account? <Link style={styles.signupLink} href={'/(onboarding)/create-account'}>Sign up</Link></Text>
             </View>
           </View>
         </View>
       </SafeAreaView>
     </>
   );
-}
+};
 
 export default Signin;
 
 const styles = StyleSheet.create({
+  safeArea: {
+    alignItems: 'center',
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  container: {
+    flex: 1,
+    width: '100%',
+    paddingTop:20
+  },
   wrapper: {
     paddingTop: 50,
+  },
+  title: {
+    fontFamily: 'MonsterBold',
+    fontSize: 24, // equivalent to text-3xl
+    marginTop: 10,
+    textAlign: 'left',
+  },
+  text: {
+    fontFamily: 'MonsterBold',
+    fontSize: 16, // equivalent to text-lg
+  },
+  inputContainer: {
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 0.5,
+    borderColor: 'black',
+    borderRadius: 5,
+    padding: 12,
+    marginTop: 10,
+    fontFamily: 'MonsterReg',
+    width: '100%',
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    position: 'relative'
+    position: 'relative',
   },
-  icon: {
+  pwdIcon: {
     position: 'absolute',
     right: 10,
     top: 20,
   },
-  container: {
-    padding: 5,
-  },
-  input: {
-    borderWidth: .5,
-    borderColor: 'black',
-    borderStyle: 'solid',
-    padding: 12,
-    marginTop: 10,
-    borderRadius: 5,
-    fontFamily: 'MonsterReg',
-    width: '100%'
+  errorText: {
+    color: 'red',
   },
   button: {
-    backgroundColor: 'yellow',
+    backgroundColor: '#F9C74F', // equivalent to bg-yellow-300
     width: '100%',
     paddingVertical: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
-    borderRadius: 10
+    borderRadius: 10,
   },
-  title: {
-    fontFamily: 'MonsterBold'
+  buttonText: {
+    fontFamily: 'MonsterBold',
+    color:'white'
   },
-  text: {
-    fontFamily: 'MonsterBold'
+  linkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
-  pwdicon: {
-    position: 'absolute',
-    right: 10,
-    top: 25
-  }
+  linkText: {
+    color: '#F9C74F', // equivalent to text-yellow-400
+    fontSize: 16, // equivalent to text-lg
+  },
+  signupContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  signupText: {
+    fontFamily: 'MonsterBold',
+  },
+  signupLink: {
+    color: '#F9C74F'
+  },
 });

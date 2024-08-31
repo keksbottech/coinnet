@@ -1,38 +1,51 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import PageHeader from '@/components/page header/PageHeader'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import Feather from '@expo/vector-icons/Feather'
-import TradingHeader from '@/components/trading header/TradingHeader'
-import SellCoinsForm from '@/components/sell coins/SellCoins'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Button from '@/components/ui/button/Button'
-import { useRouter } from 'expo-router'
-import tradingHeaderData from '@/app json/tradingheaderbuysell.json'
-
-
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import PageHeader from '@/components/page header/PageHeader';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Feather from '@expo/vector-icons/Feather';
+import TradingHeader from '@/components/trading header/TradingHeader';
+import SellCoinsForm from '@/components/sell coins/SellCoins';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import tradingHeaderData from '@/app json/tradingheaderbuysell.json';
 
 const SellTradingCoin = () => {
-    const router = useRouter()
+  const router = useRouter();
 
-    const navigateToConfirmBuy = () =>{
-        router.push('/')
-    }
+  const navigateToConfirmBuy = () => {
+    router.push('/');
+  };
+
   return (
-    <SafeAreaView style={{flex:1, padding:10, backgroundColor:'white'}}>
-    <View className='h-full'>
-        <PageHeader icon={<FontAwesome name="angle-left" size={24} color="black" />} other={<Feather name="clipboard" size={24} color="black" />} label={<Text className=' text-2xl' style={{fontFamily:'MonsterBold'}}>Trading</Text>} />
-          
-  
-          <TradingHeader style={{marginTop:20}}  data={tradingHeaderData}/>
-
-<SellCoinsForm/>
-<Button styles={{position:'relative'}} label='Sell'/>
-    </View>
+    <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.container}>
+        <PageHeader
+          icon={<FontAwesome name="angle-left" size={24} color="black" />}
+          label={<Text style={styles.headerText}>Trading</Text>}
+        />
+        <TradingHeader style={styles.tradingHeader} data={tradingHeaderData} />
+        <SellCoinsForm />
+      </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default SellTradingCoin
+export default SellTradingCoin;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: 'white',
+  },
+  container: {
+    flex: 1,
+  },
+  headerText: {
+    fontSize: 20,
+    fontFamily: 'MonsterBold',
+  },
+  tradingHeader: {
+    marginTop: 20,
+  },
+});

@@ -87,7 +87,7 @@ const KycVerification = () => {
       } else {
         throw new Error('Failed to upload image');
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error(error);
       Toast.show({
         type: 'error',

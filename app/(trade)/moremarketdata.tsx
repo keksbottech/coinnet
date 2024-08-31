@@ -26,7 +26,7 @@ const MoreMarketData = () => {
           const response = await axios.get('https://api.coincap.io/v2/assets');
           console.log(response.data)
           setMarketData(response.data.data);
-        } catch (error) {
+        } catch (error:any) {
           console.error('Error fetching price:', error.message);
         }
         finally{
@@ -40,7 +40,7 @@ const MoreMarketData = () => {
     <SafeAreaView style={{justifyContent:'center',alignItems:'center'}}>
                 <PageHeader
           icon={<FontAwesome name="angle-left" size={24} color="black" />}
-          label={<Text className='text-2xl' style={{ fontFamily: 'MonsterBold' }}>Market Movers</Text>}
+          label={<Text style={{ fontFamily: 'MonsterBold', fontSize:20 }}>Market Movers</Text>}
         />
           
         {isLoading &&   <Wave size={48} color="black"/>}
@@ -50,7 +50,7 @@ const MoreMarketData = () => {
             data={marketData}
             renderItem={({ item, index }) => {
               if(index >= 0 && index < 50){
-              return <MarketMovers width={{width:screenWidth * 0.95}}  volume={item.volumeUsd24Hr} priceUsd={item.priceUsd} changePercent24Hr={item.changePercent24Hr} symbol={item.symbol}/>
+              return <MarketMovers width={{ width: screenWidth * 0.95 }} volume={item.volumeUsd24Hr} priceUsd={item.priceUsd} changePercent24Hr={item.changePercent24Hr} symbol={item.symbol} image={''}/>
               }
               else {
                 return null

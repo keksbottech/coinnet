@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
-const categories = [
+// Define the type for category objects
+interface Category {
+  name: string;
+  percentage: string;
+  color: string;
+}
+
+const categories: Category[] = [
   { name: 'BTC', percentage: '46%', color: '#FFD700' },
-  { name: 'ATOM', percentage: '35%', color: '#00CDA1' },
-  { name: 'ETH', percentage: '10%', color: '#0080FF' },
-  { name: 'CRO', percentage: '7%', color: '#AA00FF' },
+  { name: 'ETH', percentage: '35%', color: '#00CDA1' },
+  { name: 'BNB', percentage: '10%', color: '#0080FF' },
+  { name: 'USDT', percentage: '7%', color: '#AA00FF' },
 ];
 
-const CategoryButton = ({ name, percentage, color, onPress }) => {
+// Define the type for the props of CategoryButton
+interface CategoryButtonProps {
+  name: string;
+  percentage: string;
+  color: string;
+  onPress: (name: string) => void;
+}
+
+const CategoryButton: React.FC<CategoryButtonProps> = ({ name, percentage, color, onPress }) => {
   return (
     <TouchableOpacity
       style={[styles.categoryButton, { backgroundColor: color }]}
@@ -19,8 +34,9 @@ const CategoryButton = ({ name, percentage, color, onPress }) => {
   );
 };
 
-const AssetsCategories = () => {
-  const handlePress = (name) => {
+const AssetsCategories: React.FC = () => {
+  // Typing the name parameter as string
+  const handlePress = (name: string) => {
     Alert.alert(`You clicked on: ${name}`);
   };
 
@@ -53,7 +69,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     color: '#fff',
-   fontFamily:'MonsterReg'
+    fontFamily: 'MonsterReg',
   },
 });
 

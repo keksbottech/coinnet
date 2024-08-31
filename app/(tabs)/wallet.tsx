@@ -1,136 +1,250 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import AssetWalletBalance from '@/components/asset wallet balance/AssetWalletBalance'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import PageHeader from '@/components/page header/PageHeader'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { Feather } from '@tamagui/lucide-icons'
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import AssetWalletBalance from '@/components/asset wallet balance/AssetWalletBalance';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import PageHeader from '@/components/page header/PageHeader';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Feather } from '@tamagui/lucide-icons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import AssetsActionButton from '@/components/assets action btns/AssetsActionButton'
-import AssetsCategories from '@/components/assets categories/AssetsCategories'
-import BottomDrawer from '@/components/bottom drawer/BottomDrawer'
-import { useRouter } from 'expo-router'
-import MarketChart from '@/components/market chart/MarketChart'
-import WebView from 'react-native-webview'
-
-const assets = [
-  { id: '1', name: 'BTC', fullName: 'Bitcoin', price: 30113.80, change: 2.76, holdings: 0.042148, value: 1270.10 },
-  { id: '2', name: 'ETH', fullName: 'Ethereum', price: 1801.10, change: -1.02, holdings: 0.014914, value: 270.10 },
-  { id: '3', name: 'ATOM', fullName: 'Cosmos', price: 8.87, change: 2.05, holdings: 108.427, value: 961.75 },
-  { id: '4', name: 'CRO', fullName: 'Crypto.com Coin', price: 0.11765, change: 2.38, holdings: 1616.914, value: 190.23 },
-  { id: '5', name: 'ADA', fullName: 'Cardano', price: 0.49, change: -1.24, holdings: 138.8775, value: 68.05 },
-  { id: '6', name: 'ADA', fullName: 'Cardano', price: 1.02, change: 0.01, holdings: 1, value: 1.02 },
-];
+import AssetsActionButton from '@/components/assets action btns/AssetsActionButton';
+import AssetsCategories from '@/components/assets categories/AssetsCategories';
+import BottomDrawer from '@/components/bottom drawer/BottomDrawer';
+import { useRouter } from 'expo-router';
+import MarketChart from '@/components/market chart/MarketChart';
+import { axios } from '@/lib/axios';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { Wave } from 'react-native-animated-spinkit';
+import { Image } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { RefreshControl } from 'react-native';
 
 const Wallet = () => {
   const router = useRouter();
   const [search, setSearch] = useState('');
+  const userData = useAppSelector(state => state.user.user);
+  const [walletAssets, setWalletAssets] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const marketStoredData = useAppSelector(state => state.market.marketData);
+  const [refreshing, setRefreshing] = useState(false)
 
-  const filteredAssets = assets.filter(asset =>
-    asset.name.toLowerCase().includes(search.toLowerCase()) ||
-    asset.fullName.toLowerCase().includes(search.toLowerCase())
+  useFocusEffect(
+    useCallback(() => {
+      fetchWalletBalanceCoins();
+      return () => {
+        console.log('Screen is unfocused, cleaning up...');
+      };
+    }, [])
+  );
+
+  const fetchWalletBalanceCoins = async () => {
+    try {
+      setIsLoading(true);
+      const body = { userId: userData._id };
+      const response = await axios.post('wallets/balances', body);
+      const btcData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BTC');
+      const ethData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'ETH');
+      const usdcData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'USDC');
+      const bnbData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BNB');
+
+      const walletAssets = {
+        balances: response.data.message,
+        btcData,
+        ethData,
+        usdcData,
+        bnbData,
+      };
+  
+      setWalletAssets([walletAssets]);
+    } catch (err:any) {
+      console.log(err.response.data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredAssets = walletAssets?.map((asset: { btcData: { DISPLAY: { USD: { PRICE: string; CHANGEPCT24HOUR: string; }; }; CoinInfo: { ImageUrl: any; }; }; balances: { BTC: number; ETH: number; USDC: number; BNB: number; }; ethData: { DISPLAY: { USD: { PRICE: string; CHANGEPCT24HOUR: string; }; }; CoinInfo: { ImageUrl: any; }; }; usdcData: { DISPLAY: { USD: { PRICE: string; CHANGEPCT24HOUR: string; }; }; CoinInfo: { ImageUrl: any; }; }; bnbData: { DISPLAY: { USD: { PRICE: string; CHANGEPCT24HOUR: string; }; }; CoinInfo: { ImageUrl: any; }; }; }) => {
+    return [
+      {
+        name: 'BTC',
+        fullName: 'Bitcoin',
+        price: parseFloat(asset.btcData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        change: parseFloat(asset.btcData?.DISPLAY?.USD.CHANGEPCT24HOUR),
+        holdings: asset.balances.BTC,
+        value: asset.balances.BTC * parseFloat(asset.btcData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        image: asset.btcData?.CoinInfo?.ImageUrl,
+      },
+      {
+        name: 'ETH',
+        fullName: 'Ethereum',
+        price: parseFloat(asset.ethData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        change: parseFloat(asset.ethData?.DISPLAY?.USD.CHANGEPCT24HOUR),
+        holdings: asset.balances.ETH,
+        value: asset.balances.ETH * parseFloat(asset.ethData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        image: asset.ethData?.CoinInfo?.ImageUrl,
+      },
+      {
+        name: 'USDC',
+        fullName: 'Tether',
+        price: parseFloat(asset.usdcData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        change: parseFloat(asset.usdcData?.DISPLAY?.USD.CHANGEPCT24HOUR),
+        holdings: asset.balances.USDC,
+        value: asset.balances.USDC * parseFloat(asset.usdcData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        image: asset.usdcData?.CoinInfo?.ImageUrl,
+      },
+      {
+        name: 'BNB',
+        fullName: 'Binance Coin',
+        price: parseFloat(asset.bnbData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        change: parseFloat(asset.bnbData?.DISPLAY?.USD.CHANGEPCT24HOUR),
+        holdings: asset.balances.BNB,
+        value: asset.balances.BNB * parseFloat(asset.bnbData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        image: asset.bnbData?.CoinInfo?.ImageUrl,
+      },
+    ];
+  }).flat().filter((asset: { fullName: string; name: string; }) => 
+    asset.fullName.toLowerCase() || 
+    asset.name.toLowerCase()
   );
 
   const navigateToSettings = () => {
-    router.push('(other)/settings');
+    router.push('/(other)/settings');
   };
+
+  
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([fetchWalletBalanceCoins()]);
+    setRefreshing(false);
+  };
+
 
   return (
     <>
-      <SafeAreaView style={{ flex: 1, padding: 10 }}>
+    <ScrollView
+               refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+    >
+      <SafeAreaView style={styles.safeArea}>
         <PageHeader
           icon={<FontAwesome name="angle-left" size={24} color="black" />}
-          other={
-            <TouchableOpacity onPress={navigateToSettings}>
-              <Feather name="clipboard" size={24} color="black" />
-            </TouchableOpacity>
-          }
-          label={<Text className='text-2xl' style={{ fontFamily: 'MonsterBold' }}>Wallet</Text>}
+          label={<Text style={[styles.label, styles.text2xl]}>Wallet</Text>}
         />
 
-        <View style={{ paddingTop: 30 }}>
-          <TouchableOpacity style={{ borderWidth: 1, borderColor: 'black', padding: 10, borderRadius: 10 }}>
-            <Text className='text-center text-2xl' style={{ fontFamily: 'MonsterMid' }}>Portfolio</Text>
+        <View style={styles.contentContainer}>
+          <TouchableOpacity style={styles.portfolioButton}>
+            <Text style={[styles.textCenter, styles.text2xl]}>Portfolio</Text>
           </TouchableOpacity>
           <AssetsCategories />
           <AssetWalletBalance />
           <AssetsActionButton />
         </View>
+        
       </SafeAreaView>
 
-      <BottomDrawer enablePanDownToClose={false} ui={
-        <View>
-          {/* Header with search and filter icons */}
-          <View style={styles.drawerHeader}>
-            <Text style={styles.drawerTitle}>My Assets</Text>
-            <View style={styles.iconsContainer}>
-              <TouchableOpacity style={{marginRight:10}}>
-                <Ionicons name="search-outline" size={24} color="black" />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Ionicons name="filter-outline" size={24} color="black" />
-              </TouchableOpacity>
-            </View>
-          </View>
 
-          {/* List of assets */}
-          {filteredAssets.map((item) => (
-            <View key={item.id} style={styles.assetContainer}>
-              <View style={styles.leftSection}>
-                <View style={styles.iconPlaceholder}>
-                  <Ionicons name="logo-bitcoin" size={24} color="#F7931A" />
-                </View>
-                <View>
-                  <Text style={styles.assetName}>{item.name}</Text>
-                  <Text style={styles.assetPrice}>{`$${item.price.toFixed(2)}`}</Text>
-                </View>
-              </View>
-              <View style={styles.body}>
-            <MarketChart />
-            <Text style={[{ color: item.change > 0 ? 'green' : 'red' }, {fontFamily:'MonsterBold'}]}>{`${item.change > 0 ? '+' : ''}${item.change}%`}</Text>
-          </View>
-              <View style={styles.rightSection}>
-                <Text style={styles.holdings}>{item.holdings}</Text>
-                <Text style={[{ color: item.change > 0 ? 'green' : 'red' }, {fontFamily:'MonsterBold'}]}>{`$${item.value.toFixed(2)}`}</Text>
-            
+      </ScrollView>
+      <BottomDrawer   enablePanDownToClose={false} ui={
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={{ flex: 1 }}>
+            <View style={styles.drawerHeader}>
+              <Text style={styles.drawerTitle}>My Assets</Text>
+              <View style={styles.iconsContainer}>
+                <TouchableOpacity style={styles.iconMargin}>
+                  <Ionicons name="search-outline" size={24} color="black" />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Ionicons name="filter-outline" size={24} color="black" />
+                </TouchableOpacity>
               </View>
             </View>
-          ))}
-        </View>
+
+            {isLoading && (
+              <View style={styles.loadingContainer}>
+                <Wave size={40} />
+              </View>
+            )}
+
+            {filteredAssets.map((item: { name: React.Key | null | undefined; image: any; fullName: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; price: number; change: number; holdings: number; value: number; }) => (
+              <View key={item.name} style={styles.assetContainer}>
+                <View style={styles.leftSection}>
+                  <View style={styles.iconPlaceholder}>
+                    <Image source={{ uri: `https://cryptocompare.com${item.image}` }} width={50} height={50} />
+                  </View>
+                  <View>
+                    <Text style={styles.assetName}>{item.fullName}</Text>
+                    <Text style={styles.assetPrice}>{`$${+item.price.toFixed(2)}`}</Text>
+                  </View>
+                </View>
+                <View style={styles.body}>
+                  <MarketChart styles={undefined} />
+                  <Text style={[{ color: item.change > 0 ? 'green' : 'red' }, styles.fontBold]}>
+                    {`${item.change > 0 ? '+' : ''}${item.change.toFixed(2)}%`}
+                  </Text>
+                </View>
+                <View style={styles.rightSection}>
+                  <Text style={styles.holdings}>{item.holdings.toFixed(4)}</Text>
+                  <Text style={[{ color: item.change > 0 ? 'green' : 'red' }, styles.fontBold]}>
+                    {`$${+item.value.toFixed(2)}`}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
       } />
     </>
-  )
-}
+  );
+};
 
 export default Wallet;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
+  safeArea: {
+    flex: 1,
+  },
+  label: {
+   fontFamily:'MonsterBold'
+  },
+  text2xl: {
+    fontSize: 24,
+    fontFamily:'MonsterBold'
+  },
+  contentContainer: {
+   
+  },
+  portfolioButton: {
+    marginBottom: 20,
+  },
+  textCenter: {
+    textAlign: 'center',
   },
   drawerHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    padding: 10,
   },
   drawerTitle: {
     fontSize: 18,
- fontFamily:'MonsterBold'
+   fontFamily:'MonsterBold'
   },
   iconsContainer: {
     flexDirection: 'row',
+  },
+  iconMargin: {
+    marginRight: 10,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   assetContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
+    padding: 10,
+    borderBottomColor: '#ccc',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
   },
   leftSection: {
     flexDirection: 'row',
@@ -140,35 +254,24 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   assetName: {
-    fontSize: 16,
-  fontFamily:'MonsterBold'
+   fontFamily:'MonsterBold'
   },
   assetPrice: {
-    fontSize: 14,
-    color: '#888',
+    color: 'gray',
     fontFamily:'MonsterReg'
   },
+  body: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fontBold: {
+   fontFamily:'MonsterBold'
+  },
   rightSection: {
+    justifyContent: 'center',
     alignItems: 'flex-end',
   },
   holdings: {
-    fontSize: 16,
-    color: '#000',
-    fontFamily:'MonsterReg'
+   fontFamily:'MonsterBold'
   },
-  value: {
-    fontSize: 16,
-    color: '#000',
-    
-  fontFamily:'MonsterReg'
-  },
-  body: {
-    alignItems: 'center',
-    justifyContent: 'center',
-   
-  },
-  text:{
-    fontFamily:'MonsterBold',
-    color:'green'
-  }
 });

@@ -11,7 +11,7 @@ type OTPArray = string[];
 
 const OTPInput = forwardRef<TextInput[], OTPInputProps>(({ numberOfInputs = 6, onOtpChange }, ref) => {
   const [otp, setOtp] = useState<OTPArray>(new Array(numberOfInputs).fill(''));
-  const inputRefs = useRef<(TextInput | null)[]>([]);
+  const inputRefs = useRef<(TextInput | null | any)[]>([]);
 
   useImperativeHandle(ref, () => inputRefs.current);
 
