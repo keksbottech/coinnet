@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -45,7 +45,11 @@ const BanksBottomDrawer: React.FC = () => {
       setBanks(res);
 
       dispatch(getPaymentBanks({ name: res.name, bankCode: res.code, type: res.type }));
+
+
     } catch (err) {
+      ToastAndroid.show('Error fetching banks. Try again!', ToastAndroid.SHORT);
+
       console.log(err);
     } finally {
       setIsLoading(false);
@@ -60,6 +64,7 @@ const BanksBottomDrawer: React.FC = () => {
 
   return (
     <BottomDrawer
+    
       ui={
         <View style={styles.container}>
           <Text style={styles.title}>Choose Bank</Text>

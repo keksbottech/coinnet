@@ -64,6 +64,8 @@ export function SessionHandler({layoutReady}:any) {
 // console.log(userSession)
       const checkSession = async () => {
         try{
+      // const session = await axios.get('user/session')
+      // console.log('sessoppm',session.data)
 
         if (!userSession) {
           router.replace('/(onboarding)/signin')
@@ -79,7 +81,7 @@ export function SessionHandler({layoutReady}:any) {
       };
   
       checkSession();
-    }, [userSession, router, isSessionChecked]);  
+    }, [userSession, isSessionChecked]);  
 
   return (
     <Stack>

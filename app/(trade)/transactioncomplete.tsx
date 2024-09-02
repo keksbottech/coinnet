@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import TransactionComplete from '@/components/transaction complete/TransactionComplete';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -14,6 +14,10 @@ const TransactionCompletePage = () => {
   const navigateToTransactionHistory = () => {
     router.push('/(trade)/transactionhistory');
   };
+
+
+
+
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

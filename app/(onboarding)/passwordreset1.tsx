@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform, ToastAndroid } from 'react-native';
 import React, { useState } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import Input from '@/components/ui/input/Input';
@@ -37,9 +37,9 @@ const Passwordreset = () => {
       setIsLoading(true)
       const {email} = data
 
+      console.log(email)
       
-      
-      const getUserInfo = await axios.post('user/get/info', {email})
+      const getUserInfo = await axios.post('user/get/info', {email, userId: userData._id})
 
       console.log(getUserInfo)
 
@@ -51,6 +51,7 @@ const Passwordreset = () => {
       const sendOtp = await axios.post('user/otp/email/send', body)
       
       console.log(sendOtp)
+      
       const updateData = {
         email: getUserInfo?.data.message.email,
         otpId: sendOtp.data.message.userId,
@@ -64,11 +65,7 @@ const Passwordreset = () => {
       
       dispatch(getUserForgottenEmail(getUserInfo.data.message.email))
 
-      Toast.show({
-        type:'success',
-        text1:'Otp Sent Successfully',
-        text2:'Redirecting...'
-      })
+      ToastAndroid.show('Otp sent successfully!', ToastAndroid.LONG);
 
       setTimeout(() => {
         router.navigate('/(onboarding)/confirmationemail')
@@ -77,19 +74,13 @@ const Passwordreset = () => {
     catch(err:any){
       console.log(err)
       if(err.response.data.message === 'User does not have a email or does not exist'){
-        Toast.show({
-          type:'error',
-          text1:'Otp Failed To Send',
-          text2:'Email does not have an account...'
-        })
+
+        ToastAndroid.show('Failed! Email does not exist!', ToastAndroid.SHORT);
+
       }
       else{
-        Toast.show({
-          type:'error',
-          text1:'Otp Failed To Send',
-          text2:'Something went wrong... Try again'
-        })
-  
+        ToastAndroid.show('Failed! Something went wrong...', ToastAndroid.SHORT);
+
       }
 
     }

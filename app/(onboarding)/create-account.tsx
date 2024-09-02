@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, KeyboardAvoidingView, StyleSheet, Platform } from 'react-native';
+import { View, Text, ScrollView, KeyboardAvoidingView, StyleSheet, Platform, ToastAndroid } from 'react-native';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import PageHeader from '@/components/page header/PageHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -78,11 +78,9 @@ const CreateAccount: React.FC = () => {
 
   console.log(response.data)
 
-  Toast.show({
-    type:'success',
-    text1:'Signup Successful',
-    text2:'User account was created successfully. Redirecting...'
-  })
+  ToastAndroid.show('Signed up successfully! Redirecting...', ToastAndroid.LONG);
+
+
 
 
   dispatch(getUserInfo(response.data.message[0]))
@@ -96,33 +94,20 @@ const CreateAccount: React.FC = () => {
     catch(err:any){
       if(err.response.data.message === 'User email exists in our database'){
         console.log(true)
-        Toast.show({
-          type:'error',
-          text1:'Signup Failed',
-          text2:'User with the email exists in our application'
-        })
+        ToastAndroid.show('Failed! User exists already...', ToastAndroid.LONG);
+
       }
       else if(err.response.data.message === 'You have a missing parameter (firstname, lastname, password, email)'){
-        Toast.show({
-          type:'error',
-          text1:'Signup Failed',
-          text2:'You are missing an input'
-        })
+        ToastAndroid.show('Failed! You have a missing parameter!', ToastAndroid.LONG);
       }
       else if(err.response.data.message === 'AppwriteException: A user with the same id, email, or phone already exists in this project.'){
         await logoutUser()
-        Toast.show({
-          type:'error',
-          text1:'Signup Failed',
-          text2:'User with the email exists in our application'
-        })
+        ToastAndroid.show('Failed! User exists already...', ToastAndroid.LONG);
+
       }
       else {
-        Toast.show({
-          type:'error',
-          text1:'Signup Failed',
-          text2:'Something went wrong... Try again'
-        })
+        ToastAndroid.show('Failed! Something went wrong', ToastAndroid.LONG);
+
       }
       console.log(err)
     }

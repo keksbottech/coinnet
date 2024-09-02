@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, ScrollView } from 'react-native'; 
+import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, ToastAndroid } from 'react-native'; 
 import React, { useState, useEffect } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -72,6 +72,8 @@ const PayWithFlutterwaveScreen = () => {
 
       router.push('/(other)/webview');
     } catch (err) {
+      ToastAndroid.show('Failed to initalize payment! Try again', ToastAndroid.SHORT);
+
       console.log(err);
     } finally {
       setIsLoading(false);

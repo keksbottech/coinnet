@@ -17,6 +17,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getWalletTotalBalance } from '@/lib/store/reducers/storeWalletBalances';
 import { getMarketData } from '@/lib/store/reducers/storeMarketData';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
+import { ToastAndroid } from 'react-native';
 
 const Home = () => {
   const router = useRouter();
@@ -31,16 +32,16 @@ const Home = () => {
   const[refreshing, setRefreshing] = useState(false)
 
 
-  // useEffect(() =>{
+  useEffect(() =>{
 
-  //   if(userData.isPhoneVerified){
-  //     return 
-  //   }
-  //   else {
-  //     router.push('/(onboarding)/twostepverification')
-  //   }
+    if(userData.isPhoneVerified){
+      return 
+    }
+    else {
+      router.push('/(onboarding)/twostepverification')
+    }
 
-  // }, [])
+  }, [])
 
   // useEffect(() => {
   //    checkSession()
@@ -101,6 +102,7 @@ const Home = () => {
     
     }
     catch(err:any){
+      ToastAndroid.show('Something went wrong fetching your balance. Try refreshing!', ToastAndroid.SHORT);
 
       console.log(err.response.data)
     }
@@ -120,7 +122,7 @@ const Home = () => {
       console.log('dkd')
       const response = await axios.post('wallets/balances', body);
   
-      console.log(response)
+      console.log(response.data.message)
       const btcData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BTC');
       const ethData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'ETH');
       const usdcData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'USDC');
@@ -141,6 +143,7 @@ const Home = () => {
   
       // console.log(response.data);
     } catch (err:any) {
+      ToastAndroid.show('Something went wrong fetching your balance. Try refreshing!', ToastAndroid.SHORT);
       console.log(err.response.data);
     }
     finally{
@@ -216,10 +219,10 @@ const Home = () => {
 
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    fetchPrice();
-  }, [])
+  //   fetchPrice();
+  // }, [])
 
   const navigateToProfile = () => {
     router.push('/(other)/profile');
@@ -247,6 +250,8 @@ const Home = () => {
         dispatch(getMarketData(response.data.Data))
         setMarketData(response.data.Data);
       } catch (error) {
+        ToastAndroid.show('Error fetching market price!', ToastAndroid.SHORT);
+
         console.error('Error fetching price:', error);
       }
       finally{
@@ -331,7 +336,7 @@ const Home = () => {
             showsHorizontalScrollIndicator={false}
        
           />
-          
+
 
           <View style={styles.portfolioHeader}>
             <Text style={styles.portfolioTitle}>Portfolio</Text>

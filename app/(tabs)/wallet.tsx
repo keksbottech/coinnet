@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, ToastAndroid } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import AssetWalletBalance from '@/components/asset wallet balance/AssetWalletBalance';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -46,6 +46,7 @@ const Wallet = () => {
       const usdcData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'USDC');
       const bnbData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BNB');
 
+      console.log(response.data.message)
       const walletAssets = {
         balances: response.data.message,
         btcData,
@@ -56,6 +57,8 @@ const Wallet = () => {
   
       setWalletAssets([walletAssets]);
     } catch (err:any) {
+      ToastAndroid.show('Something went wrong fetching your balance. Try refreshing!', ToastAndroid.SHORT);
+
       console.log(err.response.data);
     } finally {
       setIsLoading(false);
@@ -89,7 +92,7 @@ const Wallet = () => {
         change: parseFloat(asset.usdcData?.DISPLAY?.USD.CHANGEPCT24HOUR),
         holdings: asset.balances.USDC,
         value: asset.balances.USDC * parseFloat(asset.usdcData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
-        image: asset.usdcData?.CoinInfo?.ImageUrl,
+        image:asset.usdcData?.CoinInfo?.ImageUrl
       },
       {
         name: 'BNB',
@@ -117,6 +120,9 @@ const Wallet = () => {
     setRefreshing(false);
   };
 
+  const navigateToHistory = () => {
+    router.push('/(trade)/transactionhistory')
+  }
 
   return (
     <>
@@ -127,6 +133,9 @@ const Wallet = () => {
     >
       <SafeAreaView style={styles.safeArea}>
         <PageHeader
+        other={<TouchableOpacity onPress={navigateToHistory}>
+                    <Ionicons name="time-outline" size={24}  />
+        </TouchableOpacity>}
           icon={<FontAwesome name="angle-left" size={24} color="black" />}
           label={<Text style={[styles.label, styles.text2xl]}>Wallet</Text>}
         />
@@ -183,7 +192,7 @@ const Wallet = () => {
                   </Text>
                 </View>
                 <View style={styles.rightSection}>
-                  <Text style={styles.holdings}>{item.holdings.toFixed(4)}</Text>
+                  <Text style={styles.holdings}>{item.holdings.toFixed(6)}</Text>
                   <Text style={[{ color: item.change > 0 ? 'green' : 'red' }, styles.fontBold]}>
                     {`$${+item.value.toFixed(2)}`}
                   </Text>

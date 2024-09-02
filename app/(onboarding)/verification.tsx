@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import PageHeader from '@/components/page header/PageHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -43,33 +43,21 @@ const Verification = () => {
 
       const sendOtp = await axios.post('user/otp/phone/send', body);
       setOtpId(sendOtp.data.message.userId);
-      
-      Toast.show({
-        type: 'success',
-        text1: 'Otp Sent Successfully',
-        text2: 'Check your phone for the otp code sent to you',
-      });
+  
+      ToastAndroid.show('OTP sent successfully!', ToastAndroid.LONG);
 
     } catch (err: any) {
       console.log(err);
       if (err.response.data.message === 'AppwriteException: Document with the requested ID already exists. Try again with a different ID or use ID.unique() to generate a unique ID.') {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'User already exists. Try another phone number to create an account',
-        });
+        ToastAndroid.show('Failed! User already exists', ToastAndroid.SHORT);
+
       } else if (err.response.data.message === 'Phone number already in use by another user') {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'Phone number already in use by another user',
-        });
+
+        ToastAndroid.show('Failed! Phone number already in use', ToastAndroid.SHORT);
+
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'Check the number or your internet connection',
-        });
+        ToastAndroid.show('Failed! Something went wrong...', ToastAndroid.SHORT);
+
       }
 
     } finally {
@@ -94,11 +82,7 @@ const Verification = () => {
 
       dispatch(getUserSession(response.data.message));
 
-      Toast.show({
-        type: 'success',
-        text1: 'Otp Verification Successful',
-        text2: 'Redirecting...',
-      });
+      ToastAndroid.show('Otp Verification Successful!', ToastAndroid.SHORT);
 
       setTimeout(() => {
         router.push('/(tabs)');
@@ -106,17 +90,11 @@ const Verification = () => {
     } catch (err: any) {
       console.log(err);
       if (err.response.data.message === 'AppwriteException: Document with the requested ID already exists. Try again with a different ID or use ID.unique() to generate a unique ID.') {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'User already exists. Try another phone number to create an account',
-        });
+        ToastAndroid.show('User already exists...', ToastAndroid.SHORT);
+
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'Check the number or your internet connection',
-        });
+        ToastAndroid.show('Failed! Check the number or connection and try again...', ToastAndroid.SHORT);
+
       }
     } finally {
       setIsLoading(false);

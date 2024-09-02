@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ToastAndroid } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
@@ -62,20 +62,15 @@ const DisputeScreen = () => {
       if (data.secure_url) {
         console.log(data.secure_url)
         setImageUri(data.secure_url); // Store the Cloudinary URL
-        Toast.show({
-          type: 'success',
-          text1: 'Image uploaded successfully!',
-        });
+        ToastAndroid.show('Image uploaded successfully!', ToastAndroid.SHORT);
+
       } else {
         throw new Error('Failed to upload image');
       }
     } catch (error:any) {
       console.error(error);
-      Toast.show({
-        type: 'error',
-        text1: 'Image upload failed',
-        text2: error.message,
-      });
+      ToastAndroid.show('Failed to upload image!', ToastAndroid.SHORT);
+
     } finally {
       setIsLoading(false);
     }
@@ -99,7 +94,7 @@ try{
 
  console.log(response.data)
  
- alert('Dispute Submitted! Title: ' + data.title + ', Message: ' + data.message);
+ ToastAndroid.show('Dispute submitted successfully!', ToastAndroid.SHORT);
 
  setTimeout(() => {
   router.back()
@@ -107,6 +102,8 @@ try{
 }
 catch(err){
   console.log(err)
+  ToastAndroid.show('Failed to send dispute!', ToastAndroid.SHORT);
+
 }
 finally{
   setIsLoading(false)

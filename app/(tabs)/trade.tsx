@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import PageHeader from '@/components/page header/PageHeader'
 import EvilIcons from '@expo/vector-icons/EvilIcons'
@@ -76,6 +76,8 @@ const Trading = () => {
 
     }
     catch(err){
+      ToastAndroid.show('Something went wrong fetching data. Try refreshing!', ToastAndroid.SHORT);
+
       console.log(err)
     }
   }
@@ -111,6 +113,8 @@ const Trading = () => {
       }
     }
     catch(err){
+      ToastAndroid.show('Something went wrong fetching your pair data. Try refreshing!', ToastAndroid.SHORT);
+
       console.log(err)
     }
     finally{

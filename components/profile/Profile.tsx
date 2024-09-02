@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 import Feather from '@expo/vector-icons/Feather';
@@ -22,6 +22,7 @@ const ProfileScreen = () => {
 
   const selectImage = async () => {
     // Request permission to access media library
+    try{
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -42,6 +43,11 @@ const ProfileScreen = () => {
       setImageUri(result.assets[0].uri);
       await uploadImage(result.assets[0].uri); // Upload image to Cloudinary
     }
+  }
+  catch(err){
+    ToastAndroid.show('Failed to access image! Try again', ToastAndroid.SHORT);
+    console.log(err)
+  }
   };
 
 
@@ -72,20 +78,13 @@ const ProfileScreen = () => {
       if (data.secure_url) {
         console.log(data.secure_url)
         setImageUri(data.secure_url); // Store the Cloudinary URL
-        Toast.show({
-          type: 'success',
-          text1: 'Image uploaded successfully!',
-        });
+        ToastAndroid.show('Image uploaded successfully', ToastAndroid.SHORT);
       } else {
         throw new Error('Failed to upload image');
       }
     } catch (error:any) {
       console.error(error);
-      Toast.show({
-        type: 'error',
-        text1: 'Image upload failed',
-        text2: error.message,
-      });
+      ToastAndroid.show('Failed to upload image! Try again', ToastAndroid.SHORT);
     } finally {
       setIsLoading(false);
     }
@@ -102,19 +101,22 @@ const ProfileScreen = () => {
 
       const response = await axios.post('user/logout', body)
 
+      ToastAndroid.show('Logged out successfully!', ToastAndroid.SHORT);
+
       dispatch(getUserSession(null))
 
 
-      Toast.show({
-        type:'success',
-        text1:'Logged out successfully'
-      })
+      // Toast.show({
+      //   type:'success',
+      //   text1:'Logged out successfully'
+      // })
 
       setTimeout(() => {
         router.push('/(onboarding)/signin')
       }, 2000);
     }
     catch(err){
+      ToastAndroid.show('Failed to logout! Try again', ToastAndroid.SHORT);
       console.log(err)
     }
     finally{
@@ -233,12 +235,12 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'yellow',
+    backgroundColor: '#F9C74F',
     borderRadius: 5,
     top:100
   },
   logoutButtonText: {
-    color: '#000',
+    color: 'white',
     fontFamily: 'MonsterBold',
   
   },

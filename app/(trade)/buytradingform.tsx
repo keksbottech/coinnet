@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ToastAndroid } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '@/components/ui/button/Button';
@@ -73,6 +73,7 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
     }
     const createEscrow = await axios.post('escrow/create', body)
 
+    ToastAndroid.show('Success!', ToastAndroid.SHORT);
 
     dispatch(getEscrowData(createEscrow.data.escrow._id))
 
@@ -80,6 +81,7 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
     router.push(`/(trade)/chats/${sellerId}`);
     }
     catch(err){
+      ToastAndroid.show('Failed to send request! Try again', ToastAndroid.SHORT);
         console.log(err)
     }
     finally{

@@ -20,7 +20,7 @@ const AllDoneAccountCreation = () => {
         <View>
           <Text style={styles.allDoneText}>All done</Text>
           <Text style={styles.congratsText}>
-            Congratulations! Your account has been successfully added
+            Congratulations! Your account is all set up
           </Text>
         </View>
         <Button onClick={navigateToPasswordReset} label="Done" />

@@ -6,7 +6,7 @@ import { getMessagesData } from '@/lib/store/reducers/storeMessages';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, ToastAndroid } from 'react-native';
 import { BackHandler } from 'react-native';
 import { Alert } from 'react-native';
 import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
@@ -113,6 +113,7 @@ const ChatListScreen: React.FC = () => {
       setChats(chatPreviews);
       dispatch(getMessagesData(chatPreviews));
     } catch (err) {
+      ToastAndroid.show('Failed to fetch chat previews! Try again', ToastAndroid.SHORT);
       console.error(err);
     } finally {
       setIsLoading(false);

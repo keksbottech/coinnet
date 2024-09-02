@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform, ToastAndroid } from 'react-native';
 import React, { useRef, useState } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -62,11 +62,8 @@ const Passwordreset2 = () => {
          
         dispatch(getUserSession(verifyOtp.data.message))
 
-        Toast.show({
-          type:'success',
-          text1:'Otp Sent Successfully',
-          text2:'Redirecting...'
-        })
+        ToastAndroid.show('Otp verified successfully!', ToastAndroid.SHORT);
+
 
         
         setTimeout(() => {
@@ -76,11 +73,8 @@ const Passwordreset2 = () => {
     }
     catch(err){
       console.log(err)
-      Toast.show({
-        type:'error',
-        text1:'Invalid Otp',
-        text2:'The code you provided is incorrect'
-      })
+      ToastAndroid.show('Failed! Invalid Otp', ToastAndroid.SHORT);
+
     }
     finally{
       setIsLoading(false)
@@ -98,11 +92,7 @@ const Passwordreset2 = () => {
 
       const sendOtp = await axios('user/otp/email/send', body)
 
-      Toast.show({
-        type:'success',
-        text1:'Otp Sent Successfully',
-        text2:'Redirecting...'
-      })
+      ToastAndroid.show('Otp sent successfully!', ToastAndroid.SHORT);
 
       setTimeout(() => {
         router.navigate('/(onboarding)/confirmationemail')
@@ -111,11 +101,8 @@ const Passwordreset2 = () => {
     catch(err){
       // console.log(err)
       
-      Toast.show({
-        type:'error',
-        text1:'Otp Failed To Send',
-        text2:'Something went wrong... Try again'
-      })
+      ToastAndroid.show('Failed! Something went wrong. Try again', ToastAndroid.SHORT);
+
 
     }
     finally{
@@ -162,7 +149,7 @@ const Passwordreset2 = () => {
             </View>
 
             <TouchableOpacity onPress={navigateToPasswordReset3} style={styles.button}>
-  <Text style={styles.buttonText}>Entered</Text>
+  <Text style={styles.buttonText}>Submit</Text>
 </TouchableOpacity>
       
 

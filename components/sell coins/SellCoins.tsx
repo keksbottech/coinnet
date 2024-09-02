@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity, ToastAndroid } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import BitcoinImage from '@/assets/svg/bitcoin.svg';
@@ -63,11 +63,7 @@ const SellCoinForm: React.FC = () => {
 
       console.log(response.data)
 
-
-      Toast.show({
-        type:'success',
-        text1:'Order posted successfully',
-      })
+      ToastAndroid.show('Order posted successfully', ToastAndroid.SHORT);
 
       setTimeout(() => {
         router.push('/(trade)/buytrading')
@@ -77,11 +73,7 @@ const SellCoinForm: React.FC = () => {
     }
     catch(err:any){
       console.log(err.response.data)
-      Toast.show({
-        type:'error',
-        text1:'Failed to post order',
-        text2:'Check your internet connection or try again'
-      })
+      ToastAndroid.show('Failed to posy order! Try again', ToastAndroid.SHORT);
     }
     finally{
       setIsLoading(false)

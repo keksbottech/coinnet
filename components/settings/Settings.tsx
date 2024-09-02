@@ -51,6 +51,10 @@ const SettingsScreen = () => {
   const navigateToReferals = () => {
     router.push('/(other)/sharewithfriends')
   }
+
+  const navigateToHistory = () => {
+    router.push('/(trade)/transactionhistory')
+  }
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -94,7 +98,7 @@ const SettingsScreen = () => {
       <Text style={styles.label}>Finance</Text>
 
       <View style={styles.section}>
-        <TouchableOpacity style={styles.row}>
+        <TouchableOpacity onPress={navigateToHistory} style={styles.row}>
           <Ionicons name="time-outline" size={24} style={styles.icon} />
           <Text style={styles.text}>History</Text>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />

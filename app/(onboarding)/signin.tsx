@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { TextInput, TouchableOpacity, StyleSheet, View, Text, SafeAreaView } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { TextInput, TouchableOpacity, StyleSheet, View, Text, SafeAreaView, ToastAndroid, BackHandler } from 'react-native';
+import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { Ionicons } from '@expo/vector-icons';
 import PageHeader from '@/components/page header/PageHeader';
@@ -24,6 +24,18 @@ const Signin: React.FC = () => {
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormValues>();
 
+  useFocusEffect(
+  useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
   const navigateToForgottenPassword = () => router.navigate('/(onboarding)/passwordreset1');
 
   const signInUserAndNavigateToEmailVerification: SubmitHandler<FormValues> = async (data) => {
@@ -43,13 +55,8 @@ const Signin: React.FC = () => {
       console.log(response.data)
       dispatch(getUserInfo(response.data.message[0]));
 
-      Toast.show({
-        type: 'success',
-        text1: 'Login Successful',
-        text2: `Welcome back ${response.data.message[0].firstName} ${response.data.message[0].lastName}`,
-        text1Style: { fontFamily: 'MonsterBold', fontSize: 15, fontWeight: 'normal' },
-        text2Style: { fontFamily: 'MonsterMid', fontSize: 12, textTransform: 'capitalize' },
-      });
+      ToastAndroid.show('Logged in successfully!', ToastAndroid.SHORT);
+
 
       setTimeout(() => {
         router.push('/(onboarding)/verification');
@@ -82,6 +89,7 @@ const Signin: React.FC = () => {
           <Toast />
           <View style={styles.wrapper}>
             <Text style={styles.title}>Sign in to Coinnet</Text>
+
 
             <View style={[styles.inputContainer, {marginTop:50}]}>
               <Text style={styles.text}>Email/Phone number</Text>

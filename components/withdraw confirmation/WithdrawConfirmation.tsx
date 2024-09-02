@@ -7,7 +7,9 @@ const WithdrawConfirmation = () => {
   const bankData = useAppSelector(state => state.paymentUrl.paymentBank)
 
 
-  return (
+
+  console.log(withdrawData, 'withdraw dataaza')
+    return (
     <View style={styles.container}>
       {
       bankData.name ?
@@ -18,17 +20,19 @@ const WithdrawConfirmation = () => {
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Account Number</Text>
-        <Text style={styles.value}>{withdrawData.accountNumber}</Text>
+        <Text style={styles.value}>{withdrawData.account_number}</Text>
       </View>
       </> :       <View style={styles.row}>
         <Text style={styles.label}>Paypal Email</Text>
-        <Text style={styles.value}>{withdrawData.paypalEmail}</Text>
+        <Text style={styles.value}>{withdrawData.email}</Text>
       </View>
 }
+{bankData.name &&
       <View style={styles.row}>
         <Text style={styles.label}>Account Name</Text>
-        <Text style={styles.value}>{withdrawData.accountName}</Text>
+        <Text style={styles.value}>{withdrawData.name}</Text>
       </View>
+}
       <View style={styles.row}>
         <Text style={styles.label}>Withdrawal Amount</Text>
         <Text style={styles.value}>${withdrawData.amount}</Text>
@@ -39,7 +43,7 @@ const WithdrawConfirmation = () => {
       </View>
       <View style={styles.row}>
         <Text style={styles.label}>Total Withdrawal Amount</Text>
-        <Text style={styles.value}>${+withdrawData.amount + 8 }</Text>
+        <Text style={styles.value}>${withdrawData.amount + 8 }</Text>
       </View>
     </View>
   );

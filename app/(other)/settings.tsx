@@ -14,7 +14,6 @@ const Settings = () => {
     <SafeAreaView style={styles.safeArea}>
       <PageHeader
         icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        other={<Feather name="search" size={24} color="black" />}
         label={<Text style={styles.pageHeaderLabel}>Settings</Text>}
       />
       <View style={styles.container}>

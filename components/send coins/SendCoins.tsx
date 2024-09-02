@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, ToastAndroid } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BitcoinImage from '@/assets/svg/bitcoin.svg';
 import { Separator } from 'tamagui';
@@ -42,8 +42,22 @@ const SendCoins = () => {
 
       
       const response = await axios.post('wallets/send/coin', body);
+      ToastAndroid.show('Transaction successfull!', ToastAndroid.SHORT);
+
+      setTimeout(() => {
+        router.push('/(tabs)/wallet')        
+      }, 2000);
+
       console.log(response.data); // Handle the response as needed
     } catch (err) {
+      if(err.response.data.message === 'Receiver wallet not found'){
+        ToastAndroid.show('Invalid wallet address!', ToastAndroid.SHORT);
+
+      }
+      else{
+        ToastAndroid.show('Something went wrong... Try again!', ToastAndroid.SHORT);
+      }
+
       console.log(err);
     } finally {
       setIsLoading(false);
@@ -60,7 +74,8 @@ const SendCoins = () => {
           <Text style={styles.title}>Select Coin</Text>
           <View style={styles.coinSelector}>
             <TouchableOpacity onPress={enableBottomDrawer} style={styles.coin}>
-              <BitcoinImage />
+         
+         
               <View style={styles.coinText}>
                 <Text style={styles.coinName}>{selectedCoin?.name}</Text>
                 <Text style={styles.coinBalance}>{selectedCoin?.balance}</Text>
@@ -91,7 +106,7 @@ const SendCoins = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Amount</Text>
+            <Text style={styles.label}>Coin Amount</Text>
             <Controller
               control={control}
               name="amount"

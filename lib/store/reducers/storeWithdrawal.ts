@@ -19,7 +19,7 @@ export const storeWithdrawaleDataSlice = createSlice({
         state.withdrawal = action.payload
     },
     getWithdrawalMethod: (state, action: PayloadAction<any>) => {
-      state.withdrawal = action.payload
+      state.withdrawMethod = action.payload
   }
   },
 })

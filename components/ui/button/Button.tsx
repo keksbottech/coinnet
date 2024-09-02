@@ -1,21 +1,22 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 type ButtonPropTypes = {
   label?: string;
   styles?: object;
   onClick?: () => void;
   disabled?: boolean;
+  textStyle?: object
 };
 
-const Button = ({ label, styles, disabled, onClick }: ButtonPropTypes) => {
+const Button = ({ label, styles, disabled, onClick, textStyle }: ButtonPropTypes) => {
   return (
     <TouchableOpacity
       disabled={disabled}
       onPress={onClick}
       style={[defaultStyles.button, styles]}
     >
-      <Text style={defaultStyles.text}>{label}</Text>
+      <Text style={[defaultStyles.text, textStyle]}>{label}</Text>
     </TouchableOpacity>
   );
 };

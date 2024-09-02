@@ -7,6 +7,7 @@ import { axios } from '@/lib/axios';
 import Toast from 'react-native-toast-message';
 import Loading from '../loading/Loading';
 import Button from '../ui/button/Button';
+import { ToastAndroid } from 'react-native';
 
 const ChangePassword = () => {
   const [oldPasswordVisible, setOldPasswordVisible] = useState(false);
@@ -41,18 +42,14 @@ const ChangePassword = () => {
 
       console.log(response);
 
-      Toast.show({
-        type: 'success',
-        text1: 'Password Updated'
-      });
+      ToastAndroid.show('Password changed successfully!', ToastAndroid.SHORT);
+
 
     } catch (err) {
       console.log(err);
-      Toast.show({
-        type: 'error',
-        text1: 'Unable to update password',
-        text2: 'Check your connection and try again'
-      });
+
+      ToastAndroid.show('Unable to update password. Try again!', ToastAndroid.SHORT);
+
     } finally {
       setIsLoading(false);
     }
@@ -166,7 +163,7 @@ const ChangePassword = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+
   },
   inputContainer: {
     flexDirection: 'row',

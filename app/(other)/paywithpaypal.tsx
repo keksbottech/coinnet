@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, Platform, ScrollView, ToastAndroid } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
@@ -58,14 +58,18 @@ const PayWithPaypalScreen = () => {
         coin: selectedCoin.symbol,
       };
 
+      console.log(body)
+
       const response = await axios.post('paypal/initialize', body);
 
       console.log(response.data);
 
-      dispatch(getPaymentUrl(response.data.approvalUrl));
+      dispatch(getPaymentUrl(response.data.message));
 
       router.push('/(other)/webview')
     } catch (err) {
+      ToastAndroid.show('Failed to initialize payment! Try again', ToastAndroid.SHORT);
+
       console.log(err);
     } finally {
       setIsLoading(false);
@@ -91,7 +95,7 @@ const PayWithPaypalScreen = () => {
             <View style={styles.mainContainer}>
               <Text style={styles.title}>Deposit with Paypal</Text>
 
-              <Text>Select Coin to Buy</Text>
+              <Text style={[styles.labels, {marginTop:20}]}>Select Coin to Buy</Text>
               <TouchableOpacity onPress={enableBottomDrawer} style={styles.withdrawToContainer}>
                 <View style={styles.iconContainer}>
                   <FontAwesome name="bank" size={24} color="black" />
@@ -134,6 +138,7 @@ const PayWithPaypalScreen = () => {
                 </View>
               </View>
 
+<Text style={styles.labels}>Note: Balances might take a while to reflect using paypal</Text>
               <TouchableOpacity onPress={changePaymentMethod}>
                 <Text style={styles.changeMethod}>Change Deposit Method</Text>
               </TouchableOpacity>

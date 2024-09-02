@@ -8,7 +8,6 @@ const NumberStepProgress = ({currentStep} :any) => {
       // setCurrentStep(currentStep + 1);
     }
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.progressContainer}>
@@ -18,8 +17,8 @@ const NumberStepProgress = ({currentStep} :any) => {
               style={[
                 styles.circle,
                 {
-                  backgroundColor: currentStep >= step ? 'yellow' : 'white',
-                  borderColor: currentStep >= step ? 'yellow' : '#ccc',
+                  backgroundColor: currentStep >= step ? '#F9C74F' : 'white',
+                  borderColor: currentStep >= step ? '#F9C74F' : '#ccc',
                 },
               ]}
               onPress={() => currentStep(step)}
@@ -30,7 +29,7 @@ const NumberStepProgress = ({currentStep} :any) => {
               <View
                 style={[
                   styles.line,
-                  { backgroundColor: currentStep > step ? 'yellow' : '#ccc' },
+                  { backgroundColor: currentStep > step ? '#F9C74F' : '#ccc' },
                 ]}
               />
             )}

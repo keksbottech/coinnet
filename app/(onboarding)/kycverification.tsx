@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform, ToastAndroid } from 'react-native';
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import PageHeader from '@/components/page header/PageHeader';
@@ -80,20 +80,17 @@ const KycVerification = () => {
       if (data.secure_url) {
         console.log(data.secure_url)
         setImageUri(data.secure_url); // Store the Cloudinary URL
-        Toast.show({
-          type: 'success',
-          text1: 'Image uploaded successfully!',
-        });
+        ToastAndroid.show('Image uploaded successfully!', ToastAndroid.LONG);
+
       } else {
-        throw new Error('Failed to upload image');
+        ToastAndroid.show('Failed to upload image', ToastAndroid.LONG);
+
+        throw new Error('Failed to upload image. Try again');
       }
     } catch (error:any) {
       console.error(error);
-      Toast.show({
-        type: 'error',
-        text1: 'Image upload failed',
-        text2: error.message,
-      });
+      ToastAndroid.show('Failed to upload image. Try again', ToastAndroid.LONG);
+
     } finally {
       setIsLoading(false);
     }
@@ -117,32 +114,21 @@ const KycVerification = () => {
       }
 
       if(!imageUri){
-        Toast.show({
-          type: 'error',
-          text1: 'Nin Image Needed',
-          text2: 'You must upload your nin slip',
-        });
+        ToastAndroid.show('You must upload your NIN slip', ToastAndroid.LONG);
       }
       const response = await axios.post('kyc/send', body)
 
       console.log(response.data)
+      ToastAndroid.show('Data have been received. Pending verification', ToastAndroid.LONG);
 
-      Toast.show({
-        type: 'success',
-        text1: 'Verification successful',
-        text2: 'Redirecting',
-      });
 
       setTimeout(() => {
         router.push('/(onboarding)/alldone');
       }, 2000);
+
     } catch (err) {
       console.log(err);
-      Toast.show({
-        type: 'error',
-        text1: 'Verification not successful',
-        text2: 'Try again',
-      });
+      ToastAndroid.show('Failed. Try again', ToastAndroid.LONG);
     } finally {
       setIsLoading(false);
     }

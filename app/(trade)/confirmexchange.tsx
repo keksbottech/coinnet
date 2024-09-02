@@ -20,7 +20,7 @@ const ConfirmExchange = () => {
       <PageHeader
         icon={<FontAwesome name="angle-left" size={24} color="black" />}
         other={<AntDesign name="infocirlceo" size={24} color="black" />}
-        label={<Text style={styles.headerText}>Confirmation</Text>}
+        label={<Text style={styles.headerText}>Exchange Confirmation</Text>}
       />
       <View style={styles.container}>
         <ConfirmationExchange />

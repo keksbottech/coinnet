@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAppSelector } from '@/hooks/useAppSelector';
@@ -27,10 +27,11 @@ const TransactionAuthenticationCode = () => {
   });
   const withdrawMethod = useAppSelector(state => state.withdrawal.withdrawMethod)
 
-  useEffect(() => {
-    sendPhoneConfirmationOtpToValidate();
-  }, []);
+  // useEffect(() => {
+  //   sendPhoneConfirmationOtpToValidate();
+  // }, []);
 
+   console.log(withdrawMethod)
   const sendPhoneConfirmationOtpToValidate = async () => {
     try {
       setIsLoading(true);
@@ -39,33 +40,22 @@ const TransactionAuthenticationCode = () => {
         phone: userData?.phone,
       };
 
+      console.log(body)
+
       const sendOtp = await axios.post('user/otp/phone/send', body);
       setOtpId(sendOtp.data.message.userId);
-      Toast.show({
-        type: 'success',
-        text1: 'Otp Sent Successfully',
-        text2: 'Check your phone for the otp code sent to you',
-      });
+
+      ToastAndroid.show('Otp sent successfully!', ToastAndroid.SHORT);
+
       setOtpSuccess(true);
     } catch (err:any) {
       if (err.response?.data?.message === 'AppwriteException: Document with the requested ID already exists. Try again with a different ID or use ID.unique() to generate a unique ID.') {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'User already exists. Try another phone number to create an account',
-        });
+        ToastAndroid.show('Failed! Contact customer service', ToastAndroid.SHORT);
       } else if (err.response?.data?.message === 'Phone number already in use by another user') {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'Phone number already in use by another user',
-        });
+        ToastAndroid.show('Failed! Something went wrong', ToastAndroid.SHORT);
+
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'Check the number or your internet connection',
-        });
+        ToastAndroid.show('Failed! Something went wrong. Contact customer support', ToastAndroid.SHORT);
       }
     } finally {
       setIsLoading(false);
@@ -75,42 +65,82 @@ const TransactionAuthenticationCode = () => {
   const onSubmit = async (data:any) => {
     try {
       setIsLoading(true);
+
       const body = {
-        userId: userData?._id,
-        convertFrom: exchangeData.selectFrom,
-        convertTo: exchangeData.selectTo,
-        toAmount: exchangeData.toAmount,
-        fromAmount: exchangeData.fromAmount,
+        userId: otpId,
+        otp: data.code,
       };
 
-      if (otpSuccess) {
+      const response = await axios.post('user/otp/verify', body);
+
+      
+      ToastAndroid.show('Otp verified successfully!', ToastAndroid.SHORT);
+
+      if (true) {
+
+        console.log(transactionData)
+
         if (transactionData === 'exchange') {
+          const body = {
+            userId: userData?._id,
+            convertFrom: exchangeData.selectFrom,
+            convertTo: exchangeData.selectTo,
+            toAmount: exchangeData.toAmount,
+            fromAmount: exchangeData.fromAmount,
+          };
+
           await axios.post('exchange', body);
+          ToastAndroid.show('Exchange Successful!', ToastAndroid.SHORT);
+
           router.push('/(trade)/transactioncomplete');
         } else if (transactionData === 'withdrawal') {
-          if(withdrawMethod === 'paystack' || withdrawMethod ==='Paystack'){
+
+          if(withdrawMethod.name === 'Bank Transfer'){
             await axios.post('withdraw/paystack', withdrawalData);
+            ToastAndroid.show('Withdrawal successful!', ToastAndroid.SHORT);
+
             router.push('/(trade)/transactioncomplete');
           }
-          else if(withdrawMethod === 'flutterwave' || withdrawMethod ==='Flutterwave'){
-            await axios.post('withdraw/flutterwave', withdrawalData);
-            router.push('/(trade)/transactioncomplete');
-          }
-          else if(withdrawMethod === 'paypal' || withdrawMethod ==='Paypal'){
+          // else if(withdrawMethod === 'flutterwave' || withdrawMethod ==='Flutterwave'){
+          //   await axios.post('withdraw/flutterwave', withdrawalData);
+          //   ToastAndroid.show('Withdrawal successful!', ToastAndroid.SHORT);
+
+          //   router.push('/(trade)/transactioncomplete');
+          // }
+          else if(withdrawMethod.name === 'payPal' || withdrawMethod.name ==='PayPal'){
             const paypalBody = {
               userId: userData._id,
               amount: withdrawalData.amount, 
               currency: 'USD', 
-              recipientEmail: withdrawalData.email
+              recipientEmail: withdrawalData.email,
+              coin: withdrawalData.coin,
+              coinAmount: withdrawalData.coinAmount
             }
+
+            console.log(paypalBody, 'from paypal')
             await axios.post('withdraw/paypal', paypalBody);
+            ToastAndroid.show('Withdrawal successful!', ToastAndroid.SHORT);
+
             router.push('/(trade)/transactioncomplete');
           }
 
 
         }
       }
-    } catch (err) {
+    } catch (err:any) {
+      if(err?.response.data.message === 'Insufficient balance'){
+        ToastAndroid.show('Failed! Insufficient funds. Redirecting to fund...', ToastAndroid.SHORT);
+
+        setTimeout(() => {
+          router.push('/(tabs)')
+        }, 2000);
+      }
+      else if(err?.response.data.message === 'AppwriteException: Invalid token passed in the request.'){
+        ToastAndroid.show('Failed! Invalid Token...', ToastAndroid.SHORT);
+      }
+      else {
+        ToastAndroid.show('Failed! Something went wrong. Try again or resend otp', ToastAndroid.SHORT);
+      }
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -118,9 +148,10 @@ const TransactionAuthenticationCode = () => {
   };
 
   return (
+    <>
+          {isLoading && <Loading />}
+
     <SafeAreaView style={styles.safeArea}>
-      {isLoading && <Loading />}
-      <Toast />
       <View style={styles.container}>
         <Text style={styles.title}>Enter authentication code</Text>
         <Text style={styles.subtitle}>
@@ -153,11 +184,13 @@ const TransactionAuthenticationCode = () => {
           <Button
             styles={styles.resendButton}
             label='Resend code'
+            textStyle={{color:'black'}}
             onClick={sendPhoneConfirmationOtpToValidate}
           />
         </View>
       </View>
     </SafeAreaView>
+    </>
   );
 };
 

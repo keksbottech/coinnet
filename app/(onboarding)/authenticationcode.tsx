@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import React, { useState } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import Input from '@/components/ui/input/Input';
@@ -53,11 +53,7 @@ const AuthenticationCode = () => {
 
       dispatch(getUserInfo(updates.data.message));
 
-      Toast.show({
-        type: 'success',
-        text1: 'Otp Sent Successfully',
-        text2: 'Check your phone for the otp code sent to you',
-      });
+      ToastAndroid.show('Otp sent successfully!', ToastAndroid.LONG);
 
     } catch (err: any) {
       console.log(err);
@@ -69,23 +65,14 @@ const AuthenticationCode = () => {
 
   const handleOtpError = (err:any) => {
     if (err.response.data.message === 'AppwriteException: Document with the requested ID already exists. Try again with a different ID or use ID.unique() to generate a unique ID.') {
-      Toast.show({
-        type: 'error',
-        text1: 'Otp failed to send',
-        text2: 'User already exists. Try another phone number to create an account',
-      });
+  ToastAndroid.show('Failed! User already exists', ToastAndroid.LONG);
+
     } else if (err.response.data.message === 'Phone number already in use by another user') {
-      Toast.show({
-        type: 'error',
-        text1: 'Otp failed to send',
-        text2: 'Phone number already in use by another user',
-      });
+      ToastAndroid.show('Failed! User already exists', ToastAndroid.LONG);
+
     } else {
-      Toast.show({
-        type: 'error',
-        text1: 'Otp failed to send',
-        text2: 'Check the number or your internet connection',
-      });
+      ToastAndroid.show('Failed! Check the phone or internet connection', ToastAndroid.LONG);
+
     }
   };
 
@@ -105,18 +92,14 @@ const AuthenticationCode = () => {
 
       const updateData = {
         isPhoneVerified: true,
-        userId: userData?._id,
       };
 
-      const updateIsVerified = await axios.patch('user/update', updateData);
+      const updateIsVerified = await axios.patch('user/update', {userId: userData?._id, isNotUpdating: false,updateData});
 
       dispatch(getUserInfo(updateIsVerified.data.message));
 
-      Toast.show({
-        type: 'success',
-        text1: 'Otp Verification Successful',
-        text2: 'Redirecting...',
-      });
+      ToastAndroid.show('Otp verified successfully! Redirecting...', ToastAndroid.LONG);
+
 
       setTimeout(() => {
         router.push('/(onboarding)/kycverification');
@@ -130,31 +113,38 @@ const AuthenticationCode = () => {
     }
   };
 
-  const resendUserPhoneOtp = async () => {
-    try {
-      const body = {
-        userId: userData?.userAuthId,
-        phone: userData?.phone,
-      };
+  // const reSenendPhoneConfirmationOtpToValidate = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const body = {
+  //       userId: userData?.userAuthId,
+  //       phone: userData?.phone,
+  //     };
 
-      const sendOtp = await axios.post('user/otp/phone/send', body);
+  //     const sendOtp = await axios.post('user/otp/phone/send', body);
+  //     setOtpId(sendOtp.data.message.userId);
+  
+  //     ToastAndroid.show('OTP sent successfully!', ToastAndroid.LONG);
 
-      Toast.show({
-        type: 'success',
-        text1: 'Otp Sent Successfully',
-        text2: 'Check your phone for the otp code sent to you',
-      });
-    } catch (err) {
-      console.log(err);
-      Toast.show({
-        type: 'error',
-        text1: 'Invalid Code',
-        text2: 'The code you provided is invalid',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   } catch (err: any) {
+  //     console.log(err);
+  //     if (err.response.data.message === 'AppwriteException: Document with the requested ID already exists. Try again with a different ID or use ID.unique() to generate a unique ID.') {
+  //       ToastAndroid.show('Failed! User already exists', ToastAndroid.SHORT);
+
+  //     } else if (err.response.data.message === 'Phone number already in use by another user') {
+
+  //       ToastAndroid.show('Failed! Phone number already in use', ToastAndroid.SHORT);
+
+  //     } else {
+  //       ToastAndroid.show('Failed! Something went wrong...', ToastAndroid.SHORT);
+
+  //     }
+
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
 
   return (
     <>
@@ -198,6 +188,7 @@ const AuthenticationCode = () => {
               onClick={sendPhoneConfirmationOtpToValidate}
               styles={styles.resendButton}
               label="Resend code"
+              textStyle={{color:'black'}}
             />
           </View>
         </View>

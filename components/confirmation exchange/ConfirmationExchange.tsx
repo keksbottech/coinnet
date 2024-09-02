@@ -68,7 +68,7 @@ const ConfirmationExchange = () => {
           <Separator />
           <View style={styles.orderRow}>
             <Text style={styles.orderLabel}>To</Text>
-            <Text style={styles.orderLabel}>{exchangeData.toAmount} {exchangeData.selectedToCoin}</Text>
+            <Text style={styles.orderLabel}>{exchangeData.toAmount} {exchangeData.selectTo}</Text>
           </View>
 
           <Separator />

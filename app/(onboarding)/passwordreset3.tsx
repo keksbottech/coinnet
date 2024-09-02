@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView, Platform, Alert, ToastAndroid } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'expo-router';
@@ -54,11 +54,7 @@ const PasswordReset3 = () => {
 
     console.log(response)
 
-    Toast.show({
-      type:'success',
-      text1: 'Password Updated',
-      text2:'Redirecting'
-    })
+    ToastAndroid.show('Password updated successfully!', ToastAndroid.LONG);
 
     setTimeout(() => {
          router.push('/(onboarding)/passwordreset4'); 
@@ -67,11 +63,7 @@ const PasswordReset3 = () => {
   }
   catch(err){
     console.log(err)
-    Toast.show({
-      type:'error',
-      text1: 'Unable to update password',
-      text2:'Check your connection and try again'
-    })
+    ToastAndroid.show('Failed! Unable to update password!', ToastAndroid.LONG);
   }
   finally{
     setIsLoading(false)

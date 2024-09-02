@@ -41,27 +41,40 @@ const ConvertForm = () => {
   const coinShortForms: Record<string, string> = {
     bitcoin: 'BTC',
     ethereum: 'ETH',
-    usdt: 'USDC',
-    bnb: 'BNB',
+    tether: 'USDC',
+    binanceCoin: 'BNB',
   };
 
   const fromAmount = watch('fromAmount');
   const selectedFromCoin = watch('selectedFromCoin');
   const selectedToCoin = watch('selectedToCoin');
 
+
+
   useEffect(() => {
+    console.log(selectedFromCoin, 'from')
+    console.log(selectedToCoin, 'to')
     if (fromAmount) {
       const fromCoinData = marketStoredData.find(
-        (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name?.toLowerCase() === coinShortForms[selectedFromCoin].toLowerCase()
-      );
-      const toCoinData = marketStoredData.find(
-        (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name?.toLowerCase() === coinShortForms[selectedToCoin].toLowerCase()
+        (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name === coinShortForms[selectedFromCoin]
       );
 
+      console.log(fromCoinData, 'from data')
+      const toCoinData = marketStoredData.find(
+        (coin: { CoinInfo: { Name: string; }; }) =>
+           coin.CoinInfo?.Name=== coinShortForms[selectedToCoin]
+        );
+
+      console.log(toCoinData,'to')
       if (fromCoinData && toCoinData) {
-        const rate = toCoinData.RAW?.USD?.PRICE / fromCoinData.RAW?.USD?.PRICE;
-        const calculatedToAmount = (parseFloat(fromAmount) * rate).toFixed(6);
+        const fromAmountInUSD = parseFloat(fromAmount) * fromCoinData.RAW?.USD?.PRICE;
+
+        const calculatedToAmount = (fromAmountInUSD / toCoinData.RAW?.USD?.PRICE).toFixed(9);
+
         setValue('toAmount', calculatedToAmount);
+
+        console.log(fromAmountInUSD)
+        console.log(calculatedToAmount)
       } else {
         setValue('toAmount', '');
       }
@@ -77,10 +90,10 @@ const ConvertForm = () => {
     const selectTo = coinShortForms[selectedToCoin];
 
     const fromCoinData = marketStoredData.find(
-      (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name?.toLowerCase() === selectFrom.toLowerCase()
+      (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name === selectFrom
     );
     const toCoinData = marketStoredData.find(
-      (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name?.toLowerCase() === selectTo.toLowerCase()
+      (coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo?.Name=== selectTo
     );
 
     if (fromCoinData && toCoinData) {
@@ -110,7 +123,7 @@ const ConvertForm = () => {
             <Picker selectedValue={value} onValueChange={onChange} style={styles.picker}>
               <Picker.Item label="Bitcoin (BTC)" value="bitcoin" />
               <Picker.Item label="Tether (USDC)" value="tether" />
-              <Picker.Item label="Binance Coin (BNB)" value="binance coin" />
+              <Picker.Item label="Binance Coin (BNB)" value="binanceCoin" />
               <Picker.Item label="Ethereum (ETH)" value="ethereum" />
             </Picker>
           )}
@@ -125,7 +138,7 @@ const ConvertForm = () => {
               <Picker.Item label="Ethereum (ETH)" value="ethereum" />
               <Picker.Item label="Bitcoin (BTC)" value="bitcoin" />
               <Picker.Item label="Tether (USDC)" value="tether" />
-              <Picker.Item label="Binance Coin (BNB)" value="binance coin" />
+              <Picker.Item label="Binance Coin (BNB)" value="binanceCoin" />
             </Picker>
           )}
         />

@@ -12,6 +12,7 @@ import {
   Easing,
   Alert,
   BackHandler,
+  ToastAndroid,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
@@ -128,6 +129,8 @@ const ChatScreen = ({
         return [...updatedMessages, ...uniqueMessages];
       });
     } catch (error) {
+      ToastAndroid.show('Failed to fetch messages. Refetching!', ToastAndroid.SHORT);
+
       console.error('Failed to fetch messages:', error);
     }
   };
@@ -194,6 +197,8 @@ const ChatScreen = ({
           )
         );
       } catch (error) {
+        ToastAndroid.show('Failed to send message, try again!', ToastAndroid.SHORT);
+
         console.error('Failed to send message:', error);
         // If sending fails, keep the message in "sending" status or handle it appropriately
       }
@@ -235,6 +240,8 @@ const ChatScreen = ({
       }
 
     } catch (error) {
+      ToastAndroid.show('Something went wrong uploading image. Try again!', ToastAndroid.SHORT);
+
       console.error(error);
     } 
   };
@@ -268,6 +275,8 @@ const ChatScreen = ({
         )
       );
     } catch (error) {
+      ToastAndroid.show('Failed to send image. Try again!', ToastAndroid.SHORT);
+
       console.error('Failed to send image:', error);
     }
   };
@@ -311,6 +320,7 @@ const ChatScreen = ({
         }
     }
     catch(err){
+      ToastAndroid.show('Something went wrong updating escrow status!', ToastAndroid.SHORT);
       console.log(err)
     }
   }
@@ -330,12 +340,14 @@ const ChatScreen = ({
       Alert.alert('Awaiting seller to confirm payment!');
     }
     catch(err){
+      ToastAndroid.show('Something went wrong sending request! Try again', ToastAndroid.SHORT);
+
       console.log(err)
     }
     finally{
       setIsLoading(false)
     }
-  }
+  } 
 
   const sellerVerifiesPayment = async () => {
     try{
@@ -348,6 +360,8 @@ const ChatScreen = ({
       Alert.alert('Payment Confirmed!');
     }
     catch(err){
+      ToastAndroid.show('Something went wrong sending request. Try again!', ToastAndroid.SHORT);
+
       console.log(err)
     }
   }

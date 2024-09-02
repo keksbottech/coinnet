@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, ToastAndroid } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '@/components/ui/button/Button';
@@ -74,6 +74,7 @@ const PayWithPaystackScreen = () => {
 
       router.push('/(other)/webview');
     } catch (err) {
+      ToastAndroid.show('Payment fetched to initialize! Try again', ToastAndroid.SHORT);
       console.log(err);
     } finally {
       setIsLoading(false);
@@ -99,7 +100,7 @@ const PayWithPaystackScreen = () => {
             <View style={styles.container}>
               <Text style={styles.title}>Deposit with Paystack</Text>
               <View style={styles.wrapper}>
-                <Text>Select Coin to Buy</Text>
+                <Text style={[styles.labels, {marginTop:20}]}>Select Coin to Buy</Text>
                 <TouchableOpacity onPress={enableBottomDrawer} style={styles.withdrawToContainer}>
                   <View style={styles.withdrawToInnerContainer}>
                     <FontAwesome name="bank" size={24} color="black" />

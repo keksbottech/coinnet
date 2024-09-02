@@ -19,6 +19,7 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import { TouchableOpacity } from 'react-native';
 import { RefreshControl } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { ToastAndroid } from 'react-native';
 
 const BuyTrading = () => {
     const router = useRouter();
@@ -34,13 +35,9 @@ const BuyTrading = () => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        if (disableBackPress) {
-          router.push('/(trade)')
+          router.push('/(tabs)/trade')
 
-          return disableBackPress; // Prevent default back press behavior
-        } else {
-          return disableBackPress; // Allow default back press behavior
-        }
+          return true; // Prevent default back press behavior
       };
 
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
@@ -71,6 +68,7 @@ const BuyTrading = () => {
         dispatch(getOrdersData(response.data.message));
   
       } catch (err) {
+        ToastAndroid.show('Failed to fetch orders! Try again', ToastAndroid.SHORT);
         console.log(err);
       } finally {
         setIsLoading(false);
@@ -93,6 +91,7 @@ const BuyTrading = () => {
         console.log(response.data)
         dispatch(getOrdersData(response.data.message));
       } catch (err) {
+        ToastAndroid.show('Failed to orders based on selected! Try again', ToastAndroid.SHORT);
         console.log(err);
       } finally {
         setIsLoading(false);

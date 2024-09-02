@@ -16,6 +16,7 @@ import { Wave } from 'react-native-animated-spinkit'
 import { TouchableOpacity } from 'react-native'
 import { getMarketData } from '@/lib/store/reducers/storeMarketData'
 import { useAppDispatch } from '@/hooks/useAppDispatch'
+import { ToastAndroid } from 'react-native'
 
 
 const Market = () => {
@@ -73,6 +74,8 @@ const Market = () => {
       setMarketData([response.data.data]); 
     }
     catch(err){
+      ToastAndroid.show('Something went wrong fetching data. Try refreshing!', ToastAndroid.SHORT);
+
       console.log(err)
     }
     finally{

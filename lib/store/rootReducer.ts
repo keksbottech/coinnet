@@ -13,6 +13,7 @@ import storeWithdrawal from './reducers/storeWithdrawal'
 import storeTransactionAuthentication from './reducers/storeTransactionAuthentication'
 import storeMessages from './reducers/storeMessages'
 import storeEscrowData from './reducers/storeEscrowData'
+import storeTransactionHistory from './reducers/storeTransactionHistory'
 
 
 export const rootReducer = combineReducers({
@@ -29,5 +30,6 @@ export const rootReducer = combineReducers({
    withdrawal: storeWithdrawal,
    transaction: storeTransactionAuthentication,
    messages: storeMessages,
-   escrow: storeEscrowData
+   escrow: storeEscrowData,
+   transactionHistory: storeTransactionHistory
 })

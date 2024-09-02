@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { FlatList } from 'react-native'
@@ -27,6 +27,7 @@ const MoreMarketData = () => {
           console.log(response.data)
           setMarketData(response.data.data);
         } catch (error:any) {
+          ToastAndroid.show('Failed to fetch price! Try again', ToastAndroid.SHORT);
           console.error('Error fetching price:', error.message);
         }
         finally{

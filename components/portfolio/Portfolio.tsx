@@ -23,7 +23,7 @@ const Portfolio = ({style, name, symbol, image ='', priceUsd, changePercent24Hr}
           </View>
         </View>
         <View style={styles.rightSection}>
-          <Text style={styles.price}>{priceUsd}</Text>
+          <Text style={styles.price}>{parseFloat(priceUsd).toFixed(6)}</Text>
           <Text style={[{ color: changePercent24Hr > 0 ? 'green' : 'red' }, {fontFamily:'MonsterBold'}]}>
                     {`${changePercent24Hr > 0 ? '+' : ''}${changePercent24Hr.toFixed(2)}%`}
                   </Text>

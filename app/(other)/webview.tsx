@@ -1,13 +1,16 @@
 import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, Text, ActivityIndicator, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { useFocusEffect } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 export default function Pay() {
   const paymentUrl = useAppSelector(state => state.paymentUrl.paymentUrl);
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef(null);
+  const router = useRouter()
 
   const handleLoadStart = () => {
     setLoading(true);
@@ -32,14 +35,29 @@ export default function Pay() {
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        router.push('/(tabs)/wallet')
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {loading && (
+      {/* {loading && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#0000ff" />
           <Text>Loading payment...</Text>
         </View>
-      )}
+      )} */}
       <WebView
         ref={webViewRef}
         source={{ uri: paymentUrl }}

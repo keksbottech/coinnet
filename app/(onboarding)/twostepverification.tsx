@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ToastAndroid } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PageHeader from '@/components/page header/PageHeader';
@@ -59,33 +59,19 @@ const TwoStepVerification = () => {
 
       dispatch(getUserInfo(updates.data.message))
 
-      Toast.show({
-        type: 'success',
-        text1: 'Otp Sent Successfully',
-        text2: 'Check your phone for the otp code sent to you',
-      });
+      ToastAndroid.show('OTP sent successfully!', ToastAndroid.SHORT);
+
       setTimeout(() => {
         router.push('/(onboarding)/authenticationcode');
       }, 2000);
+
     } catch (err: any) {
       if (err.response.data.message === 'AppwriteException: Document with the requested ID already exists. Try again with a different ID or use ID.unique() to generate a unique ID.') {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'User already exists. Try another phone number to create an account',
-        });
+        ToastAndroid.show('Failed! User with the phone exists', ToastAndroid.LONG);
       } else if (err.response.data.message === 'Phone number already in use by another user') {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'Phone number already in use by another user',
-        });
+        ToastAndroid.show('Failed! User with the phone exists', ToastAndroid.LONG);
       } else {
-        Toast.show({
-          type: 'error',
-          text1: 'Otp failed to send',
-          text2: 'Check the number or your internet connection',
-        });
+        ToastAndroid.show('Failed! Check the phone number or internet connection', ToastAndroid.LONG);
       }
     } finally {
       setIsLoading(false);
