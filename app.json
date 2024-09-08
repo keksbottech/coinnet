@@ -22,7 +22,10 @@
           {
             "CFBundleURLSchemes": ["260896974979-drjr3qqlgbchbdr3i8gug891m6u0bhhn.apps.googleusercontent.com"]
           }
-        ]
+        ],
+        "NSAppTransportSecurity": {
+          "NSAllowArbitraryLoads":true
+        }
       }
     },
     "android": {
@@ -39,8 +42,16 @@
     },
     "plugins": [
       "expo-router",
-      "expo-apple-authentication"
-    ],
+      "expo-apple-authentication",
+      [
+      "expo-build-properties",
+      {
+        "andriod":{
+          "usesCleartextTraffic":true
+        }
+      }
+    ]
+  ],
     "experiments": {
       "typedRoutes": true
     },
@@ -54,9 +65,6 @@
     },
     "runtimeVersion": {
       "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/05812bd1-2b46-4887-bce3-463ac6024201"
     }
   }
 }

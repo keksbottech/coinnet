@@ -15,6 +15,7 @@ import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import Toast, { BaseToast, ToastOptions } from 'react-native-toast-message';
 import Loading from '@/components/loading/Loading';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '@/components/ThemedText';
 
 // Define the shape of the form data
 interface FormValues {
@@ -31,6 +32,7 @@ const CreateAccount: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useAppDispatch()
   const userData = useAppSelector(state => state.user.user)
+  const theme = useAppSelector(state => state.theme.theme)
 
   // Initialize react-hook-form
   const { control, handleSubmit, formState: { errors } } = useForm<FormValues>({
@@ -140,7 +142,7 @@ const CreateAccount: React.FC = () => {
   return (
     <>
     {isLoading && <Loading/>}
-    <SafeAreaView style={{ flex: 1, padding: 10 }}>
+    <SafeAreaView style={[{ flex: 1, padding: 10 },  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
     <Toast/>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -151,48 +153,50 @@ const CreateAccount: React.FC = () => {
 
           <View style={styles.container}>
             <View>
-              <Text style={[styles.label, styles.title]}>Create your account</Text>
+              <ThemedText style={[styles.label, styles.title]}>Create your account</ThemedText>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>First Name</Text>
+                <ThemedText style={styles.label}>First Name</ThemedText>
                 <Controller
                   control={control}
                   name="firstName"
                   rules={{ required: 'First name is required' }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
-                      style={styles.input}
+                      style={[styles.input,  {color:theme ? 'white': 'black'}]}
                       placeholder="Mobbin"
                       onChangeText={onChange}
                       onBlur={onBlur}
                       value={value}
+                      placeholderTextColor={theme ?'#eee' : 'gray'}
                     />
                   )}
                 />
-                {errors.firstName && <Text style={{ color: 'red' }}>{errors.firstName.message}</Text>}
+                {errors.firstName && <ThemedText style={{ color: 'red' }}>{errors.firstName.message}</ThemedText>}
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Last Name</Text>
+                <ThemedText style={styles.label}>Last Name</ThemedText>
                 <Controller
                   control={control}
                   name="lastName"
                   rules={{ required: 'Last name is required' }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
-                      style={styles.input}
+                      style={[styles.input,  {color:theme ? 'white': 'black'}]}
                       placeholder="Mobbin"
                       onChangeText={onChange}
                       onBlur={onBlur}
                       value={value}
+                      placeholderTextColor={theme ?'#eee' : 'gray'}
                     />
                   )}
                 />
-                {errors.lastName && <Text style={{ color: 'red' }}>{errors.lastName.message}</Text>}
+                {errors.lastName && <ThemedText style={{ color: 'red' }}>{errors.lastName.message}</ThemedText>}
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Email</Text>
+                <ThemedText style={styles.label}>Email</ThemedText>
                 <Controller
                   control={control}
                   name="email"
@@ -205,19 +209,20 @@ const CreateAccount: React.FC = () => {
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
-                      style={styles.input}
+                      style={[styles.input,  {color:theme ? 'white': 'black'}]}
                       placeholder="mobbin.cms2@gmail.com"
                       onChangeText={onChange}
                       onBlur={onBlur}
                       value={value}
+                      placeholderTextColor={theme ?'#eee' : 'gray'}
                     />
                   )}
                 />
-                {errors.email && <Text style={{ color: 'red' }}>{errors.email.message}</Text>}
+                {errors.email && <ThemedText style={{ color: 'red' }}>{errors.email.message}</ThemedText>}
               </View>
 
               {/* <View style={styles.inputGroup}>
-                <Text style={styles.label}>Phone</Text>
+                <ThemedText style={styles.label}>Phone</ThemedText>
                 <Controller
                   control={control}
                   name="phone"
@@ -226,20 +231,21 @@ const CreateAccount: React.FC = () => {
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
-                      style={styles.input}
+                      style={[styles.input,  {color:theme ? 'white': 'black'}]}
                       placeholder="without country code or the the prefix 0"
                       onChangeText={onChange}
                       onBlur={onBlur}
                       value={value}
+                      placeholderTextColor={theme ?'#eee' : 'gray'}
                     />
                   )}
                 />
-                {errors.phone && <Text style={{ color: 'red' }}>{errors.phone.message}</Text>}
+                {errors.phone && <Text style={{ color: 'red' }}>{errors.phone.message}</ThemedText>}
               </View> */}
 
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Password</Text>
+                <ThemedText style={styles.label}>Password</ThemedText>
                 <Controller
                   control={control}
                   name="password"
@@ -252,16 +258,17 @@ const CreateAccount: React.FC = () => {
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Input
-                      style={styles.input}
+                      style={[styles.input,  {color:theme ? 'white': 'black'}]}
                       placeholder="XXXXXXXXXX"
                       secureTextEntry={true}
                       onChangeText={onChange}
                       onBlur={onBlur}
                       value={value}
+                      placeholderTextColor={theme ?'#eee' : 'gray'}
                     />
                   )}
                 />
-                {errors.password && <Text style={{ color: 'red' }}>{errors.password.message}</Text>}
+                {errors.password && <ThemedText style={{ color: 'red' }}>{errors.password.message}</ThemedText>}
               </View>
 
               <View style={styles.inputGroup}>
@@ -272,16 +279,16 @@ const CreateAccount: React.FC = () => {
                   render={({ field: { onChange, onBlur, value } }) => (
                     <CheckboxWithLabel
                       label={
-                        <Text style={styles.text}>
+                        <ThemedText style={styles.text}>
                           I certify that I am 18 years of age or older, and I agree to the User Agreement and Privacy Policy.
-                        </Text>
+                        </ThemedText>
                       }
                       onValueChange={onChange}
                       value={value}
                     />
                   )}
                 />
-                {errors.termsAccepted && <Text style={{ color: 'red' }}>{errors.termsAccepted.message}</Text>}
+                {errors.termsAccepted && <ThemedText style={{ color: 'red' }}>{errors.termsAccepted.message}</ThemedText>}
               </View>
 
             </View>
@@ -304,7 +311,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     marginTop: 10,
     fontFamily: 'MonsterBold',
   },
@@ -313,7 +320,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: 'MonsterBold',
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 10,
   },
   input: {

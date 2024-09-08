@@ -8,6 +8,7 @@ import {
     ContributionGraph,
     StackedBarChart
 } from 'react-native-chart-kit';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 // Define the type for the props
 interface MarketChartProps {
@@ -18,11 +19,12 @@ interface MarketChartProps {
 }
 
 const MarketChart: React.FC<MarketChartProps> = ({ data = [], withHorizontalLabels = false, withVerticalLabels = false, styles }) => {
+const theme = useAppSelector(state => state.theme.theme)
 
   return (
         <View style={styles}>
             <LineChart
-          
+            
                 data={{
                     datasets: [
                         {
@@ -39,7 +41,7 @@ const MarketChart: React.FC<MarketChartProps> = ({ data = [], withHorizontalLabe
                         },
                     ],
                 }}
-                width={Dimensions.get('window').width * 0.45} // from react-native
+                width={Dimensions.get('window').width * 0.35} // from react-native
                 height={60} // Height of the chart
                 withVerticalLabels={withVerticalLabels}
                 withHorizontalLabels={withHorizontalLabels}
@@ -48,14 +50,14 @@ const MarketChart: React.FC<MarketChartProps> = ({ data = [], withHorizontalLabe
                 withOuterLines={false}
                 chartConfig={{
                     backgroundColor: '#ffffff',
-                    backgroundGradientFrom: '#ffffff',
-                    backgroundGradientTo: '#ffffff',
+                    backgroundGradientFrom:`${theme ? 'gray' : "white"}`,
+                    backgroundGradientTo: `${theme ? 'gray' : "white"}`,
                     color: () => `#FFD700`, // Gold color for the line
                     strokeWidth: 2,
                     propsForDots: {
                         r: '5',
                         strokeWidth: '2',
-                        stroke: '#fafafa',
+                        // stroke: '#fafafa',
                     },
                 }}
                 bezier

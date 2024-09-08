@@ -11,11 +11,14 @@ import BottomDrawer from '@/components/bottom drawer/BottomDrawer';
 import { MaterialIcons } from '@expo/vector-icons';
 import PaymentBottomDrawer from '@/components/payment bottom drawer/PaymentBottomDrawer';
 import BanksBottomDrawer from '@/components/banks bottom drawer/BanksBottomDrawer';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const WithdrawPage = () => {
     const router = useRouter();
     const [isBottomDrawerEnabled, setIsBottomDrawerEnabled] = useState(false);
     const [bankBottomEnabled, setBankBottomEnabled] = useState(false);
+    const theme = useAppSelector(state => state.theme.theme)
 
     const enableBottomDrawer = () => {
         setIsBottomDrawerEnabled(!isBottomDrawerEnabled);
@@ -27,10 +30,10 @@ const WithdrawPage = () => {
 
     return (
         <>
-            <SafeAreaView style={styles.safeAreaView}>
+            <SafeAreaView style={[styles.safeAreaView,{backgroundColor:theme ? '#0F0F0F': 'white'}]}>
                 <PageHeader
-                    icon={<FontAwesome name="angle-left" size={24} color="black" />}
-                    label={<Text style={styles.headerText}>Withdraw</Text>}
+                    icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white':"black"} />}
+                    label={<ThemedText style={styles.headerText}>Withdraw</ThemedText>}
                 />
                 <View style={styles.container}>
                     <Withdraw 

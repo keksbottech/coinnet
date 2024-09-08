@@ -13,6 +13,7 @@ import Loading from '@/components/loading/Loading';
 import SelectCoinsToDepositDrawer from '@/components/select coin/SelectCoinToDeposit';
 import { useForm, Controller } from 'react-hook-form';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { ThemedText } from '@/components/ThemedText';
 
 const PayWithFlutterwaveScreen = () => {
   const router = useRouter();
@@ -30,7 +31,7 @@ const PayWithFlutterwaveScreen = () => {
       email: '',
     },
   });
-
+  const theme = useAppSelector(state => state.theme.theme)
   const coinAmount = watch('coinAmount');
   const fiatAmount = watch('fiatAmount');
 
@@ -85,30 +86,30 @@ const PayWithFlutterwaveScreen = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <PageHeader
           icon={<FontAwesome name="angle-left" size={24} color="black" />}
-          label={<Text style={styles.headerText}>Deposit</Text>}
+          label={<ThemedText style={styles.headerText}>Deposit</ThemedText>}
         />
         <KeyboardAvoidingView style={styles.mainContent} behavior="padding" keyboardVerticalOffset={100}>
           <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <Text style={styles.title}>Deposit with Flutterwave</Text>
+            <ThemedText style={styles.title}>Deposit with Flutterwave</ThemedText>
 
             <View style={styles.wrapper}>
-              <Text style={styles.labels}>Select Coin to Buy</Text>
-              <TouchableOpacity onPress={enableBottomDrawer} style={styles.withdrawToContainer}>
+              <ThemedText style={styles.labels}>Select Coin to Buy</ThemedText>
+              <TouchableOpacity onPress={enableBottomDrawer} style={[styles.withdrawToContainer, {backgroundColor:theme ? 'gray': 'white'}]}>
                 <View style={styles.coinRow}>
                   <FontAwesome name="bank" size={24} color="black" />
                   <View>
-                    <Text style={styles.withdrawToText}>{selectedCoin?.name}</Text>
-                    <Text style={styles.withdrawToText}>{selectedCoin?.symbol}</Text>
+                    <ThemedText style={styles.withdrawToText}>{selectedCoin?.name}</ThemedText>
+                    <ThemedText style={styles.withdrawToText}>{selectedCoin?.symbol}</ThemedText>
                   </View>
                 </View>
                 <AntDesign name="down" size={20} color="black" />
               </TouchableOpacity>
 
               <View style={styles.wrap}>
-                <Text style={styles.labels}>Name:</Text>
+                <ThemedText style={styles.labels}>Name:</ThemedText>
                 <Controller
                   name="name"
                   control={control}
@@ -119,7 +120,7 @@ const PayWithFlutterwaveScreen = () => {
               </View>
 
               <View style={styles.wrap}>
-                <Text style={styles.labels}>Email:</Text>
+                <ThemedText style={styles.labels}>Email:</ThemedText>
                 <Controller
                   name="email"
                   control={control}
@@ -130,7 +131,7 @@ const PayWithFlutterwaveScreen = () => {
               </View>
 
               <View style={styles.wrap}>
-                <Text style={styles.labels}>Coin Amount:</Text>
+                <ThemedText style={styles.labels}>Coin Amount:</ThemedText>
                 <Controller
                   name="coinAmount"
                   control={control}
@@ -148,7 +149,7 @@ const PayWithFlutterwaveScreen = () => {
               </View>
 
               <View style={styles.wrap}>
-                <Text style={styles.labels}>Amount To Pay</Text>
+                <ThemedText style={styles.labels}>Amount To Pay</ThemedText>
                 <Controller
                   name="fiatAmount"
                   control={control}
@@ -160,7 +161,7 @@ const PayWithFlutterwaveScreen = () => {
             </View>
 
             <TouchableOpacity onPress={changePaymentMethod}>
-              <Text style={styles.changeMethod}>Change Deposit Method</Text>
+              <ThemedText style={styles.changeMethod}>Change Deposit Method</ThemedText>
             </TouchableOpacity>
             <Button onClick={handleSubmit(navigateToFlutterwaveOnboarding)} styles={styles.confirmButton} label="Confirm" />
           </ScrollView>

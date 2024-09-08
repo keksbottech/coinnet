@@ -10,6 +10,7 @@ import { axios } from '@/lib/axios';
 import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
+import { ThemedText } from '../ThemedText';
 
 const ProfileScreen = () => {
   const [imageUri, setImageUri] = useState<any>(null);
@@ -18,6 +19,7 @@ const ProfileScreen = () => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
 
   const selectImage = async () => {
@@ -140,15 +142,16 @@ const ProfileScreen = () => {
           <Feather name="camera" size={14} color="black" />
         </TouchableOpacity>
       </View>
-      <Text style={styles.label}>{`${userData?.firstName} ${userData?.lastName}`}</Text>
-      <TextInput readOnly style={styles.input} placeholder={`${userData?.firstName} ${userData?.lastName}`} />
+      <ThemedText style={styles.label}>{`${userData?.firstName} ${userData?.lastName}`}</ThemedText>
+      <TextInput placeholderTextColor={theme ? 'white':'black'} readOnly style={styles.input} placeholder={`${userData?.firstName} ${userData?.lastName}`} />
       <View style={styles.inputContainer}>
-        <Text style={styles.flag}>🇳🇬 +234</Text>
+        <ThemedText style={styles.flag}>🇳🇬 +234</ThemedText>
         <TextInput
         readOnly
           style={styles.phoneInput}
           placeholder={`${userData?.phone}`} 
           keyboardType="numeric"
+          placeholderTextColor={theme ? 'white': 'black'}
         />
       </View>
       <Picker
@@ -158,9 +161,9 @@ const ProfileScreen = () => {
       >
         <Picker.Item label="Male" value="male" />
       </Picker>
-      <TextInput readOnly style={styles.input} placeholder={`${userData?.email}`}  />
+      <TextInput readOnly placeholderTextColor={theme ? 'white': 'black'} style={styles.input} placeholder={`${userData?.email}`}  />
       <TouchableOpacity onPress={logoutUser} style={styles.logoutButton}>
-        <Text style={styles.logoutButtonText}>Logout</Text>
+        <ThemedText style={styles.logoutButtonText}>Logout</ThemedText>
       </TouchableOpacity>
     </View>
     </>
@@ -201,6 +204,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontFamily: 'MonsterReg',
     paddingVertical: 16,
+    color:'#ccc'
   },
   inputContainer: {
     flexDirection: 'row',
@@ -220,6 +224,7 @@ const styles = StyleSheet.create({
     height: 40,
     paddingHorizontal: 10,
     fontFamily: 'MonsterReg',
+        color:'#ccc'
   },
   picker: {
     width: '100%',

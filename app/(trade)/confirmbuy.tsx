@@ -8,21 +8,23 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import BottomDrawer from '@/components/bottom drawer/BottomDrawer';
 import { TouchableOpacity } from 'react-native';
 import PaymentBottomDrawer from '@/components/payment bottom drawer/PaymentBottomDrawer';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '@/components/ThemedText';
 
 const ConfirmBuy = () => {
   const [isBottomDrawerEnabled, setIsBottomDrawerEnabled] = useState(false);
-
+  const theme = useAppSelector(state => state.theme.theme)
   const enableBottomDrawer = () => {
     setIsBottomDrawerEnabled(!isBottomDrawerEnabled);
   };
 
   return (
     <>
-      <SafeAreaView style={styles.safeAreaView}>
+      <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <PageHeader
-          other={<AntDesign name="infocirlceo" size={24} color="black" />}
-          icon={<FontAwesome name="angle-left" size={24} color="black" />}
-          label={<Text style={styles.headerText}>Confirmation</Text>}
+          other={<AntDesign name="infocirlceo" size={24} color={theme ? 'white': "black"} />}
+          icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white': "black"} />}
+          label={<ThemedText style={styles.headerText}>Confirmation</ThemedText>}
         />
         <View style={styles.container}>
           <ConfirmationBuy enableBottomDrawerFunc={enableBottomDrawer} />

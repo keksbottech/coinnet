@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Image, StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { ThemedText } from '../ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 // Define the types for the props
 interface CryptoCardProps {
@@ -16,12 +18,13 @@ const screenWidth = Dimensions.get("window").width;
 
 const CryptoCard: React.FC<CryptoCardProps> = ({ symbol, priceUsd, volume, changePercent24Hr, width, image }) => {
   // Determine color based on changePercent24Hr
+  const theme = useAppSelector(state => state.theme.theme)
   const changeColor = parseFloat(changePercent24Hr) >= 0 ? '#4CAF50' : '#FF5252'; // Green for positive, red for negative
 
   return (
-    <View style={[styles.card, width]}>
+    <View style={[styles.card, {backgroundColor:theme ? 'rgba(255,255,255,.1)': 'white'},width]}>
       <View style={styles.header}>
-        <Text style={styles.title}>{`${symbol}/USD`}</Text>
+        <ThemedText style={styles.title}>{`${symbol}/USD`}</ThemedText>
         <View>
           <Image
             source={{ uri: `https://cryptocompare.com${image}` }}
@@ -29,10 +32,10 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ symbol, priceUsd, volume, chang
           />
         </View>
       </View>
-      <Text style={styles.price}>{priceUsd}</Text>
-      <Text style={[styles.change, { color: changeColor }]}>
+      <ThemedText style={styles.price}>{priceUsd}</ThemedText>
+      <ThemedText style={[styles.change, { color: changeColor }]}>
         {parseFloat(changePercent24Hr).toFixed(2)}%
-      </Text>
+      </ThemedText>
       <LineChart
         data={{
           datasets: [
@@ -58,17 +61,17 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ symbol, priceUsd, volume, chang
         withInnerLines={false}
         withOuterLines={false}
         chartConfig={{
-          backgroundColor: '#ffffff',
-          backgroundGradientFrom: '#ffffff',
-          backgroundGradientTo: '#ffffff',
+          // backgroundColor: 'red',
+          backgroundGradientFrom:  `${theme ? 'gray' : "white"}`,
+          backgroundGradientTo: `${theme ? 'gray' : "white"}`,
           color: () => '#FFD700', // Gold color for the line
           strokeWidth: 2,
         }}
         bezier
         style={styles.chart}
       />
-      <Text style={styles.volume}>24H Vol.</Text>
-      <Text style={styles.volume}>{volume}</Text>
+      <ThemedText style={styles.volume}>24H Vol.</ThemedText>
+      <ThemedText style={styles.volume}>{volume}</ThemedText>
     </View>
   );
 };
@@ -96,12 +99,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontFamily: 'MonsterBold',
-    color: '#4A4A4A',
+    color: '#ccc',
   },
   price: {
     fontSize: 23,
     fontFamily: 'MonsterBold',
-    color: '#000',
     marginVertical: 0,
   },
   change: {

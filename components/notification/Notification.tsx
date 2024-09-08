@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, StyleProp, ViewStyle, TextStyle } from 'react-native';
+import { ThemedText } from '../ThemedText';
 
 // Type definitions for the component
 type SwitchToggleFunction = (value: boolean) => void;
@@ -19,11 +20,11 @@ const NotificationsScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Push Notification</Text>
+        <ThemedText style={styles.sectionTitle}>Push Notification</ThemedText>
         <View style={styles.switchRow}>
           <View>
-            <Text style={styles.subText}>Take a break</Text>
-            <Text style={styles.subText}>Pause notifications for a short time</Text>
+            <ThemedText style={styles.subText}>Take a break</ThemedText>
+            <ThemedText style={styles.subText}>Pause notifications for a short time</ThemedText>
           </View>
           <Switch
             onValueChange={toggleSwitch(setPushNotification)}
@@ -35,8 +36,8 @@ const NotificationsScreen: React.FC = () => {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Customize Notifications</Text>
-        <Text style={styles.subText}>Choose the messages you'd like to receive</Text>
+        <ThemedText style={styles.sectionTitle}>Customize Notifications</ThemedText>
+        <ThemedText style={styles.subText}>Choose the messages you'd like to receive</ThemedText>
         {renderSwitch("General Notification", generalNotification, toggleSwitch(setGeneralNotification))}
         {renderSwitch("Sound", sound, toggleSwitch(setSound))}
         {renderSwitch("Vibrate", vibrate, toggleSwitch(setVibrate))}
@@ -51,7 +52,7 @@ const NotificationsScreen: React.FC = () => {
 // Type the parameters for renderSwitch function
 const renderSwitch = (label: string, state: boolean, toggleFunction: SwitchToggleFunction) => (
   <View style={styles.switchContainer}>
-    <Text style={styles.switchLabel}>{label}</Text>
+    <ThemedText style={styles.switchLabel}>{label}</ThemedText>
     <Switch
       onValueChange={toggleFunction}
       value={state}
@@ -64,8 +65,6 @@ const renderSwitch = (label: string, state: boolean, toggleFunction: SwitchToggl
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: 'white',
   },
   section: {
     marginBottom: 30,

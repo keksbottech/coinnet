@@ -9,6 +9,7 @@ import Input from '@/components/ui/input/Input';
 import Button from '@/components/ui/button/Button';
 import Toast from 'react-native-toast-message';
 import Loading from '../loading/Loading';
+import { ThemedText } from '../ThemedText';
 
 const TransactionAuthenticationCode = () => {
   const router = useRouter();
@@ -26,7 +27,8 @@ const TransactionAuthenticationCode = () => {
     },
   });
   const withdrawMethod = useAppSelector(state => state.withdrawal.withdrawMethod)
-
+  const theme = useAppSelector(state => state.theme.theme)
+  
   // useEffect(() => {
   //   sendPhoneConfirmationOtpToValidate();
   // }, []);
@@ -153,23 +155,24 @@ const TransactionAuthenticationCode = () => {
 
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <Text style={styles.title}>Enter authentication code</Text>
-        <Text style={styles.subtitle}>
+        <ThemedText style={styles.title}>Enter authentication code</ThemedText>
+        <ThemedText style={styles.subtitle}>
           Enter the 7-digit code we just texted to your phone number to verify your transaction
-        </Text>
+        </ThemedText>
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Code</Text>
+          <ThemedText style={styles.inputLabel}>Code</ThemedText>
           <Controller
             control={control}
             name="code"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                style={styles.input}
+                style={[styles.input, {color:theme ? 'white': 'black'}]}
                 placeholder='Authentication code'
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
                 keyboardType="numeric"
+                placeholderTextColor={'#eee'}
               />
             )}
           />

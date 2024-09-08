@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
+import { ThemedText } from '../ThemedText';
 
 const FormatDate: React.FC<{ date: Date }> = ({ date }) => {
   const formattedDate = formatDistanceToNow(date, { addSuffix: true });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{formattedDate}</Text>
+      <ThemedText style={styles.text}>{formattedDate}</ThemedText>
     </View>
   );
 };
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
 
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily:'MonsterMid'
   },
 });

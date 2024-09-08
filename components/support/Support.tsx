@@ -6,6 +6,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { axios } from '@/lib/axios';
 import Loading from '../loading/Loading';
 import { ToastAndroid } from 'react-native';
+import { ThemedText } from '../ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 interface FormData {
   name: string;
@@ -18,6 +20,7 @@ const ContactUs = () => {
   const [countryCode, setCountryCode] = useState('NG');
   const [country, setCountry] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false)
+  const theme = useAppSelector(state => state.theme.theme)
 
   const {
     control,
@@ -60,29 +63,30 @@ const ContactUs = () => {
       >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.container}>
-            <Text style={styles.headerText}>Contact us for Coinnet</Text>
+            <ThemedText style={styles.headerText}>Contact us for Coinnet</ThemedText>
             <View style={styles.infoContainer}>
-              <Ionicons name="location-sharp" size={20} color="black" />
-              <Text style={styles.infoText}>
+              <Ionicons name="location-sharp" size={20} color={theme ? 'white': "black"} />
+              <ThemedText style={styles.infoText}>
                 House# 72, Road# 21, Banani, Dhaka-1213 (near Banani Bidyaniketon School & College, beside University of Nigeria)
-              </Text>
+              </ThemedText>
             </View>
             <View style={styles.infoContainer}>
-              <Ionicons name="call-sharp" size={20} color="black" />
-              <Text style={styles.infoText}>Call: 13301 (24/7)</Text>
+              <Ionicons name="call-sharp" size={20} color={theme ? 'white': "black"} />
+              <ThemedText style={styles.infoText}>Call: 13301 (24/7)</ThemedText>
             </View>
             <View style={styles.infoContainer}>
-              <Ionicons name="mail-sharp" size={20} color="black" />
-              <Text style={styles.infoText}>Email: support@coinnet.com</Text>
+              <Ionicons name="mail-sharp" size={20} color={theme ? 'white': "black"} />
+              <ThemedText style={styles.infoText}>Email: support@coinnet.com</ThemedText>
             </View>
 
-            <Text style={{ fontFamily: 'MonsterBold', fontSize: 18, paddingVertical: 20 }}>Send Message</Text>
+            <ThemedText style={{ fontFamily: 'MonsterBold', fontSize: 18, paddingVertical: 20 }}>Send Message</ThemedText>
 
             <Controller
               control={control}
               rules={{ required: 'Name is required' }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                placeholderTextColor={'#ccc'}
                   style={styles.input}
                   placeholder="Name"
                   onBlur={onBlur}
@@ -93,7 +97,7 @@ const ContactUs = () => {
               name="name"
               defaultValue=""
             />
-            {errors.name && <Text style={styles.errorText}>{errors.name.message}</Text>}
+            {errors.name && <ThemedText style={styles.errorText}>{errors.name.message}</ThemedText>}
 
             <Controller
               control={control}
@@ -106,6 +110,7 @@ const ContactUs = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                placeholderTextColor={'#ccc'}
                   style={styles.input}
                   placeholder="Email"
                   onBlur={onBlur}
@@ -117,7 +122,7 @@ const ContactUs = () => {
               name="email"
               defaultValue=""
             />
-            {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
+            {errors.email && <ThemedText style={styles.errorText}>{errors.email.message}</ThemedText>}
 
             <View style={styles.phoneContainer}>
               <CountryPicker
@@ -133,7 +138,7 @@ const ContactUs = () => {
                 }}
                 containerButtonStyle={styles.countryPicker}
               />
-              <Text style={styles.callingCode}>+{country?.callingCode}</Text>
+              <ThemedText style={styles.callingCode}>+{country?.callingCode}</ThemedText>
 
               <Controller
                 control={control}
@@ -146,6 +151,7 @@ const ContactUs = () => {
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
+                  placeholderTextColor={'#ccc'}
                     style={styles.phoneInput}
                     placeholder="Your mobile number"
                     onBlur={onBlur}
@@ -158,13 +164,14 @@ const ContactUs = () => {
                 defaultValue=""
               />
             </View>
-            {errors.phoneNumber && <Text style={styles.errorText}>{errors.phoneNumber.message}</Text>}
+            {errors.phoneNumber && <ThemedText style={styles.errorText}>{errors.phoneNumber.message}</ThemedText>}
 
             <Controller
               control={control}
               rules={{ required: 'Message is required' }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                placeholderTextColor={'#ccc'}
                   style={[styles.input, styles.textArea]}
                   placeholder="Write your text"
                   onBlur={onBlur}
@@ -177,10 +184,10 @@ const ContactUs = () => {
               name="message"
               defaultValue=""
             />
-            {errors.message && <Text style={styles.errorText}>{errors.message.message}</Text>}
+            {errors.message && <ThemedText style={styles.errorText}>{errors.message.message}</ThemedText>}
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-              <Text style={styles.buttonText}>Send Message</Text>
+              <ThemedText style={styles.buttonText}>Send Message</ThemedText>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -211,7 +218,7 @@ const styles = StyleSheet.create({
   infoText: {
     marginLeft: 10,
     fontSize: 14,
-    color: '#333',
+    color: '#ccc',
     fontFamily: 'MonsterReg',
   },
   input: {

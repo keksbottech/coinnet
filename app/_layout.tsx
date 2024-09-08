@@ -15,6 +15,7 @@ import { axios } from '@/lib/axios';
 import { Users } from '@tamagui/lucide-icons';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
+import { getThemeData } from '@/lib/store/reducers/storeTheme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,6 +31,8 @@ export default function RootLayout() {
     MonsterReg: require('../assets/fonts/montserrat/Montserrat-Regular.ttf'),
     MonsterBold: require('../assets/fonts/montserrat/Montserrat-Bold.ttf'),
   });
+  const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'light'); // Manage theme state
+
 
   useEffect(() => {
     if (loaded) {
@@ -43,24 +46,29 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
+        <ThemeProvider value={isDarkMode ? DarkTheme : DefaultTheme}>
           <TamaguiProvider config={config}>
-            <SessionHandler layoutReady={layoutReady}/>
+            <SessionHandler isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} layoutReady={layoutReady}/>
           </TamaguiProvider>
         </ThemeProvider>
       </GestureHandlerRootView>
     </Provider>
   );
 }
-export function SessionHandler({layoutReady}:any) {
+export function SessionHandler({layoutReady, isDarkMode, setIsDarkMode}:any) {
   const [isSessionChecked, setIsSessionChecked] = useState(false);
   const router = useRouter();
   const userSession = useAppSelector((state) => state.session.session);
   const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
   if (layoutReady) {
     useEffect(() => {
-      
+      dispatch(getThemeData(theme))
+    setIsDarkMode(theme)
+    
+
+
 // console.log(userSession)
       const checkSession = async () => {
         try{

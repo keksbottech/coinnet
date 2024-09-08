@@ -12,6 +12,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserOtpId } from '@/lib/store/reducers/storeUserInfo';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import Button from '@/components/ui/button/Button';
+import { ThemedText } from '@/components/ThemedText';
 
 const Verification = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const Verification = () => {
       code: '',
     },
   });
+  const theme = useAppSelector(state => state.theme.theme)
   const [otpId, setOtpId] = useState('');
 
   useEffect(() => {
@@ -106,13 +108,13 @@ const Verification = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={[styles.safeArea,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <View style={styles.container}>
           <PageHeader />
           <Toast />
           <View style={styles.content}>
-            <Text style={styles.title}>Enter the 7-digit code we texted to {formatPhoneNumber()}</Text>
-            <Text style={styles.text}>This extra step shows it's really you trying to sign in</Text>
+            <ThemedText style={styles.title}>Enter the 7-digit code we texted to {formatPhoneNumber()}</ThemedText>
+            <ThemedText style={styles.text}>This extra step shows it's really you trying to sign in</ThemedText>
 
             <Controller
               control={control}
@@ -125,7 +127,7 @@ const Verification = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
-                  style={[styles.input, errors.code && styles.inputError]}
+                  style={[styles.input, errors.code && styles.inputError,  {color:theme ? 'white': 'black'}]}
                   placeholder='******'
                   onBlur={onBlur}
                   onChangeText={onChange}
@@ -135,18 +137,18 @@ const Verification = () => {
               )}
               name="code"
             />
-            {errors.code && <Text style={styles.errorText}>{errors.code.message}</Text>}
+            {errors.code && <ThemedText style={styles.errorText}>{errors.code.message}</ThemedText>}
           </View>
 
           <View style={styles.footer}>
             <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.buttonSubmit}>
-              <Text style={styles.buttonText}>Submit</Text>
+              <ThemedText style={styles.buttonText}>Submit</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity onPress={sendPhoneConfirmationOtpToValidate} style={styles.buttonSubmit}>
-              <Text style={styles.buttonText}>Resend Code</Text>
+              <ThemedText style={styles.buttonText}>Resend Code</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity style={styles.buttonHelp}>
-              <Text style={styles.buttonText}>I need help</Text>
+              <ThemedText style={styles.buttonText}>I need help</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -162,7 +164,6 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'space-between',
     flexDirection: 'column',
-    backgroundColor: 'white',
     flex: 1,
   },
   container: {
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 0.5,
-    borderColor: 'black',
+    borderColor: 'gray',
     padding: 12,
     marginTop: 20,
     borderRadius: 5,

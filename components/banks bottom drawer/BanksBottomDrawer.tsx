@@ -11,6 +11,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getPaymentBanks, getPaymentMethod } from '@/lib/store/reducers/storePaymentUrl';
 import { axios } from '@/lib/axios';
 import { Wave } from 'react-native-animated-spinkit';
+import { ThemedText } from '../ThemedText';
 
 interface Bank {
   id: number;
@@ -67,7 +68,7 @@ const BanksBottomDrawer: React.FC = () => {
     
       ui={
         <View style={styles.container}>
-          <Text style={styles.title}>Choose Bank</Text>
+          <ThemedText style={styles.title}>Choose Bank</ThemedText>
           <View style={{ alignItems: 'center' }}>
             {isLoading && <Wave size={40} />}
           </View>
@@ -83,8 +84,8 @@ const BanksBottomDrawer: React.FC = () => {
                   {method.icon}
                 </View>
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={styles.methodName}>{method.name}</Text>
-                  <Text style={styles.methodNumber}>{method.number}</Text>
+                  <ThemedText style={styles.methodName}>{method.name}</ThemedText>
+                  <ThemedText style={styles.methodNumber}>{method.number}</ThemedText>
                 </View>
               </View>
               {selectedMethod === method.id && (
@@ -102,7 +103,6 @@ export default BanksBottomDrawer;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     paddingTop: 20,
     paddingHorizontal: 20,
   },

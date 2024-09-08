@@ -75,6 +75,7 @@ const ChangePassword = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                placeholderTextColor={'#ccc'}
               />
             )}
           />
@@ -107,6 +108,7 @@ const ChangePassword = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
+                placeholderTextColor={'#ccc'}
               />
             )}
           />
@@ -137,6 +139,7 @@ const ChangePassword = () => {
                 placeholder="Confirm Password"
                 secureTextEntry={!confirmPasswordVisible}
                 onBlur={onBlur}
+                placeholderTextColor={'#ccc'}
                 onChangeText={onChange}
                 value={value}
               />

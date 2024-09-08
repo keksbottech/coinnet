@@ -12,6 +12,7 @@ import { axios } from '@/lib/axios';
 import { Wave } from 'react-native-animated-spinkit';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getTransactionHistory } from '@/lib/store/reducers/storeTransactionHistory';
+import { ThemedText } from '@/components/ThemedText';
 
 const TransactionHistoryPage = () => {
   const [refreshing, setRefreshing] = useState(false)
@@ -19,13 +20,13 @@ const TransactionHistoryPage = () => {
   const userData = useAppSelector(state => state.user.user)
   const dispatch = useAppDispatch()
   const transactionHistoryData = useAppSelector(state => state.transactionHistory.transactionHistory)
-
+  const theme = useAppSelector(state => state.theme.theme)
 
   useFocusEffect(
     useCallback(() => {
       getTransactions()
 
-      console.log(transactionHistoryData, 'data')
+      // console.log(transactionHistoryData, 'data')
     }, [])
   )
 
@@ -37,13 +38,13 @@ const TransactionHistoryPage = () => {
 
       const response = await axios.get(`transaction-history/${userData._id}`)
 
-      console.log(response, 'res')
+      // console.log(response, 'res')
       dispatch(getTransactionHistory(response.data.transactions))
-      console.log(response.data)
+      // console.log(response.data)
 
     }
     catch(err){
-      console.log(err)
+      // console.log(err)
       ToastAndroid.show('Something went wrong fetching your history! Try again', ToastAndroid.LONG);
     }
     finally{
@@ -59,12 +60,12 @@ const TransactionHistoryPage = () => {
 
   return (
   
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
    
       <PageHeader
-        icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        other={<AntDesign name="infocirlceo" size={24} color="black" />}
-        label={<Text style={styles.headerText}>Transaction History</Text>}
+        icon={<FontAwesome name="angle-left" size={24} color={theme ?'white': "black"} />}
+        // other={<AntDesign name="infocirlceo" size={24} color="black" />}
+        label={<ThemedText style={styles.headerText}>Transaction History</ThemedText>}
       />
       <View style={styles.container}>
         <View style={{alignItems:'center'}}>

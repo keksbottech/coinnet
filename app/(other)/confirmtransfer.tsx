@@ -4,13 +4,16 @@ import ConfirmTransfer from '@/components/confirm transfer/ConfirmTransfer';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import PageHeader from '@/components/page header/PageHeader';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const ConfirmTransferPage = () => {
+  const theme = useAppSelector(state => state.theme.theme)
   return (
     <SafeAreaView style={styles.safeArea}>
       <PageHeader 
-        icon={<FontAwesome name="angle-left" size={24} color="black" />} 
-        label={<Text style={styles.headerLabel}>Transfer</Text>} 
+        icon={<FontAwesome name="angle-left" size={24} color={theme ?'white': "black"} />} 
+        label={<ThemedText style={styles.headerLabel}>Transfer</ThemedText>} 
       />
       <View style={styles.container}>
         <ConfirmTransfer />

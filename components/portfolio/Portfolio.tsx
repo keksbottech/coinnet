@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import BitcoinImage from '@/assets/svg/bitcoin.svg'
+import { ThemedText } from '../ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -13,20 +15,23 @@ type PortfolioTypes = {
   image:string
 }
 const Portfolio = ({style, name, symbol, image ='', priceUsd, changePercent24Hr}:PortfolioTypes) => {
+  const theme = useAppSelector(state=> state.theme.theme)
+
+  console.log(priceUsd)
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container,{backgroundColor:theme ? 'rgba(255,255,255,.1)': 'white'} ,style]}>
         <View style={styles.leftSection}>
         <Image source={{uri:`https://cryptocompare.com${image}`}} width={50} height={50}/>
           <View style={styles.textContainer}>
-            <Text style={styles.cryptoName} >{name}</Text>
-            <Text style={styles.cryptoSymbol}>{symbol}</Text>
+            <ThemedText style={styles.cryptoName} >{name}</ThemedText>
+            <ThemedText style={styles.cryptoSymbol}>{symbol}</ThemedText>
           </View>
         </View>
         <View style={styles.rightSection}>
-          <Text style={styles.price}>{parseFloat(priceUsd).toFixed(6)}</Text>
-          <Text style={[{ color: changePercent24Hr > 0 ? 'green' : 'red' }, {fontFamily:'MonsterBold'}]}>
+          <ThemedText style={styles.price}>{priceUsd}</ThemedText>
+          <ThemedText style={[{ color: changePercent24Hr > 0 ? 'green' : 'red' }, {fontFamily:'MonsterReg'}]}>
                     {`${changePercent24Hr > 0 ? '+' : ''}${changePercent24Hr.toFixed(2)}%`}
-                  </Text>
+                  </ThemedText>
         </View>
     </View>
   );
@@ -36,7 +41,6 @@ const styles = StyleSheet.create({
   container: {
  // Adjust width to fit most screens
  width:'100%',
-    backgroundColor: '#ffffff',
     borderRadius: 10,
     padding: 15,
     paddingVertical:20,
@@ -72,7 +76,6 @@ const styles = StyleSheet.create({
   cryptoName: {
     fontSize: 17,
     fontFamily:'MonsterBold',
-    color: '#333',
   },
   cryptoSymbol: {
     fontSize: 14,
@@ -84,7 +87,6 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 18,
-    color: '#333',
       fontFamily:'MonsterBold'
   },
   change: {

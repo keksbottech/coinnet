@@ -13,6 +13,7 @@ import { axios } from '@/lib/axios';
 import { getPaymentUrl } from '@/lib/store/reducers/storePaymentUrl';
 import Loading from '@/components/loading/Loading';
 import SelectCoinsToDepositDrawer from '@/components/select coin/SelectCoinToDeposit';
+import { ThemedText } from '@/components/ThemedText';
 
 const PayWithPaypalScreen = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const PayWithPaypalScreen = () => {
   });
   const selectedCoin = useAppSelector(state => state.selectedCoin.selectedCoin);
   const marketStoredData = useAppSelector(state => state.market.marketData);
-
+  const theme = useAppSelector(state => state.theme.theme)
   const coinAmount = watch('coinAmount');
 
   useEffect(() => {
@@ -81,10 +82,10 @@ const PayWithPaypalScreen = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <PageHeader
           icon={<FontAwesome name="angle-left" size={24} color="black" />}
-          label={<Text style={styles.headerLabel}>Deposit</Text>}
+          label={<ThemedText style={styles.headerLabel}>Deposit</ThemedText>}
         />
         <KeyboardAvoidingView
           style={styles.keyboardAvoidingView}
@@ -93,15 +94,15 @@ const PayWithPaypalScreen = () => {
         >
           <ScrollView contentContainerStyle={styles.scrollView}>
             <View style={styles.mainContainer}>
-              <Text style={styles.title}>Deposit with Paypal</Text>
+              <ThemedText style={styles.title}>Deposit with Paypal</ThemedText>
 
-              <Text style={[styles.labels, {marginTop:20}]}>Select Coin to Buy</Text>
-              <TouchableOpacity onPress={enableBottomDrawer} style={styles.withdrawToContainer}>
+              <ThemedText style={[styles.labels, {marginTop:20}]}>Select Coin to Buy</ThemedText>
+              <TouchableOpacity onPress={enableBottomDrawer} style={[styles.withdrawToContainer, {backgroundColor:theme ? 'gray': 'white'}]}>
                 <View style={styles.iconContainer}>
                   <FontAwesome name="bank" size={24} color="black" />
                   <View>
-                    <Text style={styles.withdrawToText}>{selectedCoin?.name} </Text>
-                    <Text style={styles.withdrawToText}>{selectedCoin?.symbol}</Text>
+                    <ThemedText style={styles.withdrawToText}>{selectedCoin?.name} </ThemedText>
+                    <ThemedText style={styles.withdrawToText}>{selectedCoin?.symbol}</ThemedText>
                   </View>
                 </View>
                 <AntDesign name="down" size={20} color="black" />
@@ -109,7 +110,7 @@ const PayWithPaypalScreen = () => {
 
               <View style={styles.wrapper}>
                 <View style={styles.wrap}>
-                  <Text style={styles.labels}>Coin Amount:</Text>
+                  <ThemedText style={styles.labels}>Coin Amount:</ThemedText>
                   <Controller
                     name="coinAmount"
                     control={control}
@@ -127,7 +128,7 @@ const PayWithPaypalScreen = () => {
                 </View>
 
                 <View style={styles.wrap}>
-                  <Text style={styles.labels}>Amount To Pay</Text>
+                  <ThemedText style={styles.labels}>Amount To Pay</ThemedText>
                   <Controller
                     name="fiatAmount"
                     control={control}
@@ -138,9 +139,9 @@ const PayWithPaypalScreen = () => {
                 </View>
               </View>
 
-<Text style={styles.labels}>Note: Balances might take a while to reflect using paypal</Text>
+<ThemedText style={styles.labels}>Note: Balances might take a while to reflect using paypal</ThemedText>
               <TouchableOpacity onPress={changePaymentMethod}>
-                <Text style={styles.changeMethod}>Change Deposit Method</Text>
+                <ThemedText style={styles.changeMethod}>Change Deposit Method</ThemedText>
               </TouchableOpacity>
 
               <Button

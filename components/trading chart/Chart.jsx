@@ -8,9 +8,11 @@ import {
     ContributionGraph,
     StackedBarChart
   } from "react-native-chart-kit";
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 
 const Chart = ({data = [], withHorizontalLabels = true, withVerticalLabels = false, styles}) => {
+  const theme = useAppSelector(state => state.theme.theme)
   return (
    <View style={styles}>
   <LineChart
@@ -39,10 +41,11 @@ const Chart = ({data = [], withHorizontalLabels = true, withVerticalLabels = fal
     withInnerLines={false}
     yAxisInterval={1} // optional, defaults to 1
     chartConfig={{
-      backgroundColor: "white",
-      backgroundGradientFrom: "white",
-      backgroundGradientTo: "#ffffff",
+      backgroundColor: `${theme ? 'rgba(255,255, 255, .1)' : "red"}`,
+      backgroundGradientFrom:`${theme ? 'gray' : "white"}`,
+      backgroundGradientTo: `${theme ? 'gray' : "white"}`,
       decimalPlaces: 2, // optional, defaults to 2dp
+      
       color: (opacity = 1) => `rgba(18, 85, 255, ${opacity})`,
       labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
       style: {

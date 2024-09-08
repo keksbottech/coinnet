@@ -18,6 +18,7 @@ import { getWalletTotalBalance } from '@/lib/store/reducers/storeWalletBalances'
 import { getMarketData } from '@/lib/store/reducers/storeMarketData';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import { ToastAndroid } from 'react-native';
+import { ThemedText } from '@/components/ThemedText';
 
 const Home = () => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const Home = () => {
   const walletBalance = useAppSelector(state => state.wallet.walletTotalBalance)
   const marketStoredData = useAppSelector(state => state.market.marketData)
   const[refreshing, setRefreshing] = useState(false)
+  const theme = useAppSelector(state => state.theme.theme)
 
 
   useEffect(() =>{
@@ -269,17 +271,17 @@ const Home = () => {
 
   return (
   
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea,{backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <View style={styles.container}>
         <PageHeader
           icon={
             <TouchableOpacity onPress={navigateToProfile}>
-              <EvilIcons name="user" size={35} color="black" />
+              <EvilIcons name="user" size={35} color={theme ? 'white': "black"} />
             </TouchableOpacity>
           }
           other={
             <TouchableOpacity onPress={navigateToSettings}>
-              <Ionicons name="settings-outline" size={24} color="black" />
+              <Ionicons name="settings-outline" size={24} color={theme ? 'white': "black"} />
             </TouchableOpacity>
           }
           label={
@@ -288,7 +290,7 @@ const Home = () => {
                 source={require('@/assets/images/logo/logo.png')}
                 style={styles.logo}
               />
-              <Text style={styles.headerText}>Coinnet</Text>
+              <ThemedText style={styles.headerText}>Coinnet</ThemedText>
             </View>
           }
         />
@@ -300,21 +302,21 @@ const Home = () => {
                }
         >
           <View style={styles.balanceContainer}>
-            <Text style={styles.balanceTitle}>Portfolio Balance</Text>
-            <Text style={styles.balanceAmount}>${parseFloat(walletBalance).toFixed(2)}</Text>
-            {/* <Text style={styles.balanceChange}>+2.60%</Text> */}
+            <ThemedText style={styles.balanceTitle}>Portfolio Balance</ThemedText>
+            <ThemedText style={styles.balanceAmount}>${parseFloat(walletBalance).toFixed(2)}</ThemedText>
+            {/* <ThemedText style={styles.balanceChange}>+2.60%</ThemedText> */}
           </View>
 
           <Chart styles={undefined} />
 
           <View style={styles.marketMoversHeader}>
-            <Text style={styles.marketMoversTitle}>Market Movers</Text>
+            <ThemedText style={styles.marketMoversTitle}>Market Movers</ThemedText>
             <TouchableOpacity onPress={navigateToMoreMarketData}>
-              <Text style={styles.moreText}>More</Text>
+              <ThemedText style={styles.moreText}>More</ThemedText>
             </TouchableOpacity>
           </View>
           <View style={{alignItems:'center'}}>
-          {isLoading &&   <Wave size={48} color="black"/>}
+          {isLoading &&   <Wave size={48} color={theme ? 'white': "black"}/>}
 
           </View>
 
@@ -339,9 +341,9 @@ const Home = () => {
 
 
           <View style={styles.portfolioHeader}>
-            <Text style={styles.portfolioTitle}>Portfolio</Text>
+            <ThemedText style={styles.portfolioTitle}>Portfolio</ThemedText>
             <TouchableOpacity onPress={navigateToWallet}>
-              <Text style={styles.moreText}>More</Text>
+              <ThemedText style={styles.moreText}>More</ThemedText>
             </TouchableOpacity>
           </View>
 
@@ -350,7 +352,7 @@ const Home = () => {
             {isPorfolioLoading && <Wave size={40}/>}
             </View>
             {
-              filteredAssets?.map((item: { holdings: any; fullName: string; price: any; change: string; image: any; }, index: React.Key | null | undefined)=>  <Portfolio key={index} priceUsd={`${item.holdings}`} name={item.fullName} symbol={`$ ${item.price}`} changePercent24Hr={item.change} image={item.image}/>)
+              filteredAssets?.map((item: { holdings: any; fullName: string; price: any; change: string; image: any; }, index: React.Key | null | undefined)=>  <Portfolio key={index} priceUsd={`${parseFloat(item.holdings).toFixed(6)}`} name={item.fullName} symbol={`$ ${item.price}`} changePercent24Hr={item.change} image={item.image}/>)
             }
 
           </View>

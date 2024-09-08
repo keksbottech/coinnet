@@ -9,6 +9,8 @@ import { axios } from '@/lib/axios';
 import Toast from 'react-native-toast-message';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '@/components/ThemedText';
 
 // Define the shape of the form data
 interface FormValues {
@@ -21,6 +23,7 @@ const Signin: React.FC = () => {
   const [oldPasswordVisible, setOldPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const theme = useAppSelector(state => state.theme.theme)
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormValues>();
 
@@ -84,34 +87,35 @@ const Signin: React.FC = () => {
     <>
       {isLoading && <Loading />}
 
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={[styles.safeArea,{backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <View style={styles.container}>
           <Toast />
           <View style={styles.wrapper}>
-            <Text style={styles.title}>Sign in to Coinnet</Text>
+            <ThemedText style={styles.title}>Sign in to Coinnet</ThemedText>
 
 
             <View style={[styles.inputContainer, {marginTop:50}]}>
-              <Text style={styles.text}>Email/Phone number</Text>
+              <ThemedText style={styles.text}>Email/Phone number</ThemedText>
               <Controller
                 control={control}
                 name="email"
                 rules={{ required: 'Email is required' }}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input,  {color:theme ? 'white': 'black'}]}
                     placeholder='mobbin.cms2@gmail.com'
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
+                    placeholderTextColor={theme ?'#eee': 'gray'}
                   />
                 )}
               />
-              {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
+              {errors.email && <ThemedText style={styles.errorText}>{errors.email.message}</ThemedText>}
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.text}>Password</Text>
+              <ThemedText style={styles.text}>Password</ThemedText>
               <View style={styles.inputWrapper}>
                 <Controller
                   control={control}
@@ -119,12 +123,13 @@ const Signin: React.FC = () => {
                   rules={{ required: 'Password is required' }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
-                      style={styles.input}
+                      style={[styles.input,  {color:theme ? 'white': 'black'}]}
                       placeholder="Password"
                       secureTextEntry={!oldPasswordVisible}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
+                      placeholderTextColor={theme ?'#eee': 'gray'}
                     />
                   )}
                 />
@@ -139,24 +144,24 @@ const Signin: React.FC = () => {
                   />
                 </TouchableOpacity>
               </View>
-              {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
+              {errors.password && <ThemedText style={styles.errorText}>{errors.password.message}</ThemedText>}
             </View>
 
             <View style={styles.linkContainer}>
               <TouchableOpacity onPress={navigateToForgottenPassword}>
-                <Text style={styles.linkText}>Forgotten Password</Text>
+                <ThemedText style={styles.linkText}>Forgotten Password</ThemedText>
               </TouchableOpacity>
               <TouchableOpacity>
-                <Text style={styles.linkText}>Privacy policy</Text>
+                <ThemedText style={styles.linkText}>Privacy policy</ThemedText>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity onPress={handleSubmit(signInUserAndNavigateToEmailVerification)} style={styles.button}>
-              <Text style={styles.buttonText}>Sign in</Text>
+              <ThemedText style={styles.buttonText}>Sign in</ThemedText>
             </TouchableOpacity>
 
             <View style={styles.signupContainer}>
-              <Text style={styles.signupText}>Don't have an account? <Link style={styles.signupLink} href={'/(onboarding)/create-account'}>Sign up</Link></Text>
+              <ThemedText style={styles.signupText}>Don't have an account? <Link style={styles.signupLink} href={'/(onboarding)/create-account'}>Sign up</Link></ThemedText>
             </View>
           </View>
         </View>
@@ -172,7 +177,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     padding: 10,
-    backgroundColor: '#fff',
   },
   container: {
     flex: 1,
@@ -184,13 +188,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'MonsterBold',
-    fontSize: 24, // equivalent to text-3xl
+    fontSize: 20, // equivalent to text-3xl
     marginTop: 10,
     textAlign: 'left',
   },
   text: {
     fontFamily: 'MonsterBold',
-    fontSize: 16, // equivalent to text-lg
+    fontSize: 14, // equivalent to text-lg
   },
   inputContainer: {
     marginTop: 10,
@@ -198,7 +202,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 0.5,
-    borderColor: 'black',
+    borderColor: 'gray',
     borderRadius: 5,
     padding: 12,
     marginTop: 10,
@@ -221,10 +225,10 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#F9C74F', // equivalent to bg-yellow-300
     width: '100%',
-    paddingVertical: 20,
+    paddingVertical: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 150,
     borderRadius: 10,
   },
   buttonText: {

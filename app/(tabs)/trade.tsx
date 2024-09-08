@@ -22,6 +22,8 @@ import { useAppSelector } from '@/hooks/useAppSelector'
 import { ScrollView } from 'react-native'
 import { Wave } from 'react-native-animated-spinkit'
 import { useFocusEffect } from '@react-navigation/native'
+import { ThemedText } from '@/components/ThemedText'
+import { RefreshControl } from 'react-native'
 
 const Trading = () => {
   const router = useRouter()
@@ -30,6 +32,8 @@ const Trading = () => {
   const [marketHistoryData, setMarketHistoryData] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const marketStoredData = useAppSelector(state => state.market.marketData)
+  const theme = useAppSelector(state => state.theme.theme)
+  const[refreshing, setRefreshing] = useState(false)
   
 
   // useEffect(() =>{
@@ -60,16 +64,16 @@ const Trading = () => {
       switch(popularPair){
         case 'BTC/USD':
           console.log(btcData?.DISPLAY?.USD?.PRICE)
-          setMarketData({priceUsd: btcData?.DISPLAY?.USD?.PRICE, changePercent24Hr: btcData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: btcData?.CoinInfo?.ImageUrl})
+          setMarketData({priceUsd: btcData?.DISPLAY?.USD?.PRICE, changePercent24Hr: btcData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: btcData?.CoinInfo?.ImageUrl, name: btcData?.CoinInfo.FullName, symbol:btcData?.CoinInfo?.Name})
           break;
         case 'ETH/USD':
-          setMarketData({priceUsd: ethData?.DISPLAY?.USD?.PRICE, changePercent24Hr: ethData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: ethData?.CoinInfo?.ImageUrl})
+          setMarketData({priceUsd: ethData?.DISPLAY?.USD?.PRICE, changePercent24Hr: ethData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: ethData?.CoinInfo?.ImageUrl, name: ethData?.CoinInfo.FullName, symbol:ethData?.CoinInfo?.Name})
           break;
        case 'SOL/USD':
-        setMarketData({priceUsd: solData?.DISPLAY?.USD?.PRICE, changePercent24Hr: solData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: solData?.CoinInfo?.ImageUrl})
+        setMarketData({priceUsd: solData?.DISPLAY?.USD?.PRICE, changePercent24Hr: solData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: solData?.CoinInfo?.ImageUrl, name: solData?.CoinInfo.FullName, symbol:solData?.CoinInfo?.Name})
             break;
       case 'USDC/USD':
-        setMarketData({priceUsd: usdCData?.DISPLAY?.USD?.PRICE, changePercent24Hr: usdCData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: usdCData?.CoinInfo?.ImageUrl})
+        setMarketData({priceUsd: usdCData?.DISPLAY?.USD?.PRICE, changePercent24Hr: usdCData?.DISPLAY?.USD?.CHANGEPCT24HOUR, image: usdCData?.CoinInfo?.ImageUrl,name: usdCData?.CoinInfo.FullName, symbol:usdCData?.CoinInfo?.Name})
           default:
             return null
       }
@@ -129,60 +133,82 @@ const Trading = () => {
     router.push('/(trade)/selltradingcoin')
   }
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([fetchMarketPairTradingHistory(), fetchSingleMarketDetails()]);
+    setRefreshing(false);
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View>
+    <>
+    <ScrollView
+                 showsVerticalScrollIndicator={false}
+                 refreshControl={
+                   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                 }
+             style={[styles.safeArea, {backgroundColor:theme ? '#0F0F0F': 'white'}]}
+    >
+    <SafeAreaView>
+      <View style={{flex:1}}>
         <PageHeader 
-          icon={<FontAwesome name="angle-left" size={24} color="black" />} 
+          icon={<FontAwesome name="angle-left" size={24} color={theme ?'white': "black"} />} 
           // other={<Feather name="clipboard" size={24} color="black" />} 
-          label={<Text style={styles.pageHeaderText}>Trading</Text>} 
+          label={<ThemedText style={styles.pageHeaderText}>Trading</ThemedText>} 
         />
 {/* 
         <TradingHeaderPeriod data={tradePeriodsData} style={undefined} /> */}
 
-        <Portfolio priceUsd={marketData?.priceUsd} image={marketData?.image} style={styles.portfolio} name={marketData?.name} symbol={marketData?.symbol} changePercent24Hr={parseFloat(marketData?.changePercent24Hr)} />
+        <Portfolio priceUsd={String(marketData?.priceUsd)} image={marketData?.image} style={styles.portfolio} name={marketData?.name} symbol={marketData?.symbol} changePercent24Hr={parseFloat(marketData?.changePercent24Hr)} />
         <Chart styles={styles.chart} withVerticalLabels={true} />
         {/* <TradingTools /> */}
         <PopularPairs />
-        <View style={{marginTop:15}}>
-          <Text style={styles.title}>Trading History</Text>
+        <View style={[{marginTop:15}, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
+          <ThemedText style={styles.title}>Trading History</ThemedText>
           <View style={styles.row}>
-          <Text style={styles.label}>Price</Text>
-          <Text style={styles.label}>Amount</Text>
-          <Text style={styles.label}>Time</Text>
+          <ThemedText style={styles.label}>Price</ThemedText>
+          <ThemedText style={styles.label}>Amount</ThemedText>
+          <ThemedText style={styles.label}>Time</ThemedText>
           </View>
           <View style={{alignItems:'center'}}>
-          {isLoading && <Wave size={48} color="black"/>}
+          {isLoading && <Wave size={48} color={theme ? 'white' : "black"}/>}
           </View>
-          <FlatList
-          data={marketHistoryData}
-          showsVerticalScrollIndicator={false}
-        renderItem={({item}) => <TradingHistory priceUsd={item.priceUsd} timestamp={item.time}/>}
-          />
-     
-          
-          <Separator />
+          {
+            marketHistoryData?.map((item: { priceUsd: any; time: any },index:any) => {
+              if(index <= 10){
 
-          <View style={styles.buttonContainer}>
+                return(
+              <TradingHistory key={index} priceUsd={item.priceUsd} timestamp={item.time}/>
+                )
+              }
+              else{
+                return null
+              }
+            })
+          }
+          
+        </View>
+      </View>
+
+      
+    </SafeAreaView>
+  </ScrollView>
+  <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={navigateToSellTrading} style={[styles.button, styles.button1]}>
               <View style={[styles.icon, styles.icon1]}>
                 <Feather name="arrow-down-left" size={24} color="#F9C74F" />
               </View>
-              <Text style={styles.sellText}>SELL</Text>
+              <ThemedText style={styles.sellText}>SELL</ThemedText>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={navigateToBuyTrading} style={styles.button}>
               <View style={styles.icon}>
                 <Feather name="arrow-up-right" size={24} color="white" />
               </View>
-              <Text style={styles.buyText}>BUY</Text>
+              <ThemedText style={styles.buyText}>BUY</ThemedText>
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
-
-      
-    </SafeAreaView>
+  </>
+  
   )
 }
 
@@ -192,7 +218,6 @@ const styles = StyleSheet.create({
   safeArea: {
     padding: 10,
     flex: 1,
-    backgroundColor:'white'
   },
   pageHeaderText: {
    fontFamily:'MonsterBold',
@@ -218,7 +243,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     position:'absolute',
-    top:200
+    bottom:10
   },
   button: {
     alignItems: 'center',

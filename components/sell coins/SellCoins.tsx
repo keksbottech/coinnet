@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform, TouchableOpacity, ToastAndroid, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import BitcoinImage from '@/assets/svg/bitcoin.svg';
@@ -12,6 +12,7 @@ import { getSelectedCoinData } from '@/lib/store/reducers/storeSelectedCoin';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import Button from '../ui/button/Button';
 import { useRouter } from 'expo-router';
+import { ThemedText } from '../ThemedText';
 
 // Define the types for your form data
 interface FormValues {
@@ -92,16 +93,20 @@ const SellCoinForm: React.FC = () => {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
           {/* Select Coin */}
-          <Text style={styles.label}>Select Coin</Text>
+          <ThemedText style={styles.label}>Select Coin</ThemedText>
           <TouchableOpacity onPress={enableBottomDrawer} style={styles.inputWrapper}>
-            <BitcoinImage />
+            {/* <Image source={{uri:selectedCoin.image}} /> */}
+            {
+              selectedCoin?.name ? '' :      <ThemedText>Tap to Select Coin</ThemedText>
+            }
+       
             <View>
-            <Text style={styles.text}>{selectedCoin?.name}</Text>
-            <Text style={styles.text}>{selectedCoin?.symbol}</Text>
+            <ThemedText style={styles.text}>{selectedCoin?.name}</ThemedText>
+            <ThemedText style={styles.text}>{selectedCoin?.symbol}</ThemedText>
             </View>
           </TouchableOpacity>
 
-          <Text style={styles.label}>Payment Type</Text>
+          <ThemedText style={styles.label}>Payment Type</ThemedText>
           <View style={styles.inputWrapper}>
             {/* <BitcoinImage /> */}
             <Controller
@@ -110,6 +115,7 @@ const SellCoinForm: React.FC = () => {
               rules={{ required: 'payment name is required' }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                placeholderTextColor={'#ccc'}
                   style={styles.input}
                   placeholder="Paypal or Bank Transfer"
 
@@ -119,11 +125,11 @@ const SellCoinForm: React.FC = () => {
                 />
               )}
             />
-            {errors.payment && <Text style={styles.errorText}>{errors.payment.message}</Text>}
+            {errors.payment && <ThemedText style={styles.errorText}>{errors.payment.message}</ThemedText>}
           </View>
 
           {/* Limits */}
-          <Text style={styles.label}>Limits</Text>
+          <ThemedText style={styles.label}>Limits</ThemedText>
           <View style={styles.inputWrapper}>
             {/* <BitcoinImage /> */}
             <Controller
@@ -132,6 +138,7 @@ const SellCoinForm: React.FC = () => {
               rules={{ required: 'Limit is required' }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                placeholderTextColor={'#ccc'}
                   style={styles.input}
                   placeholder="1-100"
                   keyboardType="numeric"
@@ -141,11 +148,11 @@ const SellCoinForm: React.FC = () => {
                 />
               )}
             />
-            {errors.limit && <Text style={styles.errorText}>{errors.limit.message}</Text>}
+            {errors.limit && <ThemedText style={styles.errorText}>{errors.limit.message}</ThemedText>}
           </View>
 
           {/* Quantity */}
-          <Text style={styles.label}>Quantity</Text>
+          <ThemedText style={styles.label}>Quantity</ThemedText>
           <View style={styles.inputWrapper}>
             {/* <BitcoinImage /> */}
             <Controller
@@ -160,6 +167,7 @@ const SellCoinForm: React.FC = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                placeholderTextColor={'#ccc'}
                   style={styles.input}
                   placeholder="0.023554"
                   keyboardType="numeric"
@@ -169,11 +177,11 @@ const SellCoinForm: React.FC = () => {
                 />
               )}
             />
-            {errors.quantity && <Text style={styles.errorText}>{errors.quantity.message}</Text>}
+            {errors.quantity && <ThemedText style={styles.errorText}>{errors.quantity.message}</ThemedText>}
           </View>
 
           {/* You Sell */}
-          <Text style={styles.label}>You Sell</Text>
+          <ThemedText style={styles.label}>You Sell</ThemedText>
           <View style={styles.inputWrapper}>
             {/* <BitcoinImage /> */}
             <Controller
@@ -188,6 +196,7 @@ const SellCoinForm: React.FC = () => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                placeholderTextColor={'#ccc'}
                   style={styles.input}
                   placeholder="$1,000"
                   keyboardType="numeric"
@@ -197,7 +206,7 @@ const SellCoinForm: React.FC = () => {
                 />
               )}
             />
-            {errors.youSell && <Text style={styles.errorText}>{errors.youSell.message}</Text>}
+            {errors.youSell && <ThemedText style={styles.errorText}>{errors.youSell.message}</ThemedText>}
           </View>
 
           <View style={styles.buttonWrapper}>
@@ -234,7 +243,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginBottom: 20,
-    backgroundColor: '#f9f9f9',
+
   },
   picker: {
     flex: 1,
@@ -243,6 +252,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontFamily: 'MonsterReg',
+    color:'#ccc'
   },
   errorText: {
     color: 'red',

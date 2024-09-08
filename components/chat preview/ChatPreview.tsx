@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { ThemedText } from '../ThemedText';
 
 interface ChatPreviewProps {
   id: string;
@@ -26,16 +27,16 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({ id, name= 'kjsj ks', lastMess
           <Image source={{ uri: profileUrl }} style={styles.profileImage} />
         ) : (
           <View style={styles.initialsContainer}>
-            <Text style={styles.initialsText}>{initials}</Text>
+            <ThemedText style={styles.initialsText}>{initials}</ThemedText>
           </View>
         )}
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.nameText}>{name}</Text>
-        <Text style={styles.messageText}>{lastMessage}</Text>
+        <ThemedText style={styles.nameText}>{name}</ThemedText>
+        <ThemedText style={styles.messageText}>{lastMessage}</ThemedText>
       </View>
       <View style={styles.timeContainer}>
-        <Text style={styles.timeText}>{time}</Text>
+        <ThemedText style={styles.timeText}>{time}</ThemedText>
         {isNewMessage && <View style={styles.newMessageIndicator} />}
       </View>
     </TouchableOpacity>

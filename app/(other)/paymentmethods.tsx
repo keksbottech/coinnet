@@ -5,9 +5,12 @@ import PageHeader from '@/components/page header/PageHeader';
 import { FontAwesome } from '@expo/vector-icons';
 import Paypal from '@/assets/svg/paypal.svg';
 import { useRouter } from 'expo-router';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '@/components/ThemedText';
 
 const PaymentMethods = () => {
   const router = useRouter();
+  const theme = useAppSelector(state => state.theme.theme)
 
   const navigateToPaypal = () => {
     router.push('/(other)/paywithpaypal');
@@ -22,22 +25,22 @@ const PaymentMethods = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader 
         icon={<FontAwesome name="angle-left" size={24} color="black" />}  
-        label={<Text style={styles.headerLabel}>Deposit</Text>} 
+        label={<ThemedText style={styles.headerLabel}>Deposit</ThemedText>} 
       />
   
       <View style={styles.wrapper}>
-        <Text style={styles.title}>Payment Methods</Text>
+        <ThemedText style={styles.title}>Payment Methods</ThemedText>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={navigateToPaypal} style={styles.button}>
+          <TouchableOpacity onPress={navigateToPaypal} style={[styles.button, {borderColor:theme ? 'white': 'black'}]}>
             <Paypal />
-            <Text style={styles.label}>Deposit with Paypal</Text>
+            <ThemedText style={styles.label}>Deposit with Paypal</ThemedText>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={navigateToFlutterwave} style={styles.button}>
+          <TouchableOpacity onPress={navigateToFlutterwave} style={[styles.button, {borderColor:theme ? 'white': 'black'}]}>
             <View>
               <Image 
                 source={require('@/assets/images/flutterwave.png')} 
@@ -45,10 +48,10 @@ const PaymentMethods = () => {
                 resizeMode="contain" 
               />
             </View>
-            <Text style={styles.label}>Deposit with Flutterwave</Text>
+            <ThemedText style={styles.label}>Deposit with Flutterwave</ThemedText>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={navigateToPaystack} style={styles.button}>
+          <TouchableOpacity onPress={navigateToPaystack} style={[styles.button, {borderColor:theme ? 'white': 'black'}]}>
             <View>
               <Image 
                 source={require('@/assets/images/paystack.png')} 
@@ -56,7 +59,7 @@ const PaymentMethods = () => {
                 resizeMode="contain" 
               />
             </View>
-            <Text style={styles.label}>Deposit with Paystack</Text>
+            <ThemedText style={styles.label}>Deposit with Paystack</ThemedText>
           </TouchableOpacity>
         </View>
       </View>

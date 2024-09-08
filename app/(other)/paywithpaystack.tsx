@@ -13,6 +13,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import Loading from '@/components/loading/Loading';
 import SelectCoinsToDepositDrawer from '@/components/select coin/SelectCoinToDeposit';
 import { useForm, Controller } from 'react-hook-form';
+import { ThemedText } from '@/components/ThemedText';
 
 const PayWithPaystackScreen = () => {
   const router = useRouter();
@@ -22,7 +23,7 @@ const PayWithPaystackScreen = () => {
   const [isBottomDrawerEnabled, setIsBottomDrawerEnabled] = useState(false);
   const selectedCoin = useAppSelector(state => state.selectedCoin.selectedCoin);
   const marketStoredData = useAppSelector(state => state.market.marketData);
-
+  const theme = useAppSelector(state => state.theme.theme)
   const { control, setValue, handleSubmit, watch } = useForm({
     defaultValues: {
       name: '',
@@ -86,10 +87,10 @@ const PayWithPaystackScreen = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={[styles.safeArea, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <PageHeader
           icon={<FontAwesome name="angle-left" size={24} color="black" />}
-          label={<Text style={styles.pageHeaderLabel}>Deposit</Text>}
+          label={<ThemedText style={styles.pageHeaderLabel}>Deposit</ThemedText>}
         />
         <KeyboardAvoidingView
           style={styles.keyboardAvoidingView}
@@ -98,22 +99,22 @@ const PayWithPaystackScreen = () => {
         >
           <ScrollView contentContainerStyle={styles.scrollViewContentContainer}>
             <View style={styles.container}>
-              <Text style={styles.title}>Deposit with Paystack</Text>
+              <ThemedText style={styles.title}>Deposit with Paystack</ThemedText>
               <View style={styles.wrapper}>
-                <Text style={[styles.labels, {marginTop:20}]}>Select Coin to Buy</Text>
-                <TouchableOpacity onPress={enableBottomDrawer} style={styles.withdrawToContainer}>
+                <ThemedText style={[styles.labels, {marginTop:20}]}>Select Coin to Buy</ThemedText>
+                <TouchableOpacity onPress={enableBottomDrawer} style={[styles.withdrawToContainer, {backgroundColor:theme ? 'gray': 'white'}]}>
                   <View style={styles.withdrawToInnerContainer}>
                     <FontAwesome name="bank" size={24} color="black" />
                     <View>
-                      <Text style={styles.withdrawToText}>{selectedCoin?.name} </Text>
-                      <Text style={styles.withdrawToText}>{selectedCoin?.symbol}</Text>
+                      <ThemedText style={styles.withdrawToText}>{selectedCoin?.name} </ThemedText>
+                      <ThemedText style={styles.withdrawToText}>{selectedCoin?.symbol}</ThemedText>
                     </View>
                   </View>
                   <AntDesign name="down" size={20} color="black" />
                 </TouchableOpacity>
 
                 <View style={styles.wrap}>
-                  <Text style={styles.labels}>Name:</Text>
+                  <ThemedText style={styles.labels}>Name:</ThemedText>
                   <Controller
                     control={control}
                     name="name"
@@ -124,7 +125,7 @@ const PayWithPaystackScreen = () => {
                 </View>
 
                 <View style={styles.wrap}>
-                  <Text style={styles.labels}>Email:</Text>
+                  <ThemedText style={styles.labels}>Email:</ThemedText>
                   <Controller
                     control={control}
                     name="email"
@@ -135,7 +136,7 @@ const PayWithPaystackScreen = () => {
                 </View>
 
                 <View style={styles.wrap}>
-                  <Text style={styles.labels}>Coin Amount:</Text>
+                  <ThemedText style={styles.labels}>Coin Amount:</ThemedText>
                   <Controller
                     control={control}
                     name="coinAmount"
@@ -152,7 +153,7 @@ const PayWithPaystackScreen = () => {
                 </View>
 
                 <View style={styles.wrap}>
-                  <Text style={styles.labels}>Amount To Pay</Text>
+                  <ThemedText style={styles.labels}>Amount To Pay</ThemedText>
                   <Controller
                     control={control}
                     name="fiatAmount"
@@ -164,7 +165,7 @@ const PayWithPaystackScreen = () => {
               </View>
 
               <TouchableOpacity onPress={changePaymentMethod}>
-                <Text style={styles.changeMethod}>Change Deposit Method</Text>
+                <ThemedText style={styles.changeMethod}>Change Deposit Method</ThemedText>
               </TouchableOpacity>
               <Button
                 styles={styles.button}

@@ -1,22 +1,26 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Separator } from 'tamagui';
+import { ThemedText } from '../ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const MarketSubHeaderPairsTabs = () => {
+  const theme = useAppSelector(state => state.theme.theme)
+
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer,{backgroundColor:theme ? 'rgba(255,255,255,.1)': 'white'}]}>
       <View style={styles.column}>
-        <Text style={styles.headerText}>Pair</Text>
-        <Text style={styles.headerText}>USDT</Text>
+        <ThemedText style={styles.headerText}>Pair</ThemedText>
+        <ThemedText style={styles.headerText}>USDT</ThemedText>
       </View>
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={styles.headerText}>Last</Text>
-          <Text style={styles.headerText}>Price</Text>
+          <ThemedText style={styles.headerText}>Last</ThemedText>
+          <ThemedText style={styles.headerText}>Price</ThemedText>
         </View>
         <View style={[styles.column, styles.marginLeft]}>
-          <Text style={styles.headerText}>24H</Text>
-          <Text style={styles.headerText}>Change</Text>
+          <ThemedText style={styles.headerText}>24H</ThemedText>
+          <ThemedText style={styles.headerText}>Change</ThemedText>
         </View>
       </View>
     </View>
@@ -43,7 +47,6 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    color: '#333333',
     fontFamily: 'MonsterBold',
   },
   marginLeft: {

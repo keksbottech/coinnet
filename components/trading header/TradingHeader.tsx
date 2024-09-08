@@ -1,9 +1,12 @@
+import { useAppSelector } from '@/hooks/useAppSelector';
 import { usePathname, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { ThemedText } from '../ThemedText';
 
 const TradingHeader = ({data, style}) => {
   const pathname = usePathname()
+  const theme = useAppSelector(state => state.theme.theme)
 
   const router = useRouter()
 
@@ -18,7 +21,7 @@ const TradingHeader = ({data, style}) => {
   }
 
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, style, {backgroundColor:theme ? 'rgba(255,255,255,.1)': 'white'}]}>
       {data?.map(period => (
         <TouchableOpacity
           key={period.id}
@@ -28,14 +31,14 @@ const TradingHeader = ({data, style}) => {
           ]}
           onPress={() => navigateToSelectedTab(period.screen)}
         >
-          <Text
+          <ThemedText
             style={[
               styles.buttonText,
               pathname === `/${period.scren}` && styles.selectedButtonText
             ]}
           >
             {period.name}
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
       ))}
     </View>

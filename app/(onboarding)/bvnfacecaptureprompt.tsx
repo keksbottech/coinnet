@@ -4,22 +4,25 @@ import Button from '@/components/ui/button/Button';
 import BvnFaceImage from '@/assets/svg/facecaputure.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const BvnFaceCapture = () => {
   const router = useRouter();
+  const theme = useAppSelector(state => state.theme.theme)
 
   const navigateToBvnFaceCaptureBox = () => {
     router.push('/(onboarding)/bvnfacecapture');
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <View style={styles.container}>
         <BvnFaceImage />
-        <Text style={styles.title}>One More Thing</Text>
-        <Text style={styles.description}>
+        <ThemedText style={styles.title}>One More Thing</ThemedText>
+        <ThemedText style={styles.description}>
           To complete your KYC verification, please ensure that your face is clearly visible and matches the photo on your NIN and BVN. Make sure you are in a well-lit environment with a plain background. Remove any facial accessories such as glasses or hats before taking the photo.
-        </Text>
+        </ThemedText>
         <Button onClick={navigateToBvnFaceCaptureBox} label="Done" />
       </View>
     </SafeAreaView>

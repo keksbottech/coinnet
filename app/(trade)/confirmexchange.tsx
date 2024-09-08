@@ -7,20 +7,22 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Button from '@/components/ui/button/Button';
 import { useRouter } from 'expo-router';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const ConfirmExchange = () => {
   const router = useRouter();
-
+  const theme = useAppSelector(state => state.theme.theme)
   const navigateToAuthenticationCode = () => {
     router.navigate('/(trade)/transactionauthenticationcode');
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={[styles.safeAreaView,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader
-        icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        other={<AntDesign name="infocirlceo" size={24} color="black" />}
-        label={<Text style={styles.headerText}>Exchange Confirmation</Text>}
+        icon={<FontAwesome name="angle-left" size={24} color={theme ?'white':"black"} />}
+        other={<AntDesign name="infocirlceo" size={24} color={theme ?'white':"black"} />}
+        label={<ThemedText style={styles.headerText}>Exchange Confirmation</ThemedText>}
       />
       <View style={styles.container}>
         <ConfirmationExchange />

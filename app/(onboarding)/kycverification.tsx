@@ -14,12 +14,14 @@ import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'react-native';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { axios } from '@/lib/axios';
+import { ThemedText } from '@/components/ThemedText';
 
 const KycVerification = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const userData = useAppSelector(state => state.user.user)
+  const theme = useAppSelector(state => state.theme.theme)
 
   const {
     control,
@@ -137,7 +139,7 @@ const KycVerification = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <SafeAreaView style={{ padding: 10, flex: 1, backgroundColor: 'white' }}>
+      <SafeAreaView style={[{ padding: 10, flex: 1 },  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -149,16 +151,16 @@ const KycVerification = () => {
               <View style={styles.container}>
                 <View style={styles.header}>
                   <Fingerprint />
-                  <Text style={styles.title}>KYC Verification</Text>
+                  <ThemedText style={styles.title}>KYC Verification</ThemedText>
                 </View>
 
-                <Text style={styles.description}>
+                <ThemedText style={styles.description}>
                   Verify your identity! Upload a government-issued ID (Passport, driver’s license, national ID card) to complete KYC verification, secure your account, and unlock full platform features.
-                </Text>
+                </ThemedText>
 
                 <View style={styles.inputGroup}>
                   <View>
-                    <Text style={[styles.text, { marginBottom: 10 }]}>Enter your BVN Number</Text>
+                    <ThemedText style={[styles.text, { marginBottom: 10 }]}>Enter your BVN Number</ThemedText>
                     <Controller
                       control={control}
                       name="bvn"
@@ -177,14 +179,14 @@ const KycVerification = () => {
                             value={value}
                             keyboardType="numeric"
                           />
-                          {errors.bvn && <Text style={{ color: 'red' }}>{errors.bvn.message}</Text>}
+                          {errors.bvn && <ThemedText style={{ color: 'red' }}>{errors.bvn.message}</ThemedText>}
                         </>
                       )}
                     />
                   </View>
 
                   <View style={{ marginTop: 10 }}>
-                    <Text style={[styles.text, { marginBottom: 10 }]}>NIN Number</Text>
+                    <ThemedText style={[styles.text, { marginBottom: 10 }]}>NIN Number</ThemedText>
                     <Controller
                       control={control}
                       name="nin"
@@ -203,7 +205,7 @@ const KycVerification = () => {
                             value={value}
                             keyboardType="numeric"
                           />
-                          {errors.nin && <Text style={{ color: 'red' }}>{errors.nin.message}</Text>}
+                          {errors.nin && <ThemedText style={{ color: 'red' }}>{errors.nin.message}</ThemedText>}
                         </>
                       )}
                     />
@@ -212,9 +214,9 @@ const KycVerification = () => {
 
                 <View style={styles.uploadLinkContainer}>
                   <TouchableOpacity style={{ marginRight: 5 }} onPress={pickImage}>
-                    <Text style={styles.uploadLink}>Click Here</Text>
+                    <ThemedText style={styles.uploadLink}>Click Here</ThemedText>
                   </TouchableOpacity>
-                  <Text style={styles.text}>to upload NIN Slip</Text>
+                  <ThemedText style={styles.text}>to upload NIN Slip</ThemedText>
                 </View>
 
                 {imageUri && (

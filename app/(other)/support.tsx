@@ -8,13 +8,16 @@ import Button from '@/components/ui/button/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons';
 import ContactUs from '@/components/support/Support';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '@/components/ThemedText';
 
 const Support = () => {
+  const theme = useAppSelector(state => state.theme.theme)
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader
-        icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        label={<Text style={styles.headerText}>Support</Text>}
+        icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white' : "black" }/>}
+        label={<ThemedText style={styles.headerText}>Support</ThemedText>}
       />
       <View style={styles.container}>
         <ContactUs />

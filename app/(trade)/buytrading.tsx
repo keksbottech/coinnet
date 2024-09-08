@@ -20,6 +20,7 @@ import { TouchableOpacity } from 'react-native';
 import { RefreshControl } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ToastAndroid } from 'react-native';
+import { ThemedText } from '@/components/ThemedText';
 
 const BuyTrading = () => {
     const router = useRouter();
@@ -28,7 +29,7 @@ const BuyTrading = () => {
     const orders = useAppSelector(state => state.orders.orders);
     const selectedCoin = useAppSelector(state => state.selectedCoin.selectedCoin);
     const [refreshing, setRefreshing] = useState(false)
-
+    const theme = useAppSelector(state => state.theme.theme)
     const [disableBackPress, setDisableBackPress] = useState(true)
 
 
@@ -110,19 +111,19 @@ const BuyTrading = () => {
       router.push('/(trade)/chatpreview')
     }
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'white', padding: 10, paddingTop:30 }}>
+      <SafeAreaView style={[{ flex: 1, padding: 10, paddingTop:30,  }, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
                 <PageHeader
             icon={
        
-                          <FontAwesome name="angle-left" size={24} color="black" />
+                          <FontAwesome name="angle-left" size={24} color={theme ? 'white':"black"} />
                      
                           }
             other={
               <TouchableOpacity onPress={navigateToChatPreview}>
-            <Fontisto name="hipchat" size={24} color="black" />
+            <Fontisto name="hipchat" size={24} color={theme ? 'white':"black"} />
             </TouchableOpacity>
             }
-            label={<Text style={{ fontFamily: 'MonsterBold', fontSize:20 }}>Trading</Text>}
+            label={<ThemedText style={{ fontFamily: 'MonsterBold', fontSize:20 }}>Trading</ThemedText>}
           />
         <View>
   
@@ -131,7 +132,7 @@ const BuyTrading = () => {
           <TradingAmountSubHeader />
 
           <View style={{ alignItems: 'center' }}>
-            {isLoading && <Wave size={40} />}
+            {isLoading && <Wave size={40} color={theme? 'white': 'black'}/>}
           </View>
 
           <FlatList

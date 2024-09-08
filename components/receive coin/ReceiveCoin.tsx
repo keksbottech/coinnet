@@ -2,6 +2,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Clipboard, Alert } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import { ThemedText } from '../ThemedText';
 
 const ReceiveCoin = () => {
   const userData = useAppSelector(state => state.user.user)
@@ -23,7 +24,7 @@ const ReceiveCoin = () => {
 
   return (
     <View style={styles.container}>
-            <Text style={[styles.addressLabel, {textAlign:'center'}]}>You can only accept payments through coinnet users</Text>
+            <ThemedText style={[styles.addressLabel, {textAlign:'center'}]}>You can only accept payments through coinnet users</ThemedText>
       <View style={styles.qrContainer}>
         <QRCode
           value={walletAddress}
@@ -34,11 +35,11 @@ const ReceiveCoin = () => {
       <View style={{flexDirection:'row', alignItems:'center', width:'100%', justifyContent:'space-between'}}>
       
         <View>
-      <Text style={styles.addressLabel}>Wallet address</Text>
-      <Text style={styles.address}>{formatWalletAddress(userData._id)}</Text>
+      <ThemedText style={styles.addressLabel}>Wallet address</ThemedText>
+      <ThemedText style={styles.address}>{formatWalletAddress(userData._id)}</ThemedText>
       </View>
       <TouchableOpacity style={styles.copyButton} onPress={handleCopyToClipboard}>
-        <Text style={styles.copyButtonText}>Copy</Text>
+        <ThemedText style={styles.copyButtonText}>Copy</ThemedText>
       </TouchableOpacity>
       </View>
     </View>
@@ -62,17 +63,16 @@ const styles = StyleSheet.create({
   },
   addressLabel: {
     fontSize: 16,
-    color: '#333',
+    color: '#ccc',
     fontFamily:'MonsterReg'
   },
   address: {
     fontSize: 14,
-    color: '#555',
+    color: '#ccc',
     marginBottom: 20,
     fontFamily:'MonsterReg'
   },
   copyButton: {
-    backgroundColor: '#f0f0f0',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,

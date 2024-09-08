@@ -17,12 +17,14 @@ import Loading from '@/components/loading/Loading';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { getUserForgottenEmail } from '@/lib/store/reducers/storeUserInfo';
+import { ThemedText } from '@/components/ThemedText';
 
 const Passwordreset = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false)
   const userData = useAppSelector(state => state.user.user)
   const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
   const { control, handleSubmit, watch, formState: { errors } } = useForm({
     defaultValues: {
@@ -89,33 +91,34 @@ const Passwordreset = () => {
     }
   };
 
+  console.log(theme)
   return (
     <>
     {isLoading && <Loading/>}
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={[{ flex: 1},  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView contentContainerStyle={{ padding: 10, flexGrow: 1 }}>
           <PageHeader
-            icon={<FontAwesome name="angle-left" size={24} color="black" />}
+            icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white':"black"} />}
             label={<NumberStepProgress currentStep={1} />}
           />
 <Toast/>
           <View style={styles.content}>
             <View>
-              <Text style={styles.title}>Password reset</Text>
-              <Text style={styles.description}>
+              <ThemedText style={styles.title}>Password reset</ThemedText>
+              <ThemedText style={styles.description}>
                 Please enter your registered email address to reset your password
-              </Text>
+              </ThemedText>
             </View>
 
             <View style={styles.inputContainer}>
               <Feather
                 name="mail"
                 size={24}
-                color="black"
+                color={theme ? 'white':"black"}
                 style={styles.inputIcon}
               />
               <Controller
@@ -147,17 +150,17 @@ const Passwordreset = () => {
                 />
               )}
             </View>
-            {errors.email && <Text style={{ color: 'red' }}>{errors.email.message}</Text>}
+            {errors.email && <ThemedText style={{ color: 'red' }}>{errors.email.message}</ThemedText>}
 
             <TouchableOpacity onPress={handleSubmit(sendEmailConfirmationOtpToValidate)} style={styles.button}>
-              <Text style={styles.buttonText}>Continue</Text>
+              <ThemedText style={styles.buttonText}>Continue</ThemedText>
             </TouchableOpacity>
 
-            <Text style={styles.termsText}>
+            <ThemedText style={styles.termsText}>
               By registering you accept our Terms & Conditions and Privacy Policy. Your data will be securely encrypted with TLS
-            </Text>
+            </ThemedText>
 
-            <ContinueWithOauth styles={styles.oauth} />
+            {/* <ContinueWithOauth styles={styles.oauth} /> */}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

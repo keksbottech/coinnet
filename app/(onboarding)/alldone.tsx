@@ -5,9 +5,12 @@ import Button from '@/components/ui/button/Button';
 import CheckImage from '@/assets/svg/check.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const AllDoneAccountCreation = () => {
   const router = useRouter();
+  const theme = useAppSelector(state => state.theme.theme)
 
   const navigateToPasswordReset = () => {
     router.push('/(tabs)');
@@ -18,10 +21,10 @@ const AllDoneAccountCreation = () => {
       <View style={styles.container}>
         <CheckImage />
         <View>
-          <Text style={styles.allDoneText}>All done</Text>
-          <Text style={styles.congratsText}>
+          <ThemedText style={styles.allDoneText}>All done</ThemedText>
+          <ThemedText style={styles.congratsText}>
             Congratulations! Your account is all set up
-          </Text>
+          </ThemedText>
         </View>
         <Button onClick={navigateToPasswordReset} label="Done" />
       </View>
@@ -35,7 +38,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'white',
   },
   container: {
     flex: 1,

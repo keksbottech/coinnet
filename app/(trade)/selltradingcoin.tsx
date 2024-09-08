@@ -8,20 +8,23 @@ import SellCoinsForm from '@/components/sell coins/SellCoins';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import tradingHeaderData from '@/app json/tradingheaderbuysell.json';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '@/components/ThemedText';
 
 const SellTradingCoin = () => {
   const router = useRouter();
+  const theme = useAppSelector(state =>state.theme.theme)
 
   const navigateToConfirmBuy = () => {
     router.push('/');
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <View style={styles.container}>
         <PageHeader
-          icon={<FontAwesome name="angle-left" size={24} color="black" />}
-          label={<Text style={styles.headerText}>Trading</Text>}
+          icon={<FontAwesome name="angle-left" size={24} color={theme ?'white' : "black"} />}
+          label={<ThemedText style={styles.headerText}>Trading</ThemedText>}
         />
         <TradingHeader style={styles.tradingHeader} data={tradingHeaderData} />
         <SellCoinsForm />

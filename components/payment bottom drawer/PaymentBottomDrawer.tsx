@@ -9,6 +9,7 @@ import MonoBank from '@/assets/svg/mastercard.svg'
 import VisaCard from '@/assets/svg/visa.svg'
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getPaymentMethod } from '@/lib/store/reducers/storePaymentUrl';
+import { ThemedText } from '../ThemedText';
 
 const paymentMethods = [
     { id: 1, name: 'PayPal', icon: <PayPal/>, number: 'XXXX5555' },
@@ -31,7 +32,7 @@ const PaymentBottomDrawer = () => {
 <BottomDrawer
     ui={
       <View style={styles.container}>
-      <Text style={styles.title}>Choose Payment Methods</Text>
+      <ThemedText style={styles.title}>Choose Payment Methods</ThemedText>
       {paymentMethods.map(method => (
         <TouchableOpacity
           key={method.id}
@@ -43,9 +44,10 @@ const PaymentBottomDrawer = () => {
             {method.icon}
             </View>
             <View style={{marginLeft:10}}>
-              <Text style={styles.methodName}>{method.name}</Text>
-              <Text style={styles.methodNumber}>{method.number}</Text>
+              <ThemedText style={styles.methodName}>{method.name}</ThemedText>
+              <ThemedText style={styles.methodNumber}>{method.number}</ThemedText>
             </View>
+
           </View>
           {selectedMethod === method.id && (
             <MaterialIcons name="check-circle" size={24} color="green" />
@@ -64,7 +66,6 @@ export default PaymentBottomDrawer
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: '#fff',
       paddingTop: 20,
       paddingHorizontal:20
     },

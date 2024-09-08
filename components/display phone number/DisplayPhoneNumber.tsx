@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { FontAwesome } from '@expo/vector-icons';
+import { ThemedText } from '../ThemedText';
 
 interface DisplayPhoneNumberProps {
   receiverName: string | null;
@@ -28,17 +29,17 @@ const DisplayPhoneNumber: React.FC<DisplayPhoneNumberProps> = ({ receiverName, h
 
   return (
     <View style={styles.container}>
-      <Text style={styles.receiverName}>{receiverName}</Text>
-      <Text style={styles.receiverPhone}>{receiverPhone}</Text>
+      <ThemedText style={styles.receiverName}>{receiverName}</ThemedText>
+      <ThemedText style={styles.receiverPhone}>{receiverPhone}</ThemedText>
 
       <TouchableOpacity onPress={handleCopy} style={styles.button}>
         <FontAwesome name="clipboard" size={24} color="blue" />
-        <Text style={styles.buttonText}>Copy Phone Number</Text>
+        <ThemedText style={[styles.buttonText]}>Copy Phone Number</ThemedText>
       </TouchableOpacity>
       
       <TouchableOpacity onPress={handleCancel} style={styles.button}>
         <FontAwesome name="close" size={24} color="blue" />
-        <Text style={styles.buttonText}>Cancel</Text>
+        <ThemedText style={styles.buttonText}>Cancel</ThemedText>
       </TouchableOpacity>
 
       <Modal
@@ -50,10 +51,10 @@ const DisplayPhoneNumber: React.FC<DisplayPhoneNumberProps> = ({ receiverName, h
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <FontAwesome name="clipboard" size={48} color="blue" style={styles.icon} />
-            <Text style={styles.modalText}>Phone number copied to clipboard!</Text>
-            <Text style={styles.modalPhone}>{receiverPhone}</Text>
+            <ThemedText style={styles.modalText}>Phone number copied to clipboard!</ThemedText>
+            <ThemedText style={styles.modalPhone}>{receiverPhone}</ThemedText>
             <TouchableOpacity onPress={handleCloseModal} style={styles.cancelButton}>
-              <Text style={styles.cancelButtonText}>Cancel</Text>
+              <ThemedText style={styles.cancelButtonText}>Cancel</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -88,7 +89,8 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: 10,
     fontSize: 16,
-    fontFamily:'MonsterReg'
+    fontFamily:'MonsterReg',
+    color:'black'
   },
   modalOverlay: {
     flex: 1,
@@ -118,11 +120,10 @@ const styles = StyleSheet.create({
   cancelButton: {
     marginTop: 10,
     padding: 10,
-    backgroundColor: '#007bff',
+    backgroundColor: 'red',
     borderRadius: 5,
   },
   cancelButtonText: {
-    color: 'white',
     fontSize: 16,
   },
 });

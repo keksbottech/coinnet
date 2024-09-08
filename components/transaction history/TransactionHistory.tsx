@@ -6,9 +6,11 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { Wave } from 'react-native-animated-spinkit';
 import { useFocusEffect } from 'expo-router';
 import { ScrollView } from 'react-native';
+import { ThemedText } from '../ThemedText';
 
 
 const TransactionHistory = ({ transaction }:any) => {
+  const theme = useAppSelector(state => state.theme.theme)
 
   function hideStringPartially(str:any) {
     if(!str) return ''
@@ -41,14 +43,14 @@ function formatDateAndTime(dateString:any) {
 
   return (
 
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor:theme ? 'rgba(255,255,255,.1)': 'white'}]}>
       <View>
-    <View style={styles.transactionItem}>
+    <View style={[styles.transactionItem]}>
       <View style={styles.header}>
-      <Text style={styles.amountUSD}>{transaction.asset}</Text>
-        <Text style={styles.currency}>$ {transaction.amountInFiat / 1700}</Text>
-        <Text style={styles.amountUSD}> {transaction.coinAmount}</Text>
-        <Text
+      <ThemedText style={styles.amountUSD}>{transaction.asset}</ThemedText>
+        <ThemedText style={styles.currency}>$ {parseFloat(transaction.amountInFiat / 1700).toFixed(6)}</ThemedText>
+        <ThemedText style={styles.amountUSD}> {parseFloat(transaction.coinAmount)}</ThemedText>
+        <ThemedText
           style={[
             styles.status,
             transaction.status === 'completed'
@@ -59,24 +61,24 @@ function formatDateAndTime(dateString:any) {
           ]}
         >
           {transaction.status}
-        </Text>
-        <Text style={styles.id}>ID: {hideStringPartially(transaction._id)}</Text>
+        </ThemedText>
+        <ThemedText style={styles.id}>ID: {hideStringPartially(transaction._id)}</ThemedText>
       </View>
       <View style={styles.body}>
-        <Text style={styles.amount}>Amount: {transaction.amount}</Text>
-        <Text style={styles.txid}>TXID: {hideStringPartially(transaction.txId)}</Text>
-        <Text style={styles.txid}>RID: {hideStringPartially(transaction.rId)}</Text>
+        <ThemedText style={styles.amount}>Amount: {transaction.amount}</ThemedText>
+        <ThemedText style={styles.txid}>TXID: {hideStringPartially(transaction.txId)}</ThemedText>
+        <ThemedText style={styles.txid}>RID: {hideStringPartially(transaction.rId)}</ThemedText>
       </View>
       <View>
-      <Text style={styles.dateTime}>
+      <ThemedText style={styles.dateTime}>
           {formatDateAndTime(transaction.createdAt).formattedDate} 
-        </Text>
-        <Text style={styles.dateTime}>
+        </ThemedText>
+        <ThemedText style={styles.dateTime}>
         {formatDateAndTime(transaction.createdAt).formattedTime} 
-        </Text>
+        </ThemedText>
       </View>
       </View>
-      <Text style={styles.label}>Description: {transaction.details}</Text>
+      <ThemedText style={styles.label}>Description: {transaction.details}</ThemedText>
     </View>
 
     {/* {transaction.type === 'send' && (
@@ -84,11 +86,11 @@ function formatDateAndTime(dateString:any) {
           <View style={{alignItems:'center', justifyContent:'center', flexDirection:'row'}}>
           <SendImage />
           <View style={{left:10}}>
-<Text style={styles.amountUSD}>Send</Text>
-<Text style={styles.amountUSD}>monobank</Text>
+<Text style={styles.amountUSD}>Send</ThemedText>
+<Text style={styles.amountUSD}>monobank</ThemedText>
             </View>
             </View>
-          <Text style={styles.amountUSD}>{transaction.amountInFiat}</Text>
+          <ThemedText style={styles.amountUSD}>{transaction.amountInFiat}</ThemedText>
         </View>
       )} */}
     </View>
@@ -103,10 +105,10 @@ const styles = StyleSheet.create({
       marginBottom: 15,
       borderBottomColor:'black',
       borderBottomWidth:.3,
-      paddingBottom:30
+      paddingBottom:30,
+      borderRadius:15
   },
   transactionItem: {
-    backgroundColor: '#fff',
     borderRadius: 8,
     flexDirection:'row',
     justifyContent:'space-between'
@@ -179,7 +181,6 @@ const styles = StyleSheet.create({
   amountUSD: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
       fontFamily:'MonsterReg'
   },
   label:{

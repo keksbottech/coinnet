@@ -12,6 +12,7 @@ import SelectCoinsToDepositDrawer from '../select coin/SelectCoinToDeposit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
 import Loading from '../loading/Loading';
+import { ThemedText } from '../ThemedText';
 
 const SendCoins = () => {
   const { control, handleSubmit, formState: { errors } } = useForm();
@@ -21,6 +22,7 @@ const SendCoins = () => {
   const [isBottomDrawerEnabled, setIsBottomDrawerEnabled] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const theme = useAppSelector(state => state.theme.theme)
 
   const enableBottomDrawer = () => {
     setIsBottomDrawerEnabled(!isBottomDrawerEnabled);
@@ -67,25 +69,25 @@ const SendCoins = () => {
   return (
     <>
     {isLoading && <Loading/>}
-    <ScrollView style={{flex:1}}>
+    <ScrollView style={[{flex:1}, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <SafeAreaView style={{ padding: 10 }}>
         <View style={styles.container}>
-          <Text style={[styles.title, {textAlign:'center'}]}>Please enter only coinnet associated wallet address</Text>
-          <Text style={styles.title}>Select Coin</Text>
+          <ThemedText style={[styles.title, {textAlign:'center'}]}>Please enter only coinnet associated wallet address</ThemedText>
+          <ThemedText style={styles.title}>Select Coin</ThemedText>
           <View style={styles.coinSelector}>
-            <TouchableOpacity onPress={enableBottomDrawer} style={styles.coin}>
+            <TouchableOpacity onPress={enableBottomDrawer} style={[styles.coin,{backgroundColor:theme ? 'gray': 'white'}]}>
          
          
               <View style={styles.coinText}>
-                <Text style={styles.coinName}>{selectedCoin?.name}</Text>
-                <Text style={styles.coinBalance}>{selectedCoin?.balance}</Text>
+                <ThemedText style={styles.coinName}>{selectedCoin?.name}</ThemedText>
+                <ThemedText style={styles.coinBalance}>{selectedCoin?.balance}</ThemedText>
               </View>
               <Ionicons name="chevron-down-outline" size={20} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Enter Address</Text>
+            <ThemedText style={styles.label}>Enter Address</ThemedText>
             <View style={styles.inputWithIcon}>
               <Controller
                 control={control}
@@ -93,7 +95,7 @@ const SendCoins = () => {
                 rules={{ required: 'Address is required' }}
                 render={({ field: { onChange, value } }) => (
                   <TextInput
-                    style={[styles.input, { flex: 1 }]}
+                    style={[styles.input, {color:theme ? 'white': 'black'}, { flex: 1 }]}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter wallet address"
@@ -102,18 +104,18 @@ const SendCoins = () => {
               />
               <Ionicons name="qr-code-outline" size={24} style={styles.icon} />
             </View>
-            {errors.address && <Text style={styles.errorText}>{errors.address.message}</Text>}
+            {errors.address && <ThemedText style={styles.errorText}>{errors.address.message}</ThemedText>}
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Coin Amount</Text>
+            <ThemedText style={styles.label}>Coin Amount</ThemedText>
             <Controller
               control={control}
               name="amount"
               rules={{ required: 'Amount is required' }}
               render={({ field: { onChange, value } }) => (
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, {color:theme ? 'white': 'black'}]}
                   onChangeText={onChange}
                   value={value}
                   placeholder="Enter amount"
@@ -121,17 +123,17 @@ const SendCoins = () => {
                 />
               )}
             />
-            {errors.amount && <Text style={styles.errorText}>{errors.amount.message}</Text>}
+            {errors.amount && <ThemedText style={styles.errorText}>{errors.amount.message}</ThemedText>}
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Note</Text>
+            <ThemedText style={styles.label}>Note</ThemedText>
             <Controller
               control={control}
               name="note"
               render={({ field: { onChange, value } }) => (
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, {color:theme ? 'white': 'black'}]}
                   onChangeText={onChange}
                   value={value}
                   placeholder="Add a note"
@@ -140,10 +142,10 @@ const SendCoins = () => {
             />
           </View>
 
-          <Text style={[styles.transactionInfo, { paddingBottom: 30 }]}>
+          <ThemedText style={[styles.transactionInfo, { paddingBottom: 30 }]}>
             Transaction fees: 0.0000 BTC{'\n'}
             Min: 0.0001 BTC - Max: 2.0006 BTC
-          </Text>
+          </ThemedText>
 
           <Separator />
           <Button

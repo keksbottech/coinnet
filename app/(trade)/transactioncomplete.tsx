@@ -7,10 +7,12 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Button from '@/components/ui/button/Button';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const TransactionCompletePage = () => {
   const router = useRouter();
-
+  const theme = useAppSelector(state=> state.theme.theme)
   const navigateToTransactionHistory = () => {
     router.push('/(trade)/transactionhistory');
   };
@@ -22,9 +24,9 @@ const TransactionCompletePage = () => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <PageHeader
-        icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        other={<AntDesign name="infocirlceo" size={24} color="black" />}
-        label={<Text style={styles.headerText}>Transaction Completed</Text>}
+        icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white':"black"} />}
+        other={<AntDesign name="infocirlceo" size={24} color={theme ? 'white':"black"} />}
+        label={<ThemedText style={styles.headerText}>Transaction Completed</ThemedText>}
       />
       <View style={styles.container}>
         <TransactionComplete />

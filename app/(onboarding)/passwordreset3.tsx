@@ -17,12 +17,14 @@ import { axios } from '@/lib/axios';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import Loading from '@/components/loading/Loading';
 import Toast from 'react-native-toast-message';
+import { ThemedText } from '@/components/ThemedText';
 
 const PasswordReset3 = () => {
   const [isFingerprintEnabled, setIsFingerprintEnabled] = useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false)
   const userData = useAppSelector(state => state.user.user)
+  const theme = useAppSelector(state => state.theme.theme)
   
   const {
     control,
@@ -127,30 +129,30 @@ const PasswordReset3 = () => {
   return (
     <>
     {isLoading && <Loading/>}
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <PageHeader
-            icon={<FontAwesome name="angle-left" size={24} color="black" />}
+            icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white':"black"} />}
             label={<NumberStepProgress currentStep={3} />}
           />
 
 <Toast/>
           <View style={styles.content}>
             <View style={styles.headerContent}>
-              <Text style={styles.headerTitle}>Create a password</Text>
-              <Text style={styles.headerSubtitle}>
+              <ThemedText style={styles.headerTitle}>Create a password</ThemedText>
+              <ThemedText style={styles.headerSubtitle}>
                 The password must be 8 characters, including 1 uppercase letter, 1
                 number, and 1 special character.
-              </Text>
+              </ThemedText>
             </View>
 
             <View style={styles.formContainer}>
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Password</Text>
+                <ThemedText style={styles.label}>Password</ThemedText>
                 <Controller
                   control={control}
                   rules={{
@@ -176,11 +178,11 @@ const PasswordReset3 = () => {
                   )}
                   name="password"
                 />
-                {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
+                {errors.password && <ThemedText style={styles.errorText}>{errors.password.message}</ThemedText>}
               </View>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Confirm Password</Text>
+                <ThemedText style={styles.label}>Confirm Password</ThemedText>
                 <Controller
                   control={control}
                   rules={{
@@ -200,12 +202,12 @@ const PasswordReset3 = () => {
                   name="confirmPassword"
                 />
                 {errors.confirmPassword && (
-                  <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>
+                  <ThemedText style={styles.errorText}>{errors.confirmPassword.message}</ThemedText>
                 )}
               </View>
 
               <View style={styles.toggleContainer}>
-                <Text style={styles.label}>Unlock with Touch ID?</Text>
+                <ThemedText style={styles.label}>Unlock with Touch ID?</ThemedText>
                 <ToggleSwitch
                   isToggled={isFingerprintEnabled}
                   onValueChange={() => handleToggleSwitch(password)}
@@ -214,15 +216,15 @@ const PasswordReset3 = () => {
             </View>
 
             <Button onClick={handleSubmit(onSubmit)} styles={styles.button} label="Continue" />
-            <Text style={styles.termsText}>
+            <ThemedText style={styles.termsText}>
               By registering you accept our Terms & Conditions and Privacy Policy.
               Your data will be securely encrypted with TLS.
-            </Text>
+            </ThemedText>
           </View>
 
-          <View style={styles.oauthContainer}>
+          {/* <View style={styles.oauthContainer}>
             <ContinueWithOauth styles={{ position: 'relative' }} />
-          </View>
+          </View> */}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -237,7 +239,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     justifyContent: 'space-between',
-    backgroundColor: 'white',
   },
   content: {
     flex: 1,

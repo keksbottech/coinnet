@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   featureText: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
+    color: '#ccc',
     
     fontFamily:'MonsterReg'
   },

@@ -1,3 +1,4 @@
+import { useAppSelector } from '@/hooks/useAppSelector';
 import React from 'react';
 import { View, TextInput, StyleSheet, TextInputProps, StyleProp, TextStyle } from 'react-native';
 
@@ -19,17 +20,19 @@ const Input: React.FC<InputPropTypes> = ({
   keyboardType = 'default',
   ...restProps
 }) => {
+  const theme = useAppSelector(state => state.theme.theme)
   return (
     <TextInput
       placeholder={placeholder}
       keyboardType={keyboardType}
-      style={[styles.input, style]}
+      style={[styles.input, style, {color: theme ? 'white': 'black', borderColor:theme?'white':'black'}]}
       onChangeText={onChangeText}
       value={`${value}`}
       onBlur={onBlur}
       secureTextEntry={secureTextEntry}
       onEndEditing={onSubmit}
       editable={!readOnly}
+      placeholderTextColor={'#eee'}
       {...restProps} // Spread other TextInputProps
     />
   );
@@ -39,7 +42,7 @@ export default Input;
 
 const styles = StyleSheet.create({
   input: {
-    borderColor: 'black',
+    borderColor: '#eee',
     borderWidth: 0.5,
     borderStyle: 'solid',
     padding: 10,

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getSelectedCoinData } from '@/lib/store/reducers/storeSelectedCoin';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const FilterOptions: React.FC = () => {
   const [selectedAmount, setSelectedAmount] = useState<string>('Amount');
@@ -11,6 +12,7 @@ const FilterOptions: React.FC = () => {
   const amountOptions = ['Amount', '1', '10', '100', '1000']; // Add more options as needed
   const paymentMethods = ['Bank Transfer', 'PayPal']; // Add more options as needed
   const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
   useEffect(() => {
     console.log(selectedPaymentMethod)
@@ -39,11 +41,12 @@ const FilterOptions: React.FC = () => {
 
         <Picker
           selectedValue={selectedPaymentMethod}
-          style={styles.picker}
+          style={[styles.picker, {color:theme ?'white': 'black'}]}
+
           onValueChange={(itemValue) => setSelectedPaymentMethod(itemValue as string)}
         >
           {paymentMethods.map((method) => (
-            <Picker.Item key={method} style={{fontFamily:'MonsterReg'}} label={method} value={method} />
+            <Picker.Item key={method} style={[{fontFamily:'MonsterReg'},]} label={method} value={method} />
           ))}
         </Picker>
       </View>
@@ -73,7 +76,8 @@ const styles = StyleSheet.create({
   picker: {
     flex: 1,
     height: 40,
-       fontFamily:'MonsterReg'
+       fontFamily:'MonsterReg',
+      
   },
 });
 

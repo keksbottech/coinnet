@@ -6,10 +6,12 @@ import Button from '../ui/button/Button';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useRouter } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { ThemedText } from '../ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 export default function ConfirmationBuy({enableBottomDrawerFunc}:any) {
   const [selectedMethod, setSelectedMethod] = useState('Coinnet Wallet');
-
+  const theme = useAppSelector(state => state.theme.theme)
   const router = useRouter()
 
 
@@ -20,51 +22,51 @@ export default function ConfirmationBuy({enableBottomDrawerFunc}:any) {
 
   return (
     <>
-    <View style={styles.container}>
-      <Text style={styles.title}>Your Buy</Text>
-      <Text style={styles.amount}>0.040510</Text>
+    <View style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
+      <ThemedText style={styles.title}>Your Buy</ThemedText>
+      <ThemedText style={styles.amount}>0.040510</ThemedText>
 
-      <Text style={styles.label} >You Receive</Text>
+      <ThemedText style={styles.label} >You Receive</ThemedText>
 
       <View style={styles.sectionB}>
      
         <View style={styles.row}>
-          <Text style={styles.quantity}>Quantity</Text>
-          <Text style={styles.amountReceived}>0.040141 </Text>
+          <ThemedText style={styles.quantity}>Quantity</ThemedText>
+          <ThemedText style={styles.amountReceived}>0.040141 </ThemedText>
         </View>
 
-        <Text  style={{fontFamily:'MonsterBold', fontSize:18}}>BTC</Text>
+        <ThemedText  style={{fontFamily:'MonsterBold', fontSize:18}}>BTC</ThemedText>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label} >Payment Methods Available</Text>
+        <ThemedText style={styles.label} >Payment Methods Available</ThemedText>
         <TouchableOpacity onPress={enableBottomDrawerFunc} style={styles.pickerContainer}>
           <View style={styles.wrap}>
-        <FontAwesome name="bank" size={24} color="black" />
+  <FontAwesome name="bank" size={24} color={theme ?'white': "black"} />
         <View>
-          <Text style={styles.text}>Coinnet Wallet</Text>
-          <Text style={[styles.text, {marginTop:5}]}>XXXXXXX887748</Text>
+          <ThemedText style={styles.text}>Coinnet Wallet</ThemedText>
+          <ThemedText style={[styles.text, {marginTop:5}]}>XXXXXXX887748</ThemedText>
         </View>
         </View>
 
-        <AntDesign name="downcircleo" size={24} color="black" />
+  <AntDesign name="downcircleo" size={24} color={theme ?'white': "black"} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.detailsContainer}>
         <View style={styles.detailRow}>
-          <Text style={styles.detailLabel}>Amount</Text>
-          <Text style={styles.detailValue}>0.040141 BTC $1000</Text>
+          <ThemedText style={styles.detailLabel}>Amount</ThemedText>
+          <ThemedText style={styles.detailValue}>0.040141 BTC $1000</ThemedText>
         </View>
         <Separator/>
         <View style={styles.detailRow}>
-          <Text style={styles.detailLabel}>Transaction Fee (0.05%)</Text>
-          <Text style={styles.detailValue}>$1.0</Text>
+          <ThemedText style={styles.detailLabel}>Transaction Fee (0.05%)</ThemedText>
+          <ThemedText style={styles.detailValue}>$1.0</ThemedText>
         </View>
         <Separator/>
         <View style={styles.detailRow}>
-          <Text style={styles.detailLabel}>Total</Text>
-          <Text style={styles.detailValue}>0.040141 BTC $1001</Text>
+          <ThemedText style={styles.detailLabel}>Total</ThemedText>
+          <ThemedText style={styles.detailValue}>0.040141 BTC $1001</ThemedText>
         </View>
       </View>
       <Button onClick={navigateToAuthenticationCode} styles={{top:100, position:'relative'}} label='Buy'/>
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 16,
-    color: '#888',
+    // color: '#888',
     
     fontFamily:'MonsterReg'
   },

@@ -7,18 +7,21 @@ import NumberStepProgress from '@/components/number step progress/NumberStepProg
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import ShieldImage from '@/assets/svg/shield.svg';
 import { useRouter } from 'expo-router';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '@/components/ThemedText';
 
 const PasswordReset4 = () => {
   const router = useRouter();
+  const theme = useAppSelector(state => state.theme.theme)
 
   const navigateToHome = () => {
     router.push('/(tabs)/');
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader 
-        icon={<FontAwesome name="angle-left" size={24} color="black" />} 
+        icon={<FontAwesome name="angle-left" size={24} color={theme?'white':"black"} />} 
         label={<NumberStepProgress currentStep={3} />}
       />
        
@@ -27,13 +30,13 @@ const PasswordReset4 = () => {
           <ShieldImage />
         </View>
 
-        <Text style={styles.congratsText}>
+        <ThemedText style={styles.congratsText}>
           Congratulations!
-        </Text>
+        </ThemedText>
 
-        <Text style={styles.infoText}>
+        <ThemedText style={styles.infoText}>
           You have successfully created a new password, click continue to enter the application.
-        </Text>
+        </ThemedText>
 
         <Button onClick={navigateToHome} styles={styles.button} label='Continue' />
       </View>

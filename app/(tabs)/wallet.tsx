@@ -17,6 +17,7 @@ import { Wave } from 'react-native-animated-spinkit';
 import { Image } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from 'react-native';
+import { ThemedText } from '@/components/ThemedText';
 
 const Wallet = () => {
   const router = useRouter();
@@ -26,6 +27,7 @@ const Wallet = () => {
   const [isLoading, setIsLoading] = useState(false);
   const marketStoredData = useAppSelector(state => state.market.marketData);
   const [refreshing, setRefreshing] = useState(false)
+  const theme = useAppSelector(state => state.theme.theme)
 
   useFocusEffect(
     useCallback(() => {
@@ -130,19 +132,20 @@ const Wallet = () => {
                refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
+              style={{backgroundColor:theme ? '#0F0F0F': 'white'}}
     >
       <SafeAreaView style={styles.safeArea}>
         <PageHeader
         other={<TouchableOpacity onPress={navigateToHistory}>
-                    <Ionicons name="time-outline" size={24}  />
+                    <Ionicons name="time-outline" color={theme?'white':'black'} size={24}  />
         </TouchableOpacity>}
-          icon={<FontAwesome name="angle-left" size={24} color="black" />}
-          label={<Text style={[styles.label, styles.text2xl]}>Wallet</Text>}
+          icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white':"black"} />}
+          label={<ThemedText style={[styles.label, styles.text2xl]}>Wallet</ThemedText>}
         />
 
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.portfolioButton}>
-            <Text style={[styles.textCenter, styles.text2xl]}>Portfolio</Text>
+            <ThemedText style={[styles.textCenter, styles.text2xl]}>Portfolio</ThemedText>
           </TouchableOpacity>
           <AssetsCategories />
           <AssetWalletBalance />
@@ -157,13 +160,13 @@ const Wallet = () => {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={{ flex: 1 }}>
             <View style={styles.drawerHeader}>
-              <Text style={styles.drawerTitle}>My Assets</Text>
+              <ThemedText style={styles.drawerTitle}>My Assets</ThemedText>
               <View style={styles.iconsContainer}>
                 <TouchableOpacity style={styles.iconMargin}>
-                  <Ionicons name="search-outline" size={24} color="black" />
+                  <Ionicons name="search-outline" size={24} color={theme ? 'white':"black"} />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Ionicons name="filter-outline" size={24} color="black" />
+                  <Ionicons name="filter-outline" size={24} color={theme ? 'white':"black"} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -181,21 +184,21 @@ const Wallet = () => {
                     <Image source={{ uri: `https://cryptocompare.com${item.image}` }} width={50} height={50} />
                   </View>
                   <View>
-                    <Text style={styles.assetName}>{item.fullName}</Text>
-                    <Text style={styles.assetPrice}>{`$${+item.price.toFixed(2)}`}</Text>
+                    <ThemedText style={styles.assetName}>{item.fullName}</ThemedText>
+                    <ThemedText style={styles.assetPrice}>{`$${+item.price.toFixed(2)}`}</ThemedText>
                   </View>
                 </View>
                 <View style={styles.body}>
                   <MarketChart styles={undefined} />
-                  <Text style={[{ color: item.change > 0 ? 'green' : 'red' }, styles.fontBold]}>
+                  <ThemedText style={[{ color: item.change > 0 ? 'green' : 'red' }, styles.fontBold]}>
                     {`${item.change > 0 ? '+' : ''}${item.change.toFixed(2)}%`}
-                  </Text>
+                  </ThemedText>
                 </View>
                 <View style={styles.rightSection}>
-                  <Text style={styles.holdings}>{item.holdings.toFixed(6)}</Text>
-                  <Text style={[{ color: item.change > 0 ? 'green' : 'red' }, styles.fontBold]}>
+                  <ThemedText style={styles.holdings}>{item.holdings.toFixed(6)}</ThemedText>
+                  <ThemedText style={[{ color: item.change > 0 ? 'green' : 'red' }, styles.fontBold]}>
                     {`$${+item.value.toFixed(2)}`}
-                  </Text>
+                  </ThemedText>
                 </View>
               </View>
             ))}

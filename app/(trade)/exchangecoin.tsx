@@ -8,15 +8,18 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const ExchangeCoin = () => {
   const router = useRouter();
+  const theme = useAppSelector(state => state.theme.theme)
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <PageHeader
-        icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        label={<Text style={styles.headerText}>Trading</Text>}
+        icon={<FontAwesome name="angle-left" size={24} color={theme ?'white':"black" }/>}
+        label={<ThemedText style={styles.headerText}>Trading</ThemedText>}
       />
       <TradingHeader style={styles.tradingHeader} data={tradingHeaderData} />
       <ExchangeCrypto />

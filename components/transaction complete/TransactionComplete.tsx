@@ -9,6 +9,7 @@ const TransactionComplete = () => {
   const transactionData = useAppSelector((state) => state.transaction.transactionName);
   const exchangeData = useAppSelector((state) => state.exchange.exchange);
   const router = useRouter();
+  const theme = useAppSelector(state => state.theme.theme)
 
   useEffect(() => {
     const backAction = () => {

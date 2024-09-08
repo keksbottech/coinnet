@@ -19,6 +19,7 @@ import { TextInput } from 'react-native';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
+import { ThemedText } from '@/components/ThemedText';
 
 const Passwordreset2 = () => {
   const router = useRouter();
@@ -28,6 +29,7 @@ const Passwordreset2 = () => {
   const [otpValue, setOtpValue] = useState(null);
   const userEmail = useAppSelector(state => state.user.userForgottenEmail)
   const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
   const handleOtpChange = (otp: any) => {
     setOtpValue(otp);
@@ -113,24 +115,24 @@ const Passwordreset2 = () => {
   return (
     <>
     {isLoading && <Loading/>}
-    <SafeAreaView style={{ flex: 1, padding: 10, backgroundColor:'white' }}>
+    <SafeAreaView style={[{ flex: 1, padding: 10},  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <PageHeader
-            icon={<FontAwesome name="angle-left" size={24} color="black" />}
+            icon={<FontAwesome name="angle-left" size={24} color={theme?'white':"black"} />}
             label={<NumberStepProgress currentStep={2}/>}
           />
           <Toast/>
 
           <View style={styles.content}>
             <View>
-              <Text style={styles.title}>Please enter the code</Text>
-              <Text style={styles.subtitle}>
+              <ThemedText style={styles.title}>Please enter the code</ThemedText>
+              <ThemedText style={styles.subtitle}>
                 We sent an email to {userData?.email}
-              </Text>
+              </ThemedText>
             </View>
 
             <View style={styles.mailIconContainer}>
@@ -142,18 +144,18 @@ const Passwordreset2 = () => {
             </View>
 
             <View style={styles.resendContainer}>
-              <Text style={styles.resendText}>Didn't get an email?</Text>
+              <ThemedText style={styles.resendText}>Didn't get an email?</ThemedText>
               <TouchableOpacity onPress={resendEmailOtpForConfirmation}>
-                <Text style={styles.resendLink}>Send again</Text>
+                <ThemedText style={styles.resendLink}>Send again</ThemedText>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity onPress={navigateToPasswordReset3} style={styles.button}>
-  <Text style={styles.buttonText}>Submit</Text>
+  <ThemedText style={styles.buttonText}>Submit</ThemedText>
 </TouchableOpacity>
       
 
-            <ContinueWithOauth styles={styles.oauth} />
+            {/* <ContinueWithOauth styles={styles.oauth} /> */}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

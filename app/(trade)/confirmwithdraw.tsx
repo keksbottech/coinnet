@@ -9,10 +9,13 @@ import Button from '@/components/ui/button/Button';
 import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getTransactionData } from '@/lib/store/reducers/storeTransactionAuthentication';
+import { ThemedText } from '@/components/ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const ConfirmWithdrawPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const theme = useAppSelector(state => state.theme.theme)
 
   const navigateToAuthenticationCode = () => {
     dispatch(getTransactionData('withdrawal'));
@@ -20,10 +23,10 @@ const ConfirmWithdrawPage = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'} ]}>
       <PageHeader
-        icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        label={<Text style={styles.headerText}>Confirm Withdraw</Text>}
+        icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white':"black"} />}
+        label={<ThemedText style={styles.headerText}>Confirm Withdraw</ThemedText>}
       />
       <View style={styles.container}>
         <WithdrawConfirmation />

@@ -5,14 +5,16 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import PageHeader from '@/components/page header/PageHeader'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import MarketSubHeaderPairsTabs from '@/components/market header tabs/MarketSubHeaderPairsTabs'
+import { useAppSelector } from '@/hooks/useAppSelector'
 
 const Favorites = () => {
+  const theme = useAppSelector(state => state.theme.theme)
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
     <PageHeader 
-      icon={<FontAwesome name="angle-left" size={24} color="black" />} 
-      other={<AntDesign name="infocirlceo" size={24} color="black" />} 
+      icon={<FontAwesome name="angle-left" size={24} color={theme ?'white':"black" }/>} 
+      other={<AntDesign name="infocirlceo" size={24} color={theme ?'white':"black" }/>} 
       label={<Text style={styles.pageHeaderText}>Favorites</Text>} 
     />
 

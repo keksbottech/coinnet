@@ -1,4 +1,5 @@
 import ChatPreview from '@/components/chat preview/ChatPreview';
+import { ThemedText } from '@/components/ThemedText';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { axios } from '@/lib/axios';
@@ -33,6 +34,7 @@ const ChatListScreen: React.FC = () => {
   const router = useRouter()
   const [refreshing, setRefreshing] = useState(false)
   const [disableBackPress, setDisableBackPress] = useState(true)
+  const theme = useAppSelector(state => state.theme.theme)
 
   useEffect(() => {
     fetchChatPreviews();
@@ -140,18 +142,20 @@ const ChatListScreen: React.FC = () => {
 
   return (
     
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         
-<Text style={styles.title}>{`${userData.firstName} ${userData.lastName} Chats `}</Text>
+<ThemedText style={styles.title}>{`${userData.firstName} ${userData.lastName} Chats `}</ThemedText>
       <TextInput
         style={styles.searchInput}
-        placeholder="Search"
+        placeholder="Search Chats"
         value={searchQuery}
         onChangeText={setSearchQuery}
+        placeholderTextColor={'#eee'}
       />
       <View style={{alignItems:'center'}}>
-      {isLoading && <Wave size={50}/>}
+      {isLoading && <Wave size={50} color={theme?'white':'black'}/>}
       </View>
+      <View style={{marginTop:20}}>
       {filteredChats.length > 0 ?
       <FlatList
         data={filteredChats}
@@ -171,8 +175,9 @@ const ChatListScreen: React.FC = () => {
           />
         
         )}
-      /> : <Text style={styles.label}>You have no chats</Text>
+      /> : <ThemedText style={styles.label}>You have no chats</ThemedText>
     }
+    </View>
     </SafeAreaView>
   );
 };
@@ -184,13 +189,13 @@ const styles = StyleSheet.create({
     padding:16
   },
   searchInput: {
-    height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 10,
+    borderRadius: 30,
+    paddingHorizontal: 15,
     fontSize: 16,
-    marginTop:20
+    marginTop:20,
+    paddingVertical:10
   },
   title:{
     fontFamily:'MonsterBold',

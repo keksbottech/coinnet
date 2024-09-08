@@ -11,6 +11,7 @@ import { Picker } from '@react-native-picker/picker'; // Import Picker from @rea
 import { axios } from '@/lib/axios';
 import Loading from '@/components/loading/Loading';
 import { getEscrowData } from '@/lib/store/reducers/storeEscrowData';
+import { ThemedText } from '@/components/ThemedText';
 
 interface NegotiationFormProps {
   sellerFiatRate: number; // seller's fiat rate per coin
@@ -40,6 +41,7 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
   const marketStoredData = useAppSelector(state => state.market.marketData); // Assuming the state is stored here
   const orderDetails = useAppSelector(state => state.orders.selectedOrder)
   const [isLoading,setIsLoading] = useState(false)
+  const theme = useAppSelector(state => state.theme.theme)
 
   console.log(orderDetails, 'details')
   useEffect(() => {
@@ -92,9 +94,9 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
   return (
     <>
     {isLoading && <Loading/>}
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={[{ flex: 1 },{backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <View style={styles.container}>
-        <Text style={styles.title}>Negotiate Purchase</Text>
+        <ThemedText style={styles.title}>Negotiate Purchase</ThemedText>
 
         <Controller
           control={control}
@@ -102,10 +104,10 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
           rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Select Coin:</Text>
+              <ThemedText style={styles.label}>Select Coin:</ThemedText>
               <Picker
                 selectedValue={value}
-                style={styles.picker}
+                style={[styles.picker, {color:theme?'white':'black'}]}
                 onValueChange={(itemValue) => {
                   setSelectedCoin(itemValue);
                   onChange(itemValue);
@@ -127,11 +129,13 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
           rules={{ required: true, min: 0 }}
           render={({ field: { onChange, value } }) => (
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Amount of Coin:</Text>
+              <ThemedText style={styles.label}>Amount of Coin:</ThemedText>
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
                 value={value.toString()}
+                placeholderTextColor={'#ccc'}
+                placeholder='0.00'
                 onChangeText={(text) => {
                   const numericValue = text.replace(/[^0-9.]/g, ''); // Allow only numbers and dots
                   onChange(numericValue);
@@ -142,11 +146,11 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
         />
 
         <View style={styles.conversionContainer}>
-          <Text style={styles.label}>Selected Coin Value:</Text>
-          <Text style={styles.conversion}>{coinValue.toFixed(2)} USD</Text>
+          <ThemedText style={styles.label}>Selected Coin Value:</ThemedText>
+          <ThemedText style={styles.conversion}>{coinValue.toFixed(2)} USD</ThemedText>
 
-          <Text style={styles.label}>Estimated Value in Fiat:</Text>
-          <Text style={styles.conversion}>{fiatAmount.toFixed(2)} USD</Text>
+          <ThemedText style={styles.label}>Estimated Value in Fiat:</ThemedText>
+          <ThemedText style={styles.conversion}>{fiatAmount.toFixed(2)} USD</ThemedText>
         </View>
       </View>
 
@@ -159,7 +163,6 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -180,7 +183,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: '#333',
     fontFamily: 'MonsterBold',
   },
   input: {
@@ -189,8 +191,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     fontSize: 16,
-    backgroundColor: '#f9f9f9',
+    // backgroundColor: '#f9f9f9',
     fontFamily: 'MonsterReg',
+    color:'#ccc'
   },
   picker: {
     height: 50,

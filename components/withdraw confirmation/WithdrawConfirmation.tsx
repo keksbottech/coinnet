@@ -1,6 +1,7 @@
 import { useAppSelector } from '@/hooks/useAppSelector';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { ThemedText } from '../ThemedText';
 
 const WithdrawConfirmation = () => {
   const withdrawData = useAppSelector(state => state.withdrawal.withdrawal)
@@ -15,35 +16,35 @@ const WithdrawConfirmation = () => {
       bankData.name ?
       <>
       <View style={styles.row}>
-        <Text style={styles.label}>Bank Account</Text>
-        <Text style={styles.value}>{bankData.name}</Text>
+        <ThemedText style={styles.label}>Bank Account</ThemedText>
+        <ThemedText style={styles.value}>{bankData.name}</ThemedText>
       </View>
       <View style={styles.row}>
-        <Text style={styles.label}>Account Number</Text>
-        <Text style={styles.value}>{withdrawData.account_number}</Text>
+        <ThemedText style={styles.label}>Account Number</ThemedText>
+        <ThemedText style={styles.value}>{withdrawData.account_number}</ThemedText>
       </View>
       </> :       <View style={styles.row}>
-        <Text style={styles.label}>Paypal Email</Text>
-        <Text style={styles.value}>{withdrawData.email}</Text>
+        <ThemedText style={styles.label}>Paypal Email</ThemedText>
+        <ThemedText style={styles.value}>{withdrawData.email}</ThemedText>
       </View>
 }
 {bankData.name &&
       <View style={styles.row}>
-        <Text style={styles.label}>Account Name</Text>
-        <Text style={styles.value}>{withdrawData.name}</Text>
+        <ThemedText style={styles.label}>Account Name</ThemedText>
+        <ThemedText style={styles.value}>{withdrawData.name}</ThemedText>
       </View>
 }
       <View style={styles.row}>
-        <Text style={styles.label}>Withdrawal Amount</Text>
-        <Text style={styles.value}>${withdrawData.amount}</Text>
+        <ThemedText style={styles.label}>Withdrawal Amount</ThemedText>
+        <ThemedText style={styles.value}>${withdrawData.amount}</ThemedText>
       </View>
       <View style={styles.row}>
-        <Text style={styles.label}>Transaction Fee (2%)</Text>
-        <Text style={styles.value}>$8.0</Text>
+        <ThemedText style={styles.label}>Transaction Fee (2%)</ThemedText>
+        <ThemedText style={styles.value}>$8.0</ThemedText>
       </View>
       <View style={styles.row}>
-        <Text style={styles.label}>Total Withdrawal Amount</Text>
-        <Text style={styles.value}>${withdrawData.amount + 8 }</Text>
+        <ThemedText style={styles.label}>Total Withdrawal Amount</ThemedText>
+        <ThemedText style={styles.value}>${withdrawData.amount + 8 }</ThemedText>
       </View>
     </View>
   );
@@ -51,7 +52,7 @@ const WithdrawConfirmation = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F5F5F5',
+
   },
   row: {
     flexDirection: 'row',

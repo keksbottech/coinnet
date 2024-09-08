@@ -11,6 +11,7 @@ export default function Pay() {
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef(null);
   const router = useRouter()
+  const theme = useAppSelector(state => state.theme.theme)
 
   const handleLoadStart = () => {
     setLoading(true);
@@ -51,7 +52,7 @@ export default function Pay() {
 
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={[{ flex: 1 },  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       {/* {loading && (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color="#0000ff" />

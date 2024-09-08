@@ -14,6 +14,7 @@ import Toast from 'react-native-toast-message';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
+import { ThemedText } from '@/components/ThemedText';
 
 const AuthenticationCode = () => {
   const router = useRouter();
@@ -21,6 +22,7 @@ const AuthenticationCode = () => {
   const userData = useAppSelector(state => state.user.user);
   const dispatch = useAppDispatch();
   const [otpId, setOtpId] = useState(null);
+  const theme = useAppSelector(state => state.theme.theme)
 
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
@@ -149,17 +151,17 @@ const AuthenticationCode = () => {
   return (
     <>
       {isLoading && <Loading />}
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={[styles.safeArea,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <View style={styles.container}>
           <PageHeader label={<ProgressBar currentStep={2} />} />
           <Toast />
           <View style={styles.formContainer}>
-            <Text style={styles.title}>Enter authentication code</Text>
-            <Text style={styles.description}>
+            <ThemedText style={styles.title}>Enter authentication code</ThemedText>
+            <ThemedText style={styles.description}>
               Enter the 6-digit code we just texted to your phone number
-            </Text>
+            </ThemedText>
             <View>
-              <Text style={styles.label}>Code</Text>
+              <ThemedText style={styles.label}>Code</ThemedText>
               <Controller
                 control={control}
                 name="code"
@@ -174,7 +176,7 @@ const AuthenticationCode = () => {
                   />
                 )}
               />
-              {errors.code && <Text style={styles.errorText}>{errors.code.message}</Text>}
+              {errors.code && <ThemedText style={styles.errorText}>{errors.code.message}</ThemedText>}
             </View>
           </View>
 

@@ -5,17 +5,18 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
+const theme = useAppSelector(state => state.theme.theme)
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: 'orangered',
         headerShown: false,
         tabBarLabelStyle:{fontSize:15},
-        tabBarStyle:{height:60}
+        tabBarStyle:{height:60, backgroundColor:theme ? '#0F0F0F': 'white'}
       }}>
       <Tabs.Screen
         name="index"

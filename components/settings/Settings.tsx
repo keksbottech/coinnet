@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';  // Import Clipboard API
 import { useRouter } from 'expo-router';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { Image } from 'react-native';
+import { ThemedText } from '../ThemedText';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getThemeData } from '@/lib/store/reducers/storeTheme';
 
 
 const SettingsScreen = () => {
@@ -12,6 +15,8 @@ const SettingsScreen = () => {
   const router = useRouter()
   const toggleDarkMode = () => setIsDarkMode(previousState => !previousState);
   const userData = useAppSelector(state => state.user.user)
+  const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
   const userId = `ID ${userData._id}`;
 
@@ -55,6 +60,16 @@ const SettingsScreen = () => {
   const navigateToHistory = () => {
     router.push('/(trade)/transactionhistory')
   }
+
+  // useEffect(() => {
+
+  //   console.log(isDarkMode)
+  // }, [isDarkMode])
+  
+  const toggleTheme = () => {
+    dispatch(getThemeData(!theme))
+
+  }
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -65,10 +80,10 @@ const SettingsScreen = () => {
         )}
   
         <View style={styles.userInfo}>
-          <Text style={styles.username}>{`${userData.firstName} ${userData.lastName}`}</Text>
-          <Text style={styles.email}>{formatEmail()}</Text>
+          <ThemedText style={styles.username}>{`${userData.firstName} ${userData.lastName}`}</ThemedText>
+          <ThemedText style={styles.email}>{formatEmail()}</ThemedText>
           <View style={styles.idContainer}>
-            <Text style={styles.id}>{userId}</Text>
+            <ThemedText style={styles.id}>{userId}</ThemedText>
             <TouchableOpacity onPress={copyToClipboard}>
               <Ionicons name="copy-outline" size={20} color="black" />
             </TouchableOpacity>
@@ -76,78 +91,78 @@ const SettingsScreen = () => {
         </View>
         <View style={styles.verified}>
         <Ionicons name="checkmark-circle" size={24} color="green" />
-        <Text style={styles.label}>Verified</Text>
+        <ThemedText style={styles.label}>Verified</ThemedText>
         </View>
       </View>
-      <Text style={styles.label}>Privacy</Text>
+      <ThemedText style={styles.label}>Privacy</ThemedText>
 
       <View style={styles.section}>
         <TouchableOpacity onPress={navigateToProfile} style={styles.row}>
           <Ionicons name="person-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>Profile</Text>
+          <ThemedText style={styles.text}>Profile</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={navigateToSecurity} style={styles.row}>
           <Ionicons name="shield-checkmark-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>Security</Text>
+          <ThemedText style={styles.text}>Security</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.label}>Finance</Text>
+      <ThemedText style={styles.label}>Finance</ThemedText>
 
       <View style={styles.section}>
         <TouchableOpacity onPress={navigateToHistory} style={styles.row}>
           <Ionicons name="time-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>History</Text>
+          <ThemedText style={styles.text}>History</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={navigateToLimitsAndFeatures} style={styles.row}>
           <Ionicons name="wallet-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>Limit and features</Text>
+          <ThemedText style={styles.text}>Limit and features</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.label}>Account</Text>
+      <ThemedText style={styles.label}>Account</ThemedText>
 
       <View style={styles.section}>
         <View style={styles.row}>
           <Ionicons name="moon-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>Theme</Text>
+          <ThemedText style={styles.text}>Theme</ThemedText>
           <Switch
             style={styles.switch}
-            onValueChange={toggleDarkMode}
-            value={isDarkMode}
+            onValueChange={toggleTheme}
+            value={theme}
           />
         </View>
 
         <TouchableOpacity onPress={navigateToNotification} style={styles.row}>
           <Ionicons name="notifications-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>Notifications</Text>
+          <ThemedText style={styles.text}>Notifications</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.label}>More</Text>
+      <ThemedText style={styles.label}>More</ThemedText>
 
       <View style={styles.section}>
         <TouchableOpacity onPress={navigateToLanguage} style={styles.row}>
           <Ionicons name="language-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>Change Language</Text>
+          <ThemedText style={styles.text}>Change Language</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={navigateToReferals} style={styles.row}>
           <Ionicons name="share-social-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>Share with friends</Text>
+          <ThemedText style={styles.text}>Share with friends</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={navigateToSupport} style={styles.row}>
           <Ionicons name="help-circle-outline" size={24} style={styles.icon} />
-          <Text style={styles.text}>Support</Text>
+          <ThemedText style={styles.text}>Support</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
       </View>
@@ -192,6 +207,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: 30,
+    color:'#ccc'
   },
   text: {
     flex: 1,

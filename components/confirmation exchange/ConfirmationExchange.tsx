@@ -8,6 +8,7 @@ import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getauthenticationInfo } from '@/lib/store/reducers/storeAuthenticationInfo';
 import { getTransactionData } from '@/lib/store/reducers/storeTransactionAuthentication';
+import { ThemedText } from '../ThemedText';
 
 const ConfirmationExchange = () => {
   const exchangeData = useAppSelector(state => state.exchange.exchange);
@@ -15,6 +16,7 @@ const ConfirmationExchange = () => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
   // Ensure exchangeData and marketStoredData are defined
   const fromCoinName = exchangeData.selectFrom ? exchangeData.selectFrom.toLowerCase() : '';
@@ -37,50 +39,50 @@ const ConfirmationExchange = () => {
   return (
     <>
     {/* {isLoading && <Loading/>} */}
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       {/* You Convert Section */}
       <View style={styles.section}>
-        <Text style={styles.label}>You Convert</Text>
-        <Text style={styles.amount}>{exchangeData.fromAmount} {exchangeData.selectFrom}</Text>
+        <ThemedText style={styles.label}>You Convert</ThemedText>
+        <ThemedText style={styles.amount}>{exchangeData.fromAmount} {exchangeData.selectFrom}</ThemedText>
       </View>
 
       {/* You Receive Section */}
       <View style={styles.section} >
-        <Text style={styles.label}>You Receive</Text>
+        <ThemedText style={styles.label}>You Receive</ThemedText>
         <View style={styles.receiveContainer}>
           <View>
-            <Text style={styles.quantityText}>Quantity</Text>
-            <Text style={styles.label}>{exchangeData.toAmount}</Text>
+            <ThemedText style={styles.quantityText}>Quantity</ThemedText>
+            <ThemedText style={styles.label}>{exchangeData.toAmount}</ThemedText>
           </View>
-          <Text style={styles.currencyText}>{exchangeData.selectedToCoin}</Text>
+          <ThemedText style={styles.currencyText}>{exchangeData.selectedToCoin}</ThemedText>
         </View>
       </View>
 
       {/* Order Details Section */}
       <View style={styles.section}>
-        <Text style={styles.label}>Order</Text>
+        <ThemedText style={styles.label}>Order</ThemedText>
         <View style={styles.orderDetails}>
           <View style={styles.orderRow}>
-            <Text style={styles.orderLabel}>From</Text>
-            <Text style={styles.orderLabel}>{exchangeData.fromAmount} {exchangeData.selectFrom}</Text>
+            <ThemedText style={styles.orderLabel}>From</ThemedText>
+            <ThemedText style={styles.orderLabel}>{exchangeData.fromAmount} {exchangeData.selectFrom}</ThemedText>
           </View>
 
           <Separator />
           <View style={styles.orderRow}>
-            <Text style={styles.orderLabel}>To</Text>
-            <Text style={styles.orderLabel}>{exchangeData.toAmount} {exchangeData.selectTo}</Text>
+            <ThemedText style={styles.orderLabel}>To</ThemedText>
+            <ThemedText style={styles.orderLabel}>{exchangeData.toAmount} {exchangeData.selectTo}</ThemedText>
           </View>
 
           <Separator />
           <View style={styles.orderRow}>
-            <Text style={styles.orderLabel}>Transaction Fee (0.0%)</Text>
-            <Text style={styles.orderLabel}>$0.00</Text>
+            <ThemedText style={styles.orderLabel}>Transaction Fee (0.0%)</ThemedText>
+            <ThemedText style={styles.orderLabel}>$0.00</ThemedText>
           </View>
 
           <Separator />
           <View style={styles.orderRow}>
-            <Text style={styles.orderLabel}>Total</Text>
-            <Text style={styles.orderLabel}>{exchangeData.toAmount} {exchangeData.selectedToCoin} ${accumulatedPriceUSD}</Text>
+            <ThemedText style={styles.orderLabel}>Total</ThemedText>
+            <ThemedText style={styles.orderLabel}>{exchangeData.toAmount} {exchangeData.selectedToCoin} ${accumulatedPriceUSD}</ThemedText>
           </View>
         </View>
 
@@ -109,7 +111,7 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 36,
     fontFamily: 'MonsterBold',
-    color: '#000',
+    // color: '#000',
     alignItems:'center'
   },
   receiveContainer: {
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
   },
   currencyText: {
     fontSize: 18,
-    color: '#000',
+    // color: '#000',
     fontFamily: 'MonsterReg',
   },
   orderDetails: {
@@ -143,7 +145,7 @@ const styles = StyleSheet.create({
   },
   orderLabel: {
     fontSize: 16,
-    color: '#888',
+    // color: '#888',
     fontFamily: 'MonsterBold',
   },
 });

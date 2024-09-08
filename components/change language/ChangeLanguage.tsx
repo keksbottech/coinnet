@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { ThemedText } from '../ThemedText';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -12,9 +13,10 @@ const languages = [
 ];
 
 const LanguageSelector = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
 
   const changeLanguage = (languageCode:any) => {
+    console.log(languageCode)
     setSelectedLanguage(languageCode);
   };
 
@@ -29,8 +31,8 @@ const LanguageSelector = () => {
           ]}
           onPress={() => changeLanguage(language.code)}
         >
-          <Text style={styles.flag}>{language.flag}</Text>
-          <Text style={styles.languageName}>{language.name}</Text>
+          <ThemedText style={[styles.flag, {color: selectedLanguage ? 'red':'white'}]}>{language.flag}</ThemedText>
+          <ThemedText style={styles.languageName}>{language.name}</ThemedText>
         </TouchableOpacity>
       ))}
     </View>

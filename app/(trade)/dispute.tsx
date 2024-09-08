@@ -8,6 +8,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import Loading from '@/components/loading/Loading';
 import { useRouter } from 'expo-router';
 import Toast from 'react-native-toast-message';
+import { ThemedText } from '@/components/ThemedText';
 
 type DisputeFormData = {
   title: string;
@@ -21,6 +22,7 @@ const DisputeScreen = () => {
   const [imageUri, setImageUri] = useState('')
   const userData = useAppSelector(state => state.user.user)
   const router = useRouter()
+  const theme = useAppSelector(state => state.theme.theme)
 
   const handleChoosePhoto = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -113,10 +115,10 @@ finally{
   return (
     <>
     {isLoading && <Loading/>}
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <Toast/>
       <View style={{ flex: 1 }}>
-        <Text style={styles.header}>Submit a Dispute</Text>
+        <ThemedText style={styles.header}>Submit a Dispute</ThemedText>
 
         <Controller
           control={control}
@@ -125,6 +127,7 @@ finally{
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
+            placeholderTextColor={'#ccc'}
               style={[styles.input, errors.title && { borderColor: 'red' }]}
               placeholder="Dispute Title"
               onBlur={onBlur}
@@ -143,6 +146,7 @@ finally{
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
+            placeholderTextColor={'#ccc'}
               style={[styles.input, { height: 100 }, errors.message && { borderColor: 'red' }]}
               placeholder="Dispute Message"
               onBlur={onBlur}
@@ -183,7 +187,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    backgroundColor: '#f8f8f8',
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,

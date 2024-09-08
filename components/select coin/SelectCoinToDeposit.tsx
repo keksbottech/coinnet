@@ -6,6 +6,7 @@ import BottomDrawer from '@/components/bottom drawer/BottomDrawer';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getSelectedCoinData } from '@/lib/store/reducers/storeSelectedCoin';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '../ThemedText';
 
 const SelectCoinsToDepositDrawer = () => {
   const marketStoredData = useAppSelector(state => state.market.marketData)
@@ -39,7 +40,7 @@ const SelectCoinsToDepositDrawer = () => {
       enablePanDownToClose={false}
       ui={
         <View style={styles.container}>
-          <Text style={styles.title}>Choose Coin</Text>
+          <ThemedText style={styles.title}>Choose Coin</ThemedText>
           {coins.map(method => (
             <TouchableOpacity
               key={method.id}
@@ -49,7 +50,7 @@ const SelectCoinsToDepositDrawer = () => {
               <View style={styles.methodDetails}>
                 <Image source={{ uri: method.imageUrl }} style={styles.icon} />
                 <View style={{ marginLeft: 10 }}>
-                  <Text style={styles.methodName}>{method.name}</Text>
+                  <ThemedText style={styles.methodName}>{method.name}</ThemedText>
                 </View>
               </View>
               {selectedMethod?.name === method.name && (
@@ -67,7 +68,6 @@ export default SelectCoinsToDepositDrawer;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     paddingTop: 20,
     paddingHorizontal: 20,
   },

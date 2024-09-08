@@ -6,15 +6,18 @@ import Feather from '@expo/vector-icons/Feather';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SettingsScreen from '@/components/settings/Settings';
 import { useRouter } from 'expo-router';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '@/components/ThemedText';
 
 const Settings = () => {
   const router = useRouter();
+const theme = useAppSelector(state => state.theme.theme)
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, {backgroundColor: theme ? '#0F0F0F': 'white'}]}>
       <PageHeader
-        icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        label={<Text style={styles.pageHeaderLabel}>Settings</Text>}
+        icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white': 'black'} />}
+        label={<ThemedText style={styles.pageHeaderLabel}>Settings</ThemedText>}
       />
       <View style={styles.container}>
         <SettingsScreen />

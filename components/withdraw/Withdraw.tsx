@@ -11,6 +11,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useFocusEffect } from '@react-navigation/native';
 import { getPaymentBanks } from '@/lib/store/reducers/storePaymentUrl';
 import SelectCoinsToDepositDrawer from '../select coin/SelectCoinToDeposit';
+import { ThemedText } from '../ThemedText';
 
 const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
   const selectedPayment = useAppSelector(state => state.paymentUrl.paymentMethod);
@@ -21,6 +22,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [isBottomDrawerEnabled, setIsBottomDrawerEnabled] = useState(false);
+  const theme = useAppSelector(state => state.theme.theme)
 
   // Initialize React Hook Form
   const { control, handleSubmit, watch, setValue } = useForm({
@@ -88,43 +90,43 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
             <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>You withdraw</Text>
-              <Text style={styles.amountText}>${watchAmount || '0.00'}</Text>
+              <ThemedText style={styles.headerText}>You withdraw</ThemedText>
+              <ThemedText style={styles.amountText}>${watchAmount || '0.00'}</ThemedText>
             </View>
 
-            <Text style={styles.label}>Available Balance</Text>
+            <ThemedText style={styles.label}>Available Balance</ThemedText>
             <View style={styles.balanceContainer}>
               <View>
-                <Text style={styles.balanceText}>Quantity</Text>
-                <Text style={styles.balanceAmount}>{parseFloat(walletBalance).toFixed(2)}</Text>
+                <ThemedText style={styles.balanceText}>Quantity</ThemedText>
+                <ThemedText style={styles.balanceAmount}>{parseFloat(walletBalance).toFixed(2)}</ThemedText>
               </View>
-              <Text style={styles.currency}>USD</Text>
+              <ThemedText style={styles.currency}>USD</ThemedText>
             </View>
 
             <View>
-              <Text style={[styles.label, { marginTop: 20 }]}>Select Coin to Withdraw from</Text>
-              <TouchableOpacity onPress={enableBottomDrawer} style={styles.withdrawToContainer}>
+              <ThemedText style={[styles.label, { marginTop: 20 }]}>Select Coin to Withdraw from</ThemedText>
+              <TouchableOpacity onPress={enableBottomDrawer} style={[styles.withdrawToContainer, {backgroundColor:theme ? 'gray': 'white'}]}>
                 <View style={styles.iconContainer}>
-                  <FontAwesome name="bank" size={24} color="black" />
+                  <FontAwesome name="bank" size={24} color={theme?'white':"black"} />
                   <View>
-                    <Text style={styles.withdrawToText}>{selectedCoin?.name}</Text>
-                    <Text style={styles.withdrawToText}>{selectedCoin?.symbol}</Text>
+                    <ThemedText style={styles.withdrawToText}>{selectedCoin?.name}</ThemedText>
+                    <ThemedText style={styles.withdrawToText}>{selectedCoin?.symbol}</ThemedText>
                   </View>
                 </View>
-                <AntDesign name="down" size={20} color="black" />
+                <AntDesign name="down" size={20} color={theme?'white':"black"} />
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.label}>Estimated Coin Amount</Text>
+            <ThemedText style={styles.label}>Estimated Coin Amount</ThemedText>
             <Controller
               control={control}
               name="coinAmount"
               render={({ field: { value } }) => (
                 <View style={styles.inputContainer}>
-                  <FontAwesome name="bitcoin" size={24} color="black" />
+                  <FontAwesome name="bitcoin" size={24} color={theme?'white':"black"} />
                   <TextInput
                     placeholder="Estimated Coin"
-                    style={styles.input}
+                    style={[styles.input, {color:theme ? 'white': 'black'}]}
                     value={value}
                     editable={false} // Make this field read-only
                   />
@@ -132,7 +134,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
               )}
             />
 
-            <Text style={styles.label}>Withdraw Amount</Text>
+            <ThemedText style={styles.label}>Withdraw Amount</ThemedText>
             <Controller
               control={control}
               name="amount"
@@ -140,36 +142,36 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
               render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <>
                   <View style={styles.inputContainer}>
-                    <FontAwesome name="dollar" size={24} color="black" />
+                    <FontAwesome name="dollar" size={24} color={theme?'white':"black"} />
                     <TextInput
                       placeholder="Enter Amount"
-                      style={styles.input}
+                      style={[styles.input,{color:theme ? 'white': 'black'}]}
                       onBlur={onBlur}
                       onChangeText={onChange}
                       value={value}
                       keyboardType="numeric"
                     />
                   </View>
-                  {error && <Text style={styles.errorText}>{error.message}</Text>}
+                  {error && <ThemedText style={styles.errorText}>{error.message}</ThemedText>}
                 </>
               )}
             />
 
-            <Text style={styles.label}>Withdraw to</Text>
-            <TouchableOpacity onPress={enableBottomSheet} style={styles.withdrawToContainer}>
+            <ThemedText style={styles.label}>Withdraw to</ThemedText>
+            <TouchableOpacity onPress={enableBottomSheet} style={[styles.withdrawToContainer, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
               <View style={styles.withdrawToContent}>
-                <FontAwesome name="bank" size={24} color="black" />
+                <FontAwesome name="bank" size={24} color={theme?'white':"black"} />
                 <View>
-                  <Text style={styles.withdrawToText}>{selectedPayment.name}</Text>
-                  <Text style={styles.withdrawToText}>XXXXXXXX</Text>
+                  <ThemedText style={styles.withdrawToText}>{selectedPayment.name}</ThemedText>
+                  <ThemedText style={styles.withdrawToText}>XXXXXXXX</ThemedText>
                 </View>
               </View>
-              <AntDesign name="down" size={20} color="black" />
+              <AntDesign name="down" size={20} color={theme?'white':"black"} />
             </TouchableOpacity>
 
             {selectedPayment?.name === 'PayPal' && (
               <>
-                <Text style={styles.label}>Paypal Email Address</Text>
+                <ThemedText style={styles.label}>Paypal Email Address</ThemedText>
                 <Controller
                   control={control}
                   name="paypalEmail"
@@ -183,17 +185,17 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                   render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                     <>
                       <View style={styles.inputContainer}>
-                        <FontAwesome name="envelope" size={24} color="black" />
+                        <FontAwesome name="envelope" size={24} color={theme?'white':"black"} />
                         <TextInput
                           placeholder="Enter PayPal email address"
-                          style={styles.input}
+                          style={[styles.input, {color:theme ? 'white': 'black'}]}
                           onBlur={onBlur}
                           onChangeText={onChange}
                           value={value}
                           keyboardType="email-address"
                         />
                       </View>
-                      {error && <Text style={styles.errorText}>{error.message}</Text>}
+                      {error && <ThemedText style={styles.errorText}>{error.message}</ThemedText>}
                     </>
                   )}
                 />
@@ -202,19 +204,19 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
 
             {selectedPayment?.name === 'Bank Transfer' && (
               <>
-                <Text style={styles.label}>Choose Bank</Text>
-                <TouchableOpacity onPress={enableBankBottomSheet} style={styles.withdrawToContainer}>
+                <ThemedText style={styles.label}>Choose Bank</ThemedText>
+                <TouchableOpacity onPress={enableBankBottomSheet} style={[styles.withdrawToContainer, {backgroundColor:theme ? 'gray': 'white'}]}>
                   <View style={styles.withdrawToContent}>
-                    <FontAwesome name="bank" size={24} color="black" />
+                    <FontAwesome name="bank" size={24} color={theme?'white':"black"} />
                     <View>
-                      <Text style={styles.withdrawToText}>{selectedBank.name}</Text>
-                      <Text style={styles.withdrawToText}>XXXXXXXX</Text>
+                      <ThemedText style={styles.withdrawToText}>{selectedBank.name}</ThemedText>
+                      <ThemedText style={styles.withdrawToText}>XXXXXXXX</ThemedText>
                     </View>
                   </View>
-                  <AntDesign name="down" size={20} color="black" />
+                  <AntDesign name="down" size={20} color={theme?'white':"black"} />
                 </TouchableOpacity>
 
-                <Text style={styles.label}>Account Name</Text>
+                <ThemedText style={styles.label}>Account Name</ThemedText>
                 <Controller
                   control={control}
                   name="accountName"
@@ -222,21 +224,21 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                   render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                     <>
                       <View style={styles.inputContainer}>
-                        <FontAwesome name="user" size={24} color="black" />
+                        <FontAwesome name="user" size={24} color={theme?'white':"black"} />
                         <TextInput
                           placeholder="Enter account name"
-                          style={styles.input}
+                          style={[styles.input, {color:theme ? 'white': 'black'}]}
                           onBlur={onBlur}
                           onChangeText={onChange}
                           value={value}
                         />
                       </View>
-                      {error && <Text style={styles.errorText}>{error.message}</Text>}
+                      {error && <ThemedText style={styles.errorText}>{error.message}</ThemedText>}
                     </>
                   )}
                 />
 
-                <Text style={styles.label}>Account Number</Text>
+                <ThemedText style={styles.label}>Account Number</ThemedText>
                 <Controller
                   control={control}
                   name="accountNumber"
@@ -244,10 +246,10 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                   render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                     <>
                       <View style={styles.inputContainer}>
-                        <FontAwesome name="credit-card" size={24} color="black" />
+                        <FontAwesome name="credit-card" size={24} color={theme?'white':"black"} />
                         <TextInput
                           placeholder="Enter account number"
-                          style={styles.input}
+                          style={[styles.input, {color:theme ? 'white': 'black'}]}
                           onBlur={onBlur}
                           onChangeText={onChange}
                           value={value}
@@ -255,7 +257,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                           maxLength={10}
                         />
                       </View>
-                      {error && <Text style={styles.errorText}>{error.message}</Text>}
+                      {error && <ThemedText style={styles.errorText}>{error.message}</ThemedText>}
                     </>
                   )}
                 />
@@ -287,7 +289,7 @@ const styles = StyleSheet.create({
   amountText: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#ccc',
   },
   label: {
     fontSize: 16,
@@ -315,7 +317,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
@@ -335,7 +337,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    // backgroundColor: '#f0f0f0',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,

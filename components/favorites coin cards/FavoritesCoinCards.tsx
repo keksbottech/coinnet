@@ -7,6 +7,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getFavoriteData } from '@/lib/store/reducers/storeFavorites';
 import { Image } from 'react-native';
+import { ThemedText } from '../ThemedText';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -82,6 +83,7 @@ const FavoritesCoinCards: React.FC = () => {
   const [marketData, setMarketData] = useState<MarketDataItem[]>(initialMarketData);
   const favoriteData = useAppSelector(state => state.favorite.favorites as FavoriteDataItem[]);
   const dispatch = useAppDispatch();
+  const theme = useAppSelector(state => state.theme.theme)
 
   const moveItem = (index: number, direction: 'up' | 'down') => {
     const newMarketData = [...marketData];
@@ -112,31 +114,32 @@ const FavoritesCoinCards: React.FC = () => {
       renderItem={({ item }, rowMap) => {
   
         return (
-          <View style={styles.marketItem}>
+          <View style={[styles.marketItem, {backgroundColor:theme ? 'gray': 'white'}]}>
             <View style={styles.header}>
             <Image
             source={{ uri: `https://cryptocompare.com${item.CoinInfo.ImageUrl}` }}
             style={{ width: 40, height: 40 }}
           />
-              <Text style={styles.pair}>{item.CoinInfo.Name}/USD</Text>
-              <Text style={styles.volumeText}>Vol:</Text>
-              <Text style={styles.volumeText}>{item.DISPLAY?.USD.VOLUME24HOUR}</Text>
+
+              <ThemedText style={styles.pair}>{item.CoinInfo.Name}/USD</ThemedText>
+              <ThemedText style={styles.volumeText}>Vol:</ThemedText>
+              <ThemedText style={styles.volumeText}>{item.DISPLAY?.USD.VOLUME24HOUR}</ThemedText>
             </View>
             <View style={styles.body}>
-              <Text style={styles.priceText}>Top price:  {item.DISPLAY?.USD?.HIGH24HOUR}</Text>
+              <ThemedText style={styles.priceText}>Top price:  {item.DISPLAY?.USD?.HIGH24HOUR}</ThemedText>
               <MarketChart />
-              <Text style={styles.priceText}>Low price: {item?.DISPLAY?.USD?.LOW24HOUR}</Text>
+              <ThemedText style={styles.priceText}>Low price: {item?.DISPLAY?.USD?.LOW24HOUR}</ThemedText>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ right: 15, fontFamily: 'MonsterMid' }}>{item?.DISPLAY?.USD?.LOW24HOUR}</Text>
-              <Text
+              <ThemedText style={{ right: 15, fontFamily: 'MonsterMid' }}>{item?.DISPLAY?.USD?.LOW24HOUR}</ThemedText>
+              <ThemedText
                 style={[
                   styles.change,
                   parseFloat(item.DISPLAY?.USD?.CHANGEPCT24HOUR) > 0 ? styles.positive : styles.negative,
                 ]}
               >
                         {`${parseFloat(item.DISPLAY?.USD.CHANGEPCT24HOUR) > 0 ? '+' : ''}${parseFloat(item?.DISPLAY?.USD.CHANGEPCT24HOUR).toFixed(2)}%`}
-              </Text>
+              </ThemedText>
             </View>
           </View>
         );
@@ -148,21 +151,21 @@ const FavoritesCoinCards: React.FC = () => {
             onPress={() => moveItem(index, 'up')}
           >
             <AntDesign name="up" size={24} color="white" />
-            <Text style={styles.backTextWhite}>Move Up</Text>
+            <ThemedText style={styles.backTextWhite}>Move Up</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.backRightBtn, styles.removeBtn]}
             onPress={() => removeItem(index)}
           >
             <AntDesign name="delete" size={24} color="white" />
-            <Text style={styles.backTextWhite}>Remove</Text>
+            <ThemedText style={styles.backTextWhite}>Remove</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.backRightBtn, styles.moveBtn]}
             onPress={() => moveItem(index, 'down')}
           >
             <AntDesign name="down" size={24} color="white" />
-            <Text style={styles.backTextWhite}>Move Down</Text>
+            <ThemedText style={styles.backTextWhite}>Move Down</ThemedText>
           </TouchableOpacity>
         </View>
       )}
@@ -218,7 +221,7 @@ const styles = StyleSheet.create({
     // padding: 10,
   },
   marketItem: {
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     padding: 25,
     borderRadius: 8,
     shadowColor: '#000',
@@ -266,7 +269,7 @@ const styles = StyleSheet.create({
   },
   priceText: {
     fontSize: 14,
-    color: '#333',
+    // color: '#333',
     marginBottom: 5,
     fontFamily: 'MonsterMid'
   },

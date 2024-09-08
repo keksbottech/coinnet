@@ -2,13 +2,15 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Wave } from 'react-native-animated-spinkit'
 import DarkBg from '../dark bg/DarkBg'
+import { useAppSelector } from '@/hooks/useAppSelector'
 
 const Loading = () => {
+  const theme = useAppSelector(state => state.theme.theme)
   return (
     <>
     <DarkBg/>
     <View style={styles.container}>
-    <Wave size={48} color="black"/>
+    <Wave size={48} color={theme ? 'white': "black"}/>
     </View>
     </>
   )

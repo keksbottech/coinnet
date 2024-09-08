@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { ThemedText } from '../ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const TradingHistory = ({priceUsd, timestamp}) => {
-
+const theme = useAppSelector(state => state.theme.theme)
   function formatTime() {
     const seconds = Math.floor(timestamp / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -20,12 +22,12 @@ const TradingHistory = ({priceUsd, timestamp}) => {
   
   
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
    
       <View style={styles.row}>
-          <Text style={[styles.value, styles.redText]}>{parseFloat(priceUsd).toFixed(2)}</Text>   
-          <Text style={styles.value}>1,122.83</Text>
-          <Text style={styles.value}>{formatTime()}</Text>
+          <ThemedText style={[styles.value, styles.redText]}>{parseFloat(priceUsd).toFixed(2)}</ThemedText>   
+          <ThemedText style={styles.value}>1,122.83</ThemedText>
+          <ThemedText style={styles.value}>{formatTime()}</ThemedText>
       </View>
     </View>
   )

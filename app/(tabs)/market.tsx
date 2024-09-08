@@ -17,6 +17,8 @@ import { TouchableOpacity } from 'react-native'
 import { getMarketData } from '@/lib/store/reducers/storeMarketData'
 import { useAppDispatch } from '@/hooks/useAppDispatch'
 import { ToastAndroid } from 'react-native'
+import { useAppSelector } from '@/hooks/useAppSelector'
+import { ThemedText } from '@/components/ThemedText'
 
 
 const Market = () => {
@@ -25,6 +27,7 @@ const Market = () => {
     const [isLoading, setIsLoading] = useState(false)  
     const [value, setValue] = useState('')
     const dispatch = useAppDispatch()
+    const theme = useAppSelector(state => state.theme.theme)
  
     useEffect(()=>{
         fetchPrice()
@@ -87,18 +90,18 @@ const Market = () => {
 
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader 
-        icon={<FontAwesome name="angle-left" size={24} color="black" />} 
-        other={<AntDesign name="infocirlceo" size={24} color="black" />} 
-        label={<Text style={styles.pageHeaderText}>Market</Text>} 
+        icon={<FontAwesome name="angle-left" size={24} color={theme ?'white':"black"} />} 
+        // other={<AntDesign name="infocirlceo" size={24} color={theme ?'white':"black"} />} 
+        label={<ThemedText style={styles.pageHeaderText}>Market</ThemedText>} 
       />
 
       <View style={styles.container}>
 
         <View style={styles.searchContainer}>
-          <AntDesign style={styles.searchIcon} name='search1' color={'black'} size={18}/>
-          <Input onSubmit={getCoinBySearch} value={value} onChangeText={getValuesFromInput} style={styles.input} placeholder='Cryptocoin search... Search in Symbols (BTC)'/>
+          <AntDesign style={styles.searchIcon} name='search1' color={theme ?'white' : 'black'} size={18}/>
+          <Input onSubmit={getCoinBySearch} value={value} onChangeText={getValuesFromInput} style={styles.input} placeholderTextColor={theme ? 'white': 'black'} placeholder='Cryptocoin search... Search in Symbols (BTC)'/>
         </View>
         {/* , 'Most Trade', 'Most Lose', 'New Coin' */}
         {/* <PopularTradeHeads data={['All Coins']}/> */}
@@ -111,7 +114,7 @@ const Market = () => {
         </View>
       
       <View style={{justifyContent:'center', alignItems:'center'}}>
-      {isLoading &&   <Wave size={48} color="black"/>}
+      {isLoading &&   <Wave size={48} color={theme ?'white':"black"}/>}
 
       </View>
 

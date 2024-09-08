@@ -6,6 +6,7 @@ import MarketChart from '../market chart/MarketChart';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getFavoriteData } from '@/lib/store/reducers/storeFavorites';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '../ThemedText';
 
 // Define the types for props and data
 interface MarketData {
@@ -28,6 +29,7 @@ const MarketDataSwipeSide: React.FC<MarketDataSwipeSideProps> = ({ fetchData }) 
   const [favoriteArray, setFavoriteArray] = useState<MarketData[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const marketData = useAppSelector(state => state.market.marketData)
+  const theme = useAppSelector(state => state.theme.theme)
 
   useEffect(() => {
     console.log(favoriteArray);
@@ -55,33 +57,33 @@ const MarketDataSwipeSide: React.FC<MarketDataSwipeSideProps> = ({ fetchData }) 
       contentContainerStyle={{ paddingHorizontal: 0, borderRadius: 10, paddingBottom: 250 }}
       data={marketData}
       renderItem={({ item }: ListRenderItemInfo<MarketData>) => (
-        <View style={styles.marketItem}>
+        <View style={[styles.marketItem, {backgroundColor:theme ? 'gray': 'white'}]}>
           <View style={styles.header}>
             <View>
           <Image
             source={{ uri: `https://cryptocompare.com${item.CoinInfo.ImageUrl}` }}
             style={{ width: 40, height: 40 }}
           />
-            <Text style={styles.pair}>{item.CoinInfo.Name}/USD</Text>
+            <ThemedText style={styles.pair}>{item.CoinInfo.Name}/USD</ThemedText>
             </View>
-            <Text style={styles.volumeText}>Vol:</Text>
-            <Text style={styles.volumeText}>{item.DISPLAY?.USD.VOLUME24HOUR}</Text>
+            <ThemedText style={styles.volumeText}>Vol:</ThemedText>
+            <ThemedText style={styles.volumeText}>{item.DISPLAY?.USD.VOLUME24HOUR}</ThemedText>
           </View>
           <View style={styles.body}>
-            <Text style={styles.priceText}>Top price: {item.DISPLAY?.USD?.HIGH24HOUR}</Text>
+            <ThemedText style={styles.priceText}>Top price: {item.DISPLAY?.USD?.HIGH24HOUR}</ThemedText>
             <MarketChart />
-            <Text style={styles.priceText}>Low price: {item?.DISPLAY?.USD?.LOW24HOUR}</Text>
+            <ThemedText style={styles.priceText}>Low price: {item?.DISPLAY?.USD?.LOW24HOUR}</ThemedText>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ right: 15, fontFamily: 'MonsterMid' }}>{item?.DISPLAY?.USD?.LOW24HOUR}</Text>
-            <Text
+            <ThemedText style={{ right: 15, fontFamily: 'MonsterMid' }}>{item?.DISPLAY?.USD?.LOW24HOUR}</ThemedText>
+            <ThemedText
               style={[
                 styles.change,
                 parseFloat(item.DISPLAY?.USD?.CHANGEPCT24HOUR) > 0 ? styles.positive : styles.negative,
               ]}
             >
               {`${parseFloat(item.DISPLAY?.USD.CHANGEPCT24HOUR) > 0 ? '+' : ''}${parseFloat(item?.DISPLAY?.USD.CHANGEPCT24HOUR).toFixed(2)}%`}
-            </Text>
+            </ThemedText>
           </View>
         </View>
       )}
@@ -89,7 +91,7 @@ const MarketDataSwipeSide: React.FC<MarketDataSwipeSideProps> = ({ fetchData }) 
         <View style={styles.rowBack}>
           <TouchableOpacity style={styles.backRightBtn} onPress={() => storeMarketDataToFavorites(data.item)}>
             <AntDesign name="staro" size={24} color="white" />
-            <Text style={styles.backTextWhite}>Add to Favorites</Text>
+            <ThemedText style={styles.backTextWhite}>Add to Favorites</ThemedText>
           </TouchableOpacity>
         </View>
       )}
@@ -129,12 +131,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   backTextWhite: {
-    color: '#FFF',
     fontFamily: 'MonsterBold',
   },
   container: {},
   marketItem: {
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     padding: 25,
     borderRadius: 8,
     shadowColor: '#000',
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
   },
   priceText: {
     fontSize: 14,
-    color: '#333',
+    // color: '#333',
     marginBottom: 5,
     fontFamily: 'MonsterMid',
   },

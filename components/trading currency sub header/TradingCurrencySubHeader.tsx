@@ -4,13 +4,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Picker } from '@react-native-picker/picker';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getSelectedCoinData } from '@/lib/store/reducers/storeSelectedCoin';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '../ThemedText';
 
 const TradingCurrencySubHeader: React.FC = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<string>('ALL');
   const [showFiatDropdown, setShowFiatDropdown] = useState<boolean>(false);
   const dispatch = useAppDispatch()
   const [selectedFiat, setSelectedFiat] = useState<string>('USD');
-
+  const theme = useAppSelector(state => state.theme.theme)
   const currencies = ['ALL', 'BTC', 'USDC', 'BNB', 'ETH', 'LTC'];
   const fiatCurrencies = ['USD', 'EUR', 'GBP'];
 
@@ -38,16 +40,16 @@ const TradingCurrencySubHeader: React.FC = () => {
           style={[styles.tab, selectedCurrency === currency ? styles.activeTab : null]}
           onPress={() => handleCurrencyPress(currency)}
         >
-          <Text style={[styles.tabText, selectedCurrency === currency ? styles.activeTabText : null]}>
+          <ThemedText style={[styles.tabText, selectedCurrency === currency ? styles.activeTabText : null]}>
             {currency}
             {currency === 'USD' && <Ionicons name="chevron-down-outline" size={16} color={selectedCurrency === currency ? '#000' : '#555'} />}
-          </Text>
+          </ThemedText>
         </TouchableOpacity>
       ))}
       {showFiatDropdown && (
         <Picker
           selectedValue={selectedFiat}
-          style={styles.picker}
+          style={[styles.picker, {color:theme ?'white': 'black'}]}
           onValueChange={(itemValue) => {
             setSelectedFiat(itemValue as string);
             setSelectedCurrency('USD');
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   activeTab: {
-    borderBottomColor: '#000',
+    borderBottomColor: 'green',
   },
   tabText: {
     color: '#555',
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
     fontFamily:'MonsterReg'
   },
   activeTabText: {
-    color: '#000',
+    color: 'green',
     fontFamily:'MonsterBold'
   },
   picker: {

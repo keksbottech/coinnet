@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert, Share } from 'react-na
 import * as Clipboard from 'expo-clipboard';
 import Bag from '@/assets/svg/bag.svg';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '../ThemedText';
 
 const ReferralScreen = () => {
   const userData = useAppSelector(state => state.user.user)
@@ -39,18 +40,18 @@ const ReferralScreen = () => {
       <View style={styles.imageContainer}>
         <Bag />
       </View>
-      <Text style={styles.title}>Refer and Earn 2% Commission</Text>
-      <Text style={styles.description}>
+      <ThemedText style={styles.title}>Refer and Earn 2% Commission</ThemedText>
+      <ThemedText style={styles.description}>
         Refer friends to Connet app and get rewarded! Share your unique referral link or code and earn 2% off on your next transaction for each successful referral.
-      </Text>
+      </ThemedText>
       <View style={styles.referralContainer}>
-        <Text style={styles.referralLink}>{referralLink}</Text>
+        <ThemedText style={styles.referralLink}>{referralLink}</ThemedText>
         <TouchableOpacity onPress={copyToClipboard} style={styles.copyButton}>
-          <Text style={styles.copyButtonText}>Copy Code</Text>
+          <ThemedText style={styles.copyButtonText}>Copy Code</ThemedText>
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={shareReferralLink} style={styles.shareButton}>
-        <Text style={styles.shareButtonText}>Share</Text>
+        <ThemedText style={styles.shareButtonText}>Share</ThemedText>
       </TouchableOpacity>
     </View>
   );
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   },
   referralLink: {
     fontSize: 14,
-    color: '#000',
+   
     marginRight: 10,
     fontFamily: 'MonsterReg',
   },
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   copyButtonText: {
-    color: '#000',
+   
     fontFamily: 'MonsterBold',
   },
   shareButton: {
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
   },
   shareButtonText: {
     fontFamily: 'MonsterBold',
-    color: '#000',
+   
     textAlign: 'center',
   },
 });

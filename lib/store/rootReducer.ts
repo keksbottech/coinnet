@@ -14,6 +14,7 @@ import storeTransactionAuthentication from './reducers/storeTransactionAuthentic
 import storeMessages from './reducers/storeMessages'
 import storeEscrowData from './reducers/storeEscrowData'
 import storeTransactionHistory from './reducers/storeTransactionHistory'
+import storeTheme from './reducers/storeTheme'
 
 
 export const rootReducer = combineReducers({
@@ -31,5 +32,6 @@ export const rootReducer = combineReducers({
    transaction: storeTransactionAuthentication,
    messages: storeMessages,
    escrow: storeEscrowData,
-   transactionHistory: storeTransactionHistory
+   transactionHistory: storeTransactionHistory,
+   theme: storeTheme
 })

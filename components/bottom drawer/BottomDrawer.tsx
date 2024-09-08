@@ -1,8 +1,10 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const BottomDrawer = ({ ui, enablePanDownToClose = true }: any) => {
+  const theme = useAppSelector(state => state.theme.theme)
   // ref
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -23,9 +25,10 @@ const BottomDrawer = ({ ui, enablePanDownToClose = true }: any) => {
       onChange={handleSheetChanges}
       enablePanDownToClose={enablePanDownToClose} // Enable dragging down to close
       animateOnMount={true}
+      backgroundStyle={{backgroundColor:theme ? '#0F0F0F': 'white'}}
     >
       <BottomSheetScrollView
-        contentContainerStyle={styles.scrollViewContent} // Ensure the ScrollView content grows to fill available space
+        contentContainerStyle={[styles.scrollViewContent]} // Ensure the ScrollView content grows to fill available space
         showsVerticalScrollIndicator={false}
       >
         {ui}
@@ -38,6 +41,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingHorizontal: 16,
     paddingVertical: 8,
+    
   },
 });
 

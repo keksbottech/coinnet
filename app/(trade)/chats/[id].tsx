@@ -27,6 +27,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getTransactionData } from '@/lib/store/reducers/storeTransactionAuthentication';
 import Loading from '@/components/loading/Loading';
+import { ThemedText } from '@/components/ThemedText';
 
 type Message = {
   _id: string;
@@ -64,6 +65,7 @@ const ChatScreen = ({
   const dispatch = useAppDispatch()
   const [isLoading, setIsLoading] = useState(false)
   const [image, setImage] = useState('')
+  const theme = useAppSelector(state => state.theme.theme)
 
   const pollingIntervalForEscrow = useRef<any>(null);
 
@@ -380,7 +382,7 @@ const ChatScreen = ({
                 <Image source={{ uri: item.image }} style={styles.messageImage} />
               </TouchableOpacity>
             ) : (
-              <Text style={styles.senderText}>{item.message}</Text>
+              <ThemedText style={styles.senderText}>{item.message}</ThemedText>
             )}
             <Ionicons
               name={item.status === 'sent' ? 'checkmark-done' : 'checkmark'}
@@ -396,7 +398,7 @@ const ChatScreen = ({
                 <Image source={{ uri: item.image }} style={styles.messageImage} />
               </TouchableOpacity>
             ) : (
-              <Text style={styles.receiverText}>{item.message}</Text>
+              <ThemedText style={styles.receiverText}>{item.message}</ThemedText>
             )}
           </View>
         )}
@@ -434,24 +436,25 @@ const ChatScreen = ({
   return (
     <>
     {isLoading && <Loading/>}
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <View style={{ flex: 1 }}>
 
-        <View style={styles.header}>
+        <View style={[styles.header, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
           {receiverImage ? (
             <Image source={{ uri: receiverImage }} style={styles.profileImage} />
           ) : (
             <View style={styles.initialsContainer}>
-              <Text style={styles.initials}>{receiverName[0]}</Text>
+              <ThemedText style={styles.initials}>{receiverName[0]}</ThemedText>
             </View>
           )}
-          <Text style={styles.receiverName}>{fullname}</Text>
+
+          <ThemedText style={styles.receiverName}>{fullname}</ThemedText>
           <View style={styles.headerIcons}>
             {
               sellerId === userData._id ? <TouchableOpacity onPress={buyerVerifiesMoneyIsTransferred}>
-                <Text style={{fontFamily:'MonsterReg',fontSize:12}}>Click if money have been paid</Text>
+                <ThemedText style={{fontFamily:'MonsterReg',fontSize:12}}>Click if money have been paid</ThemedText>
               </TouchableOpacity> : <TouchableOpacity onPress={sellerVerifiesPayment}>
-                <Text style={{fontFamily:'MonsterReg',fontSize:12}}>Confirm payment</Text>
+                <ThemedText style={{fontFamily:'MonsterReg',fontSize:12}}>Confirm payment</ThemedText>
               </TouchableOpacity>
             }
             <TouchableOpacity onPress={handleCall}>
@@ -469,8 +472,8 @@ const ChatScreen = ({
         receiverName={fullname}
         // handleCopy={handleCopy}
       />}
- <Text style={styles.label}>Buyer intends to buy {p2pNegotiateData?.coinAmount} quantity of {p2pNegotiateData?.coin} which is worth ${parseFloat(p2pNegotiateData?.fiatAmount).toFixed(2)}. Buyer should confirm money have been sent and seller should confim money have been received by clicking the button above. Dispute should be sent for false transactions.
- </Text>
+ <ThemedText style={styles.label}>Buyer intends to buy {p2pNegotiateData?.coinAmount} quantity of {p2pNegotiateData?.coin} which is worth ${parseFloat(p2pNegotiateData?.fiatAmount).toFixed(2)}. Buyer should confirm money have been sent and seller should confim money have been received by clicking the button above. Dispute should be sent for false transactions.
+ </ThemedText>
         <FlatList
           ref={flatListRef}
           data={messages}

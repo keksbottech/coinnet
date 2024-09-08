@@ -6,10 +6,13 @@ import { Link, useRouter } from 'expo-router';
 import FormatDate from '../format date/FormatDate';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getOrderSellerIdData, getSelectedOrderData } from '@/lib/store/reducers/storeOrders';
+import { ThemedText } from '../ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const Card = ({fullname, time, sellersRate,sellerId, quantity, limits, coin, offerId}:any) => {
   const router = useRouter()
   const dispatch = useAppDispatch()
+  const theme = useAppSelector(state => state.theme.theme)
 
   const navigateToSellCoin = () => {
     router.push(`/(trade)/chats/${sellerId}`,)
@@ -20,30 +23,32 @@ const Card = ({fullname, time, sellersRate,sellerId, quantity, limits, coin, off
     router.push(`/(trade)/buytradingform`,)
   }
 
+
+
   console.log(limits)
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor:theme ? 'rgba(255,255,255,.1)': 'white'}]}>
       <View>
       <View style={styles.row}>
         <View style={styles.iconWrapper}>
-          <Text style={styles.iconText}>K</Text>
+          <ThemedText style={styles.iconText}>{String(fullname).split('')[0]}</ThemedText>
         </View>
-        <View>
+        <View style={{marginLeft:8}}>
           <View style={{flexDirection:'row',alignItems:'center'}}>
-        <Text style={styles.nameText}>{fullname}</Text>
+        <ThemedText style={styles.nameText}>{fullname}</ThemedText>
   
         <AntDesign style={{marginLeft:5}}  name="checkcircle" size={15} color="green" />
       </View>
         <FormatDate date={time}/>
         </View>
       </View>
-      <Text style={styles.amountText}>${sellersRate}</Text>
-      <Text style={styles.quantityText}>Quantity: {quantity} {coin}</Text>
+      <ThemedText style={styles.amountText}>${sellersRate}</ThemedText>
+      <ThemedText style={styles.quantityText}>Quantity: {quantity} {coin}</ThemedText>
       
-      <Text style={styles.limitsText}>Limits: {limits}</Text>
+      <ThemedText style={styles.limitsText}>Limits: {limits}</ThemedText>
       </View>
       <TouchableOpacity onPress={navigateToP2pNegotiate} style={styles.dayButton}>
-      <Text style={styles.buyButtonText}>Buy</Text>
+      <ThemedText style={styles.buyButtonText}>Buy</ThemedText>
       </TouchableOpacity>
     </View>
   );
@@ -51,7 +56,6 @@ const Card = ({fullname, time, sellersRate,sellerId, quantity, limits, coin, off
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
     shadowColor: '#000',
@@ -78,9 +82,9 @@ const styles = StyleSheet.create({
   },
   iconText: {
     color: '#000',
+    textTransform:'capitalize'
   },
   nameText: {
-    marginLeft: 5,
     fontFamily:'MonsterBold',
     fontSize:18
   },
