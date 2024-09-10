@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import { ThemedText } from '../ThemedText';
+import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 
 const ProfileScreen = () => {
   const [imageUri, setImageUri] = useState<any>(null);
@@ -81,6 +82,17 @@ const ProfileScreen = () => {
         console.log(data.secure_url)
         setImageUri(data.secure_url); // Store the Cloudinary URL
         ToastAndroid.show('Image uploaded successfully', ToastAndroid.SHORT);
+
+        const updateData = {
+          profileImage: data.secure_url
+         }
+
+      const updates = await axios.patch('user/update', { userId: userData?._id, updateData })
+
+      console.log(updates.data.message)
+
+      dispatch(getUserInfo(updates.data.message))
+
       } else {
         throw new Error('Failed to upload image');
       }
@@ -127,6 +139,7 @@ const ProfileScreen = () => {
   }
   
 
+  console.log(userData?.profileImage)
   return (
     <>
     {isLoading && <Loading/>}
@@ -134,7 +147,7 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         {userData?.profileImage ? (
-          <Image source={{ uri: imageUri }} style={styles.image} />
+          <Image source={{ uri: userData?.profileImage }} style={styles.image} />
         ) : (
           <Image source={require('@/assets/images/dummy.png')} style={styles.image} />
         )}

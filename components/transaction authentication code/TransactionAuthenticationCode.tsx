@@ -29,9 +29,9 @@ const TransactionAuthenticationCode = () => {
   const withdrawMethod = useAppSelector(state => state.withdrawal.withdrawMethod)
   const theme = useAppSelector(state => state.theme.theme)
   
-  // useEffect(() => {
-  //   sendPhoneConfirmationOtpToValidate();
-  // }, []);
+  useEffect(() => {
+    sendPhoneConfirmationOtpToValidate();
+  }, []);
 
    console.log(withdrawMethod)
   const sendPhoneConfirmationOtpToValidate = async () => {
@@ -157,7 +157,7 @@ const TransactionAuthenticationCode = () => {
       <View style={styles.container}>
         <ThemedText style={styles.title}>Enter authentication code</ThemedText>
         <ThemedText style={styles.subtitle}>
-          Enter the 7-digit code we just texted to your phone number to verify your transaction
+          Enter the 6-digit code we just texted to your phone number to verify your transaction
         </ThemedText>
         <View style={styles.inputContainer}>
           <ThemedText style={styles.inputLabel}>Code</ThemedText>

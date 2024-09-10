@@ -21,7 +21,7 @@ const NumberStepProgress = ({currentStep} :any) => {
                   borderColor: currentStep >= step ? '#F9C74F' : '#ccc',
                 },
               ]}
-              onPress={() => currentStep(step)}
+              // onPress={() => currentStep(step)}
             >
               <Text style={[styles.circleText, { color: currentStep >= step ? 'black' : '#ccc' }]}>{step}</Text>
             </TouchableOpacity>

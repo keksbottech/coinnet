@@ -80,11 +80,13 @@ const SendCoins = () => {
          
               <View style={styles.coinText}>
                 <ThemedText style={styles.coinName}>{selectedCoin?.name}</ThemedText>
-                <ThemedText style={styles.coinBalance}>{selectedCoin?.balance}</ThemedText>
+                <ThemedText style={styles.coinBalance}>{selectedCoin?.symbol}</ThemedText>
               </View>
+
               <Ionicons name="chevron-down-outline" size={20} />
             </TouchableOpacity>
           </View>
+
 
           <View style={styles.inputContainer}>
             <ThemedText style={styles.label}>Enter Address</ThemedText>
@@ -98,11 +100,12 @@ const SendCoins = () => {
                     style={[styles.input, {color:theme ? 'white': 'black'}, { flex: 1 }]}
                     onChangeText={onChange}
                     value={value}
+                    placeholderTextColor={theme?'#ccc':'gray'}
                     placeholder="Enter wallet address"
                   />
                 )}
               />
-              <Ionicons name="qr-code-outline" size={24} style={styles.icon} />
+              <Ionicons name="qr-code-outline" color={theme?'white':'black'} size={24} style={styles.icon} />
             </View>
             {errors.address && <ThemedText style={styles.errorText}>{errors.address.message}</ThemedText>}
           </View>
@@ -118,6 +121,7 @@ const SendCoins = () => {
                   style={[styles.input, {color:theme ? 'white': 'black'}]}
                   onChangeText={onChange}
                   value={value}
+                  placeholderTextColor={theme?'#ccc':'gray'}
                   placeholder="Enter amount"
                   keyboardType="numeric"
                 />
@@ -136,6 +140,7 @@ const SendCoins = () => {
                   style={[styles.input, {color:theme ? 'white': 'black'}]}
                   onChangeText={onChange}
                   value={value}
+                  placeholderTextColor={theme?'#ccc':'gray'}
                   placeholder="Add a note"
                 />
               )}
@@ -193,7 +198,6 @@ const styles = StyleSheet.create({
     fontFamily: 'MonsterMid',
   },
   coinBalance: {
-    color: 'gray',
     fontFamily: 'MonsterMid',
   },
   inputContainer: {

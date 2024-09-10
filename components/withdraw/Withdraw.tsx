@@ -39,6 +39,32 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
   const watchAmount = watch('amount', '');
   const coinAmount = watch('coinAmount');
 
+  const paypalEmailRules = selectedPayment?.name === 'PayPal' ? {
+    required: 'PayPal email is required',
+    pattern: {
+      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+      message: 'Enter a valid email address',
+    },
+  } : {};
+
+  const bankAccountRules = selectedPayment?.name === 'Bank Transfer' ? {
+    accountName: {
+      required: 'Account name is required',
+    },
+    accountNumber: {
+      required: 'Account number is required',
+      minLength: {
+        value: 10,
+        message: 'Account number must be exactly 10 digits',
+      },
+      maxLength: {
+        value: 10,
+        message: 'Account number must be exactly 10 digits',
+      },
+    },
+  } : {};
+  
+
   // Calculate the estimated fiat amount based on the selected coin and entered amount
   useEffect(() => {
     if (selectedCoin && watchAmount) {
@@ -63,6 +89,8 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
 
   // Handle form submission
   const onSubmit = (data: any) => {
+
+    
     const baseBody = {
       type: 'nuban',
       name: data.accountName,
@@ -75,13 +103,27 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
       coinAmount: data.coinAmount
     };
 
+    console.log(selectedPayment.name)
+
     if (selectedPayment.name === 'Bank Transfer') {
       baseBody.amount = +data.amount * 1690;
+      console.log('CLICKED')
+
+      // dispatch(getWithdrawalData(baseBody));
+      // dispatch(getWithdrawalMethod(selectedPayment));
+  
+      // router.push('/(trade)/confirmwithdraw');
     }
+
+    console.log('CLICKED')
 
     dispatch(getWithdrawalData(baseBody));
     dispatch(getWithdrawalMethod(selectedPayment));
+
     router.push('/(trade)/confirmwithdraw');
+
+
+
   };
 
   return (
@@ -125,6 +167,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                 <View style={styles.inputContainer}>
                   <FontAwesome name="bitcoin" size={24} color={theme?'white':"black"} />
                   <TextInput
+                  placeholderTextColor={theme ?'#ccc': 'gray'}
                     placeholder="Estimated Coin"
                     style={[styles.input, {color:theme ? 'white': 'black'}]}
                     value={value}
@@ -144,6 +187,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                   <View style={styles.inputContainer}>
                     <FontAwesome name="dollar" size={24} color={theme?'white':"black"} />
                     <TextInput
+                    placeholderTextColor={theme ?'#ccc': 'gray'}
                       placeholder="Enter Amount"
                       style={[styles.input,{color:theme ? 'white': 'black'}]}
                       onBlur={onBlur}
@@ -175,18 +219,13 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                 <Controller
                   control={control}
                   name="paypalEmail"
-                  rules={{
-                    required: 'PayPal email is required',
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                      message: 'Enter a valid email address',
-                    },
-                  }}
+                  rules={paypalEmailRules}
                   render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                     <>
                       <View style={styles.inputContainer}>
                         <FontAwesome name="envelope" size={24} color={theme?'white':"black"} />
                         <TextInput
+                        placeholderTextColor={theme ?'#ccc': 'gray'}
                           placeholder="Enter PayPal email address"
                           style={[styles.input, {color:theme ? 'white': 'black'}]}
                           onBlur={onBlur}
@@ -220,12 +259,14 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                 <Controller
                   control={control}
                   name="accountName"
-                  rules={{ required: 'Account name is required' }}
+                  rules={bankAccountRules.accountName}
+
                   render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                     <>
                       <View style={styles.inputContainer}>
                         <FontAwesome name="user" size={24} color={theme?'white':"black"} />
                         <TextInput
+                        placeholderTextColor={theme ?'#ccc': 'gray'}
                           placeholder="Enter account name"
                           style={[styles.input, {color:theme ? 'white': 'black'}]}
                           onBlur={onBlur}
@@ -242,12 +283,13 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                 <Controller
                   control={control}
                   name="accountNumber"
-                  rules={{ required: 'Account number is required', minLength: 10, maxLength: 10 }}
+                  rules={bankAccountRules.accountNumber}
                   render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                     <>
                       <View style={styles.inputContainer}>
                         <FontAwesome name="credit-card" size={24} color={theme?'white':"black"} />
                         <TextInput
+                        placeholderTextColor={theme ?'#ccc': 'gray'}
                           placeholder="Enter account number"
                           style={[styles.input, {color:theme ? 'white': 'black'}]}
                           onBlur={onBlur}

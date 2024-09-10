@@ -71,13 +71,8 @@ const Signin: React.FC = () => {
         errorMessage = 'You entered an invalid credential';
       }
 
-      Toast.show({
-        type: 'error',
-        text1: 'Login Failed',
-        text2: errorMessage,
-        text1Style: { fontFamily: 'MonsterBold', fontSize: 15, fontWeight: 'normal' },
-        text2Style: { fontFamily: 'MonsterMid', fontSize: 10 },
-      });
+      ToastAndroid.show('Login failed! Invalid Credential', ToastAndroid.SHORT);
+
     } finally {
       setIsLoading(false);
     }
@@ -223,7 +218,7 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   button: {
-    backgroundColor: '#F9C74F', // equivalent to bg-yellow-300
+    backgroundColor: 'yellow', // equivalent to bg-yellow-300
     width: '100%',
     paddingVertical: 15,
     justifyContent: 'center',

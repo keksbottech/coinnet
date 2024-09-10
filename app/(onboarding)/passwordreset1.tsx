@@ -138,6 +138,7 @@ const Passwordreset = () => {
                     onBlur={onBlur}
                     onChangeText={onChange}
                     value={value}
+                    placeholderTextColor={theme ?'#eee':'gray'}
                   />
                 )}
               />

@@ -33,6 +33,9 @@ const BuyTrading = () => {
     const [disableBackPress, setDisableBackPress] = useState(true)
 
 
+
+    console.log(selectedCoin,'selected')
+
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -54,6 +57,8 @@ const BuyTrading = () => {
     useEffect(() => {
       dispatch(getSelectedCoinData('ALL'))
     }, [])
+
+
     useEffect(() => {
       if (selectedCoin === 'ALL') {
         fetchAllOrders();
@@ -87,12 +92,13 @@ const BuyTrading = () => {
           paymentType: selectedCoin === 'Bank Transfer' ? 'bank transfer' :  selectedCoin === 'Paypal' ? 'paypal' : ''
         }
 
-        const response = await axios.post(`orders/get`, body);
+      
+        const response = await axios.post(`orders/get/offers`, body);
 
-        console.log(response.data)
+        console.log(response.data.message, 'response orders')
         dispatch(getOrdersData(response.data.message));
       } catch (err) {
-        ToastAndroid.show('Failed to orders based on selected! Try again', ToastAndroid.SHORT);
+        // ToastAndroid.show('Failed to orders based on selected! Try again', ToastAndroid.SHORT);
         console.log(err);
       } finally {
         setIsLoading(false);
@@ -153,8 +159,10 @@ const BuyTrading = () => {
                 sellerId={item.userId}
                 offerId={item._id}
               />
+
             )}
             contentContainerStyle={{ paddingBottom: 250 }}
+            ListEmptyComponent={() => <Text style={{textAlign:'center', color:theme ? 'white': 'black', fontSize:18}}>Data not found</Text>}
           />
                         {/* <BuyCoinsP2P
               /> */}

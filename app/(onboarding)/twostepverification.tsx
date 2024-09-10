@@ -14,6 +14,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
+import { ThemedText } from '@/components/ThemedText';
 
 const TwoStepVerification = () => {
   const router = useRouter();
@@ -86,16 +87,16 @@ const TwoStepVerification = () => {
           <PageHeader label={<ProgressBar currentStep={2} />} />
           <Toast />
           <View style={styles.headerContainer}>
-            <Text style={styles.title}>Set up 2-step verification</Text>
-            <Text style={styles.description}>
+            <ThemedText style={styles.title}>Set up 2-step verification</ThemedText>
+            <ThemedText style={styles.description}>
               Enter your phone number so we can text you an authentication code.
-            </Text>
+            </ThemedText>
           </View>
 
           <View style={styles.formContainer}>
             <View style={styles.inputLabels}>
-              <Text style={styles.label}>Country</Text>
-              <Text style={styles.label}>Phone</Text>
+              <ThemedText style={styles.label}>Country</ThemedText>
+              <ThemedText style={styles.label}>Phone</ThemedText>
             </View>
 
             <View style={styles.inputWrapper}>
@@ -112,7 +113,7 @@ const TwoStepVerification = () => {
                 }}
                 containerButtonStyle={styles.countryPicker}
               />
-              <Text style={styles.callingCode}>+{country ? country?.callingCode : '234'}</Text>
+              <ThemedText style={styles.callingCode}>+{country ? country?.callingCode : '234'}</ThemedText>
               <Controller
                 control={control}
                 name="phone"
@@ -128,7 +129,7 @@ const TwoStepVerification = () => {
                 )}
               />
             </View>
-            {errors.phone && <Text style={styles.errorText}>{errors.phone.message}</Text>}
+            {errors.phone && <ThemedText style={styles.errorText}>{errors.phone.message}</ThemedText>}
           </View>
 
           <Button label="Continue" onClick={handleSubmit(sendPhoneConfirmationOtpToValidate)} />
@@ -196,6 +197,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
     width: '100%',
     fontFamily: 'MonsterReg',
+    borderWidth:0
   },
   errorText: {
     color: 'red',

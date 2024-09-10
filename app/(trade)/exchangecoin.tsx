@@ -16,7 +16,7 @@ const ExchangeCoin = () => {
   const theme = useAppSelector(state => state.theme.theme)
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader
         icon={<FontAwesome name="angle-left" size={24} color={theme ?'white':"black" }/>}
         label={<ThemedText style={styles.headerText}>Trading</ThemedText>}

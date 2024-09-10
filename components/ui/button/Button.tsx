@@ -29,7 +29,7 @@ const defaultStyles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     paddingVertical: 20,
-    backgroundColor: '#F9C74F',
+    backgroundColor: 'yellow',
     borderRadius: 10,
     position: 'absolute',
     bottom: 30,

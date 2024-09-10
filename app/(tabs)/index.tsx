@@ -36,13 +36,13 @@ const Home = () => {
 
   useEffect(() =>{
 
-    if(userData.isPhoneVerified){
+    if(userData?.isPhoneVerified){
       return 
     }
     else {
-      router.push('/(onboarding)/twostepverification')
+      
+      router.push('/(onboarding)/signin')
     }
-
   }, [])
 
   // useEffect(() => {
@@ -104,9 +104,9 @@ const Home = () => {
     
     }
     catch(err:any){
-      ToastAndroid.show('Something went wrong fetching your balance. Try refreshing!', ToastAndroid.SHORT);
+      // ToastAndroid.show('Something went wrong fetching your balance. Try refreshing!', ToastAndroid.SHORT);
 
-      console.log(err.response.data)
+      // console.log(err.response.data)
     }
    }
 
@@ -145,8 +145,8 @@ const Home = () => {
   
       // console.log(response.data);
     } catch (err:any) {
-      ToastAndroid.show('Something went wrong fetching your balance. Try refreshing!', ToastAndroid.SHORT);
-      console.log(err.response.data);
+      // ToastAndroid.show('Something went wrong fetching your balance. Try refreshing!', ToastAndroid.SHORT);
+      // console.log(err.response.data);
     }
     finally{
       setIsPortfolioLoading(false)
@@ -252,9 +252,9 @@ const Home = () => {
         dispatch(getMarketData(response.data.Data))
         setMarketData(response.data.Data);
       } catch (error) {
-        ToastAndroid.show('Error fetching market price!', ToastAndroid.SHORT);
+        // ToastAndroid.show('Error fetching market price!', ToastAndroid.SHORT);
 
-        console.error('Error fetching price:', error);
+        // console.error('Error fetching price:', error);
       }
       finally{
         setIsLoading(false)
@@ -349,7 +349,7 @@ const Home = () => {
 
           <View style={styles.portfolioContainer}>
             <View style={{alignItems:'center'}}>
-            {isPorfolioLoading && <Wave size={40}/>}
+            {isPorfolioLoading && <Wave size={40} color={theme ? 'white': "black"}/>}
             </View>
             {
               filteredAssets?.map((item: { holdings: any; fullName: string; price: any; change: string; image: any; }, index: React.Key | null | undefined)=>  <Portfolio key={index} priceUsd={`${parseFloat(item.holdings).toFixed(6)}`} name={item.fullName} symbol={`$ ${item.price}`} changePercent24Hr={item.change} image={item.image}/>)

@@ -30,6 +30,7 @@ const PaymentBottomDrawer = () => {
   return (
 
 <BottomDrawer
+
     ui={
       <View style={styles.container}>
       <ThemedText style={styles.title}>Choose Payment Methods</ThemedText>

@@ -18,6 +18,7 @@ import { useRouter } from 'expo-router';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getExchangeData } from '@/lib/store/reducers/storeExchangeData';
+import { ThemedText } from '../ThemedText';
 
 interface FormData {
   fromAmount: string;
@@ -110,12 +111,12 @@ const ConvertForm = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.label}>You Convert</Text>
-        <Text style={styles.amountText}>
+        <ThemedText style={styles.label}>You Convert</ThemedText>
+        <ThemedText style={styles.amountText}>
           {fromAmount ? `${fromAmount} ${coinShortForms[selectedFromCoin]}` : `0.000 ${coinShortForms[selectedFromCoin]}`}
-        </Text>
+        </ThemedText>
 
-        <Text style={styles.label}>Convert From</Text>
+        <ThemedText style={styles.label}>Convert From</ThemedText>
         <Controller
           control={control}
           name="selectedFromCoin"
@@ -129,7 +130,7 @@ const ConvertForm = () => {
           )}
         />
 
-        <Text style={styles.label}>Convert To</Text>
+        <ThemedText style={styles.label}>Convert To</ThemedText>
         <Controller
           control={control}
           name="selectedToCoin"
@@ -143,7 +144,7 @@ const ConvertForm = () => {
           )}
         />
 
-        <Text style={styles.label}>You Receive</Text>
+        <ThemedText style={styles.label}>You Receive</ThemedText>
         <View style={styles.receiveContainer}>
           <Controller
             control={control}
@@ -165,27 +166,27 @@ const ConvertForm = () => {
               />
             )}
           />
-          <Text style={styles.currencyText}>{coinShortForms[selectedFromCoin]}</Text>
+          <ThemedText style={styles.currencyText}>{coinShortForms[selectedFromCoin]}</ThemedText>
         </View>
-        {errors.fromAmount && <Text style={styles.errorText}>{errors.fromAmount.message}</Text>}
+        {errors.fromAmount && <ThemedText style={styles.errorText}>{errors.fromAmount.message}</ThemedText>}
 
-        <Text style={styles.label}>Estimated Received</Text>
+        <ThemedText style={styles.label}>Estimated Received</ThemedText>
         <View style={styles.receiveContainer}>
           <Controller
             control={control}
             name="toAmount"
-            render={({ field: { value } }) => <Text style={styles.estimatedText}>{value}</Text>}
+            render={({ field: { value } }) => <ThemedText style={styles.estimatedText}>{value}</ThemedText>}
           />
-          <Text style={styles.currencyText}>{coinShortForms[selectedToCoin]}</Text>
+          <ThemedText style={styles.currencyText}>{coinShortForms[selectedToCoin]}</ThemedText>
         </View>
 
-        <Text style={styles.label}>Exchange</Text>
+        <ThemedText style={styles.label}>Exchange</ThemedText>
         <View style={styles.exchangeContainer}>
           <View style={styles.coinWrapper}>
             <BitcoinImage />
             <View>
-              <Text style={styles.coinText}>From</Text>
-              <Text style={styles.coinName}>{coinShortForms[selectedFromCoin]}</Text>
+              <ThemedText style={styles.coinText}>From</ThemedText>
+              <ThemedText style={styles.coinName}>{coinShortForms[selectedFromCoin]}</ThemedText>
             </View>
           </View>
           <TouchableOpacity style={styles.exchangeIconWrapper}>
@@ -193,8 +194,8 @@ const ConvertForm = () => {
           </TouchableOpacity>
           <View style={styles.coinWrapper}>
             <View style={{ alignItems: 'flex-end' }}>
-              <Text style={styles.coinText}>To</Text>
-              <Text style={styles.coinName}>{coinShortForms[selectedToCoin]}</Text>
+              <ThemedText style={styles.coinText}>To</ThemedText>
+              <ThemedText style={styles.coinName}>{coinShortForms[selectedToCoin]}</ThemedText>
             </View>
             <BitcoinImage />
           </View>
@@ -213,7 +214,6 @@ const ConvertForm = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#f5f5f5',
     padding: 20,
   },
   label: {

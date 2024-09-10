@@ -145,7 +145,7 @@ const Wallet = () => {
 
         <View style={styles.contentContainer}>
           <TouchableOpacity style={styles.portfolioButton}>
-            <ThemedText style={[styles.textCenter, styles.text2xl]}>Portfolio</ThemedText>
+            <ThemedText style={[styles.textCenter]}>Portfolio</ThemedText>
           </TouchableOpacity>
           <AssetsCategories />
           <AssetWalletBalance />
@@ -173,7 +173,7 @@ const Wallet = () => {
 
             {isLoading && (
               <View style={styles.loadingContainer}>
-                <Wave size={40} />
+                <Wave size={40} color={theme ? 'white': "black"}/>
               </View>
             )}
 

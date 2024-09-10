@@ -4,6 +4,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import CheckCompleteImage from '@/assets/svg/complete.svg';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { useRouter } from 'expo-router';
+import { ThemedText } from '../ThemedText';
 
 const TransactionComplete = () => {
   const transactionData = useAppSelector((state) => state.transaction.transactionName);
@@ -28,16 +29,16 @@ const TransactionComplete = () => {
   return (
     <View style={styles.container}>
       <CheckCompleteImage />
-      <Text style={styles.label}>{transactionData} Successful</Text>
-      <Text style={styles.message}>
+      <ThemedText style={styles.label}>{transactionData} Successful</ThemedText>
+      <ThemedText style={styles.message}>
         You have successfully initiated the transaction. Amount will reflect in wallet within 1 hour.
-      </Text>
+      </ThemedText>
 
       {transactionData === 'exchange' && (
         <View style={styles.section}>
           <View>
-            <Text>{exchangeData.selectFrom} </Text>
-            <Text style={styles.text}>{exchangeData.fromAmount}</Text>
+            <ThemedText>{exchangeData.selectFrom} </ThemedText>
+            <ThemedText style={styles.text}>{exchangeData.fromAmount}</ThemedText>
           </View>
 
           <View style={styles.icon}>
@@ -45,8 +46,8 @@ const TransactionComplete = () => {
           </View>
 
           <View>
-            <Text>{exchangeData.selectTo}</Text>
-            <Text style={styles.text}>{exchangeData.toAmount}</Text>
+            <ThemedText>{exchangeData.selectTo}</ThemedText>
+            <ThemedText style={styles.text}>{exchangeData.toAmount}</ThemedText>
           </View>
         </View>
       )}

@@ -1,8 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, Button, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const TransferToCoinnetUser = () => {
+  const theme = useAppSelector(state => state.theme.theme)
+
+  
   return (
     <View style={styles.container}>
       <Text style={styles.label}>User ID</Text>

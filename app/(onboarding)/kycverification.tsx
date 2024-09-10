@@ -115,6 +115,7 @@ const KycVerification = () => {
         isUserVerified: true
       }
 
+      console.log(body)
       if(!imageUri){
         ToastAndroid.show('You must upload your NIN slip', ToastAndroid.LONG);
       }
@@ -125,11 +126,11 @@ const KycVerification = () => {
 
 
       setTimeout(() => {
-        router.push('/(onboarding)/alldone');
+        router.push('/(onboarding)/bvnfacecaptureprompt');
       }, 2000);
 
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data);
       ToastAndroid.show('Failed. Try again', ToastAndroid.LONG);
     } finally {
       setIsLoading(false);

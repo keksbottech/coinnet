@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
   },
   volumeText: {
     fontSize: 14,
-    color: '#888',
     fontFamily: 'MonsterBold',
   },
 });

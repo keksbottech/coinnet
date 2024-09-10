@@ -1,29 +1,108 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import Button from '@/components/ui/button/Button';
-import BvnFaceImage from '@/assets/svg/facecaputure.svg';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, ToastAndroid, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import * as ImagePicker from 'expo-image-picker';
+import Button from '@/components/ui/button/Button';
+import BvnFaceImage from '@/assets/svg/facecaputure.svg';
 
 const BvnFaceCapture = () => {
   const router = useRouter();
-  const theme = useAppSelector(state => state.theme.theme)
+  const theme = useAppSelector((state) => state.theme.theme);
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Open Image Picker
+  const pickImage = async () => {
+    // Ask for permission
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      ToastAndroid.show('Permission to access camera roll is required!', ToastAndroid.LONG);
+      return;
+    }
+
+    // Select image
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri); // Set the selected image URI
+    }
+  };
+
+  // Upload Image to Cloudinary
+  const uploadImage = async (uri: string) => {
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      const fileType = uri.split('.').pop();
+
+      formData.append('file', {
+        uri,
+        type: `image/${fileType}`,
+        name: `upload.${fileType}`,
+      } as any); // Correct way to handle file
+
+      formData.append('upload_preset', 'coinnet');
+
+      const response = await fetch('https://api.cloudinary.com/v1_1/dcgirmxbm/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.secure_url) {
+        setImageUri(data.secure_url); // Store the Cloudinary URL
+        ToastAndroid.show('Image uploaded successfully!', ToastAndroid.LONG);
+      } else {
+        throw new Error('Failed to upload image. Try again');
+      }
+    } catch (error: any) {
+      console.error(error);
+      ToastAndroid.show('Failed to upload image. Try again', ToastAndroid.LONG);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const navigateToBvnFaceCaptureBox = () => {
     router.push('/(onboarding)/bvnfacecapture');
   };
 
   return (
-    <SafeAreaView style={[styles.safeArea,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme ? '#0F0F0F' : 'white' }]}>
       <View style={styles.container}>
         <BvnFaceImage />
         <ThemedText style={styles.title}>One More Thing</ThemedText>
         <ThemedText style={styles.description}>
-          To complete your KYC verification, please ensure that your face is clearly visible and matches the photo on your NIN and BVN. Make sure you are in a well-lit environment with a plain background. Remove any facial accessories such as glasses or hats before taking the photo.
+          To complete your KYC verification, please ensure that your face is clearly visible and matches the photo on
+          your NIN and BVN. Make sure you are in a well-lit environment with a plain background. Remove any facial
+          accessories such as glasses or hats before taking the photo.
         </ThemedText>
-        <Button onClick={navigateToBvnFaceCaptureBox} label="Done" />
+
+        <Button onClick={pickImage} label="Pick an Image" />
+
+        {/* Show selected image */}
+        {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+
+        {/* Upload image button */}
+        {imageUri && (
+          <Button
+            onClick={() => uploadImage(imageUri)}
+            label={isLoading ? 'Uploading...' : 'Upload Image'}
+            disabled={isLoading}
+          />
+        )}
+
+        {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+
+        <Button onClick={navigateToBvnFaceCaptureBox} label="Continue" />
       </View>
     </SafeAreaView>
   );
@@ -52,5 +131,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 18, // equivalent to text-xl
     color: '#6B7280', // equivalent to text-gray-500
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 20,
+    borderRadius: 10,
   },
 });

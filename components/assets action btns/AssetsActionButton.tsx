@@ -34,12 +34,18 @@ const AssetsActionButton = () => {
     const navigateToDepositCoin = () => {
         router.push('/(other)/paymentmethods')
     }
+
+    const navigateToTransferFiat = () => {
+      router.push('/(other)/transferinput')
+  }
+
   return (
     <View style={styles.container}>
       <ActionButton iconName="add-outline" onClick={navigateToDepositCoin} label="Deposit" />
       <ActionButton iconName="arrow-up-outline" onClick={navigateToSendCoin} label="Send" />
       <ActionButton iconName="arrow-down-outline" onClick={navigateToReceiveCoin} label="Receive" />
       <ActionButton iconName="cash-outline" onClick={navigateToWithdraw} label="Withdraw" />
+      <ActionButton iconName="swap-horizontal" onClick={navigateToTransferFiat} label="Transfer fiat" />
     </View>
   );
 };

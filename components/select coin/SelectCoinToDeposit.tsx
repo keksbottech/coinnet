@@ -37,7 +37,7 @@ const SelectCoinsToDepositDrawer = () => {
 
   return (
     <BottomDrawer
-      enablePanDownToClose={false}
+      enablePanDownToClose={true}
       ui={
         <View style={styles.container}>
           <ThemedText style={styles.title}>Choose Coin</ThemedText>

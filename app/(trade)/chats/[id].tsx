@@ -244,18 +244,21 @@ const ChatScreen = ({
     } catch (error) {
       ToastAndroid.show('Something went wrong uploading image. Try again!', ToastAndroid.SHORT);
 
-      console.error(error);
+      console.error(error.response.data.message);
     } 
   };
 
 
-  const handleImageSend = async (image:any) => {
+  const handleImageSend = async () => {
+    console.log(image)
     const tempMessage: Message = {
       _id: Math.random().toString(),
-      image: image,
+      image,
       senderId: userData._id,
       status: 'sending',
     };
+
+    console.log(tempMessage)
 
     setMessages((prevMessages) => [...prevMessages, tempMessage]);
     fadeIn();
@@ -267,7 +270,11 @@ const ChatScreen = ({
        image,
       };
 
+      console.log(body, 'body')
+
       const response = await axios.post('messages/initiate', body);
+
+      console.log(response.data.message)
       const serverMessage = response.data.message;
 
       // Update the temporary message with the server-confirmed message
@@ -322,8 +329,8 @@ const ChatScreen = ({
         }
     }
     catch(err){
-      ToastAndroid.show('Something went wrong updating escrow status!', ToastAndroid.SHORT);
-      console.log(err)
+      // ToastAndroid.show('Something went wrong updating escrow status!', ToastAndroid.SHORT);
+      // console.log(err)
     }
   }
 
@@ -362,18 +369,18 @@ const ChatScreen = ({
       Alert.alert('Payment Confirmed!');
     }
     catch(err){
-      ToastAndroid.show('Something went wrong sending request. Try again!', ToastAndroid.SHORT);
+      // ToastAndroid.show('Something went wrong sending request. Try again!', ToastAndroid.SHORT);
 
       console.log(err)
     }
   }
 
-  const renderItem = ({ item }: { item: Message }) => {
+  const renderItem = ({ item, index }: { item: Message }) => {
     // Avoid rendering the message if it is empty
     if (!item.message && !item.image) return null;
 
     return (
-      <Animated.View style={[styles.messageContainer]}>
+      <Animated.View key={index} style={[styles.messageContainer]}>
        
         {item.senderId === userData._id ? (
           <View style={styles.senderMessage}>

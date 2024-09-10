@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import Button from '@/components/ui/button/Button';
@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { ThemedText } from '@/components/ThemedText';
+import { ToastAndroid } from 'react-native';
 
 const ConfirmationEmail = () => {
   const router = useRouter();
@@ -19,6 +20,13 @@ const ConfirmationEmail = () => {
     router.push('/(onboarding)/passwordreset2');
   };
 
+  const navigateBackToEmail = () => {
+    ToastAndroid.show('Make sure the email is correct and try again...', ToastAndroid.LONG);
+
+    setTimeout(() => {
+      router.back()
+    }, 2000);
+  }
   return (
     <SafeAreaView style={[styles.safeArea,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader
@@ -49,9 +57,11 @@ const ConfirmationEmail = () => {
         />
         <View style={styles.footer}>
           <ThemedText style={styles.footerText}>I </ThemedText>
+          <TouchableOpacity onPress={navigateBackToEmail}>
           <ThemedText style={[styles.footerText, styles.highlightText]}>
             didn't receive
           </ThemedText>
+          </TouchableOpacity>
           <ThemedText style={styles.footerText}> my email</ThemedText>
         </View>
       </View>
