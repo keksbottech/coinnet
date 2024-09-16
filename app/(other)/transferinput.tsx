@@ -13,18 +13,11 @@ const TransferInputPage = () => {
 
 
   return (
-    <ScrollView>
-    <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
-      <PageHeader
-        icon={<FontAwesome name="angle-left" size={24} color={theme ?"white":'black' }/>}
-        label={<ThemedText style={styles.headerText}>Transfer</ThemedText>}
-      />
-      <View style={styles.container}>
+
+
+
         <TransferInput />
 
-      </View>
-    </SafeAreaView>
-    </ScrollView>
   );
 };
 
@@ -32,15 +25,12 @@ export default TransferInputPage;
 
 const styles = StyleSheet.create({
   safeAreaView: {
-    flex: 1,
-    padding: 10,
   },
   headerText: {
     fontFamily: 'MonsterBold',
     fontSize: 24,
   },
   container: {
-    flex: 1,
     paddingTop: 50,
   },
 });

@@ -32,7 +32,7 @@ const Input: React.FC<InputPropTypes> = ({
       secureTextEntry={secureTextEntry}
       onEndEditing={onSubmit}
       editable={!readOnly}
-      placeholderTextColor={'#eee'}
+      placeholderTextColor={'gray'}
       {...restProps} // Spread other TextInputProps
     />
   );

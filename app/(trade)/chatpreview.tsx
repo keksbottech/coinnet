@@ -21,7 +21,8 @@ interface Chat {
   time: string;
   profileUrl?: string;
   isNewMessage: boolean;
-  sellerId: string
+  sellerId: string;
+  image?: string
 }
 
 const ChatListScreen: React.FC = () => {
@@ -87,28 +88,59 @@ const ChatListScreen: React.FC = () => {
 
   };
 
+
   const fetchChatPreviews = async () => {
     try {
       setIsLoading(true);
 
-      const response = await axios.get(`messages/preview/${userData._id}`);
+      const body = {
+        senderId: userData._id
+      }
+      const response = await axios.post(`chat-preview`, body);
+
+      console.log(response.data.message, 'chats')
+
+
 
       const chatPreviews = await Promise.all(
         response.data.message.map(async (preview: any) => {
-          const sellerInfo = await fetchReceiverData(preview.sellerId);
+          // Assuming `userId` is the ID of the current user
+// `preview.participants` is an array of two participants
+const userId = userData._id; // Current user's ID
+const [id1, id2] = preview.participants; // Get both participants
+
+let senderId, receiverId;
+
+if (userId === id1) {
+  // If the current user is the first participant, they are the sender
+  senderId = id1;
+  receiverId = id2;
+} else {
+  // If the current user is the second participant, they are the sender
+  senderId = id2;
+  receiverId = id1;
+}
+
+// Now you can fetch receiver data regardless of the order
+
+          const sellerInfo = await fetchReceiverData(receiverId);
 
           console.log(sellerInfo.message, 'info')
           return {
-            id: preview.chatId,
+            id: preview._id,
             name: `${sellerInfo.message?.firstName} ${sellerInfo.message?.lastName}` || 'Unknown', // Set the name or a default
-            lastMessage: preview.lastMessage,
+            lastMessage: preview.recentMessage,
             time: preview.updatedAt,
-            profileUrl: sellerInfo?.profileImage || '',
-            sellerId: preview.sellerId
+            profileUrl: sellerInfo[0]?.profileImage || '',
+            sellerId: receiverId,
+            image: preview.recentImage
             // isNewMessage: false, // You can set this based on your logic
           };
         })
       );
+  
+  
+    
 
 
       console.log(chatPreviews)
@@ -139,6 +171,7 @@ const ChatListScreen: React.FC = () => {
     await Promise.all([fetchChatPreviews()]);
     setRefreshing(false);
   };
+
 
   return (
     
@@ -171,6 +204,7 @@ const ChatListScreen: React.FC = () => {
             time={item.time}
             profileUrl={item.profileUrl}
             isNewMessage={item.isNewMessage}
+            image={item.image}
             onPress={()=> handleChatPress(item?.sellerId)}
           />
         

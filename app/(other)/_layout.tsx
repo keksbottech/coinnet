@@ -26,8 +26,18 @@ const OtherLayout = () => {
       <Stack.Screen name='paywithpaystack' options={{headerShown:false}}/>
       <Stack.Screen name='paywithflutterwave' options={{headerShown:false}}/>   
       <Stack.Screen name='paywithpaypal' options={{headerShown:false}}/>     
-      <Stack.Screen name='paymentmethods' options={{headerShown:false}}/>     
-
+      <Stack.Screen name='paymentmethods' options={{headerShown:false}}/>   
+      <Stack.Screen name='switchtabsforcrypto' options={{headerShown:false}}/>      
+      <Stack.Screen name='switchtabsforfiat' options={{headerShown:false}}/>  
+      <Stack.Screen name='paywithpaypalforfiat' options={{headerShown:false}}/>      
+      <Stack.Screen name='paywithflutterwaveforfiat' options={{headerShown:false}}/>      
+      <Stack.Screen name='paywithpaystackforfiat' options={{headerShown:false}}/>    
+      <Stack.Screen name='paymentmethodsforfiat' options={{headerShown:false}}/>    
+      <Stack.Screen name='exchangefiatcurrency' options={{headerShown:false}}/>   
+      <Stack.Screen name='withdrawforfiat' options={{headerShown:false}}/>   
+      <Stack.Screen name='confirmwithdrawforfiat' options={{headerShown:false}}/> 
+      <Stack.Screen name='paywithcoinnetfiat' options={{headerShown:false}}/>   
+      <Stack.Screen name='favorites' options={{headerShown:false}}/>           
    </Stack>
   )
 }

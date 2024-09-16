@@ -74,7 +74,12 @@ const SellCoinForm: React.FC = () => {
     }
     catch(err:any){
       console.log(err.response.data)
-      ToastAndroid.show('Failed to posy order! Try again', ToastAndroid.SHORT);
+      if(err.response.data.message === 'You have insufficient funds for the sell'){
+        ToastAndroid.show('Failed to post order! You have insufficent funds', ToastAndroid.SHORT);
+      }
+      else{
+        ToastAndroid.show('Failed to post order! Try again', ToastAndroid.SHORT);
+      }
     }
     finally{
       setIsLoading(false)

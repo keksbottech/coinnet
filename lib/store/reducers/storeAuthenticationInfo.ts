@@ -3,12 +3,14 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface storeAuthenticationInfo {
   authenticationInfo: any,
-  otpCode:any
+  otpCode:any,
+  bvnImage: any
 }
 
 const initialState: storeAuthenticationInfo = {
   authenticationInfo: null,
-  otpCode:''
+  otpCode:'',
+  bvnImage:''
 }
 
 export const storeAuthenticationInfoSlice = createSlice({
@@ -17,11 +19,14 @@ export const storeAuthenticationInfoSlice = createSlice({
   reducers: {
     getauthenticationInfo: (state, action: PayloadAction<any>) => {
         state.authenticationInfo = action.payload
-    }
+    },
+    getaBvnImage: (state, action: PayloadAction<any>) => {
+      state.bvnImage = action.payload
+  }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { getauthenticationInfo } = storeAuthenticationInfoSlice.actions
+export const { getauthenticationInfo, getaBvnImage } = storeAuthenticationInfoSlice.actions
 
 export default storeAuthenticationInfoSlice.reducer

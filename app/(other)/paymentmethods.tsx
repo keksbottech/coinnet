@@ -24,6 +24,10 @@ const PaymentMethods = () => {
     router.push('/(other)/paywithflutterwave');
   };
 
+  const navigateToCoinnetFiat = () => {
+    router.push('/(other)/paywithcoinnetfiat');
+  };
+
   return (
     <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader 
@@ -60,6 +64,17 @@ const PaymentMethods = () => {
               />
             </View>
             <ThemedText style={styles.label}>Deposit with Paystack</ThemedText>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={navigateToCoinnetFiat} style={[styles.button, {borderColor:theme ? 'white': 'black'}]}>
+            <View>
+              <Image 
+                source={require('@/assets/images/logo/logo.png')} 
+                style={styles.image} 
+                resizeMode="contain" 
+              />
+            </View>
+            <ThemedText style={styles.label}>Deposit with Coinnet Fiat Balance</ThemedText>
           </TouchableOpacity>
         </View>
       </View>

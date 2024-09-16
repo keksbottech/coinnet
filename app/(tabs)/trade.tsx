@@ -159,7 +159,7 @@ const Trading = () => {
         <TradingHeaderPeriod data={tradePeriodsData} style={undefined} /> */}
 
         <Portfolio priceUsd={String(marketData?.priceUsd)} image={marketData?.image} style={styles.portfolio} name={marketData?.name} symbol={marketData?.symbol} changePercent24Hr={parseFloat(marketData?.changePercent24Hr)} />
-        <Chart styles={styles.chart} withVerticalLabels={true} />
+        <Chart styles={styles.chart} withVerticalLabels={false} />
         {/* <TradingTools /> */}
         <PopularPairs />
         <View style={[{marginTop:15}, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>

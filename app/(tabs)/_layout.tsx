@@ -47,11 +47,11 @@ const theme = useAppSelector(state => state.theme.theme)
         }}
       />
             <Tabs.Screen
-        name="favorites"
+        name="p2p"
         options={{
-          title: 'Favorites',
+          title: 'P2P Trade',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'star-sharp' : 'star-outline'} color={color} />
+            <TabBarIcon name={focused ? 'people' : 'people-outline'} color={color} />
           ),
         }}
       />

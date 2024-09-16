@@ -10,9 +10,10 @@ interface ChatPreviewProps {
   profileUrl?: string;
   isNewMessage: boolean;
   onPress: (id: string) => void;
+  image: string;
 }
 
-const ChatPreview: React.FC<ChatPreviewProps> = ({ id, name= 'kjsj ks', lastMessage, time, profileUrl, isNewMessage, onPress }) => {
+const ChatPreview: React.FC<ChatPreviewProps> = ({ id, name= 'kjsj ks', lastMessage, time, profileUrl, isNewMessage, image, onPress }) => {
   // Extract initials if no profile URL
   const initials = name
     .split(' ')
@@ -20,6 +21,7 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({ id, name= 'kjsj ks', lastMess
     .join('')
     .toUpperCase();
 
+    console.log(image)
   return (
     <TouchableOpacity style={styles.container} onPress={() => onPress(id)}>
       <View style={styles.imageContainer}>
@@ -33,7 +35,10 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({ id, name= 'kjsj ks', lastMess
       </View>
       <View style={styles.textContainer}>
         <ThemedText style={styles.nameText}>{name}</ThemedText>
-        <ThemedText style={styles.messageText}>{lastMessage}</ThemedText>
+        {
+          image ? <ThemedText style={styles.messageText}>Sent an image</ThemedText> : <ThemedText style={styles.messageText}>{lastMessage}</ThemedText>
+        }
+
       </View>
       <View style={styles.timeContainer}>
         <ThemedText style={styles.timeText}>{time}</ThemedText>

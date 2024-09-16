@@ -151,7 +151,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                 <View style={styles.iconContainer}>
                   <FontAwesome name="bank" size={24} color={theme?'white':"black"} />
                   <View>
-                    <ThemedText style={styles.withdrawToText}>{selectedCoin?.name}</ThemedText>
+                    <ThemedText style={styles.withdrawToText}>{selectedCoin?.name ? selectedCoin?.name : 'Select coin for withdrawal'}</ThemedText>
                     <ThemedText style={styles.withdrawToText}>{selectedCoin?.symbol}</ThemedText>
                   </View>
                 </View>
@@ -206,7 +206,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
               <View style={styles.withdrawToContent}>
                 <FontAwesome name="bank" size={24} color={theme?'white':"black"} />
                 <View>
-                  <ThemedText style={styles.withdrawToText}>{selectedPayment.name}</ThemedText>
+                  <ThemedText style={styles.withdrawToText}>{selectedPayment.name ?selectedPayment.name : 'Select withdrawal method'}</ThemedText>
                   <ThemedText style={styles.withdrawToText}>XXXXXXXX</ThemedText>
                 </View>
               </View>
@@ -248,7 +248,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                   <View style={styles.withdrawToContent}>
                     <FontAwesome name="bank" size={24} color={theme?'white':"black"} />
                     <View>
-                      <ThemedText style={styles.withdrawToText}>{selectedBank.name}</ThemedText>
+                      <ThemedText style={styles.withdrawToText}>{selectedBank.name ? selectedBank.name :'Select bank'}</ThemedText>
                       <ThemedText style={styles.withdrawToText}>XXXXXXXX</ThemedText>
                     </View>
                   </View>
@@ -317,7 +317,6 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     flex: 1,
   },
   headerContainer: {
@@ -326,17 +325,17 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontWeight: 'bold',
+   fontFamily:'MonsterBold',
   },
   amountText: {
-    fontSize: 48,
-    fontWeight: 'bold',
+    fontSize: 38,
+   fontFamily:'MonsterBold',
     color: '#ccc',
   },
   label: {
     fontSize: 16,
     marginBottom: 10,
-    fontWeight: 'bold',
+   fontFamily:'MonsterBold',
   },
   balanceContainer: {
     flexDirection: 'row',
@@ -344,15 +343,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   balanceText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
+   fontFamily:'MonsterBold',
   },
   balanceAmount: {
     fontSize: 20,
+    fontFamily:'MonsterReg'
   },
   currency: {
     fontSize: 20,
-    fontWeight: 'bold',
+   fontFamily:'MonsterBold',
     alignSelf: 'center',
   },
   withdrawToContainer: {
@@ -371,6 +371,7 @@ const styles = StyleSheet.create({
   withdrawToText: {
     fontSize: 16,
     marginLeft: 10,
+    fontFamily:'MonsterReg'
   },
   iconContainer: {
     flexDirection: 'row',
@@ -388,6 +389,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     fontSize: 16,
+    fontFamily:'MonsterReg'
   },
   errorText: {
     color: 'red',

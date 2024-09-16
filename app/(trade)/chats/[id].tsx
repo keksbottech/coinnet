@@ -13,6 +13,7 @@ import {
   Alert,
   BackHandler,
   ToastAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
@@ -28,6 +29,8 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getTransactionData } from '@/lib/store/reducers/storeTransactionAuthentication';
 import Loading from '@/components/loading/Loading';
 import { ThemedText } from '@/components/ThemedText';
+import io from 'socket.io-client'
+
 
 type Message = {
   _id: string;
@@ -36,6 +39,9 @@ type Message = {
   senderId: string;
   status: 'sending' | 'sent'; // Added status property
 };
+
+let socket;
+
 
 const ChatScreen = ({
   receiverName = 'alex favour',
@@ -59,38 +65,137 @@ const ChatScreen = ({
   const [sellerData, setSellerData] = useState<any>(null);
   const [fullname, setFullname] = useState<string | null>(null);
   const userData = useAppSelector((state) => state.user.user);
-  const p2pNegotiateData = useAppSelector(state => state.orders.orderP2p)
   const sellerId = useAppSelector(state => state.orders.sellerId)
-  const escrowId = useAppSelector(state => state.escrow.escrowId)
   const dispatch = useAppDispatch()
   const [isLoading, setIsLoading] = useState(false)
-  const [image, setImage] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
   const theme = useAppSelector(state => state.theme.theme)
-
+  const [p2pNegotiateData, setP2pNegotiateData] = useState(null)
+  const [isMsgSending, setIsMsgSending] = useState(false)
+  const [isSocketInitialized, setIsSocketInitialized] = useState(false); 
+  const [escrowId, setEscrowId] = useState('')
   const pollingIntervalForEscrow = useRef<any>(null);
+  const marketStoredData = useAppSelector(state => state.market.marketData); // Assuming the state is stored here
 
   useEffect(() => {
-    fetchSellersInfo();
-    const pollingIntervalForMessages = setInterval(fetchMessages, 5000); // Poll every 5 seconds
+    const fetchMessages = async () => {
+      try{
+        const body = {
+          senderId:userData._id,
+          receiverId: id
+        }
 
-    return () => {
-      clearInterval(pollingIntervalForMessages); // Clear the polling interval
- 
-    };
-  }, []);
+        console.log(body)
 
-  useEffect(() => {
-     pollingIntervalForEscrow.current = setInterval(checkForStatusInEscrow, 3000);
-         
-    
-    return () => {
-      if (pollingIntervalForEscrow.current) {
-        clearInterval(pollingIntervalForEscrow.current);
+
+
+        const response = await axios.post('messages/get', body)
+
+        setMessages(prev => [...prev, ...response.data.message])
+        console.log(response.data, 'fetched date')
+      } 
+      catch(err){
+        console.log(err)
       }
 
     }
-  }, [])
 
+    fetchMessages()
+  },[])
+
+
+  useEffect(() => {
+    // Initialize the socket
+   socket = io('https://81f0-2c0f-f5c0-44e-f94b-a45a-197f-c65b-d40b.ngrok-free.app', {
+    query: {
+      userId: userData._id
+    }
+   })
+  
+    // Listen for new messages
+    socket.on('newMessage', (message) => {
+      setMessages(prev => [...prev, message])
+      console.log(message, 'message')
+      
+    })
+
+    console.log(escrowId, 'escrow id')
+
+
+     const escrowData = {
+      senderId: userData._id,
+      receiverId: id,
+      escrowId
+     }
+
+       socket.emit('checkEscrow', escrowData);
+ 
+       // Emit the message to the server
+
+// create socket.io escrow 
+  socket.on('checkEscrow', (message) => {
+  console.log(message, 'escrow message')
+     if(message.status === 'completed'){
+        dispatch(getTransactionData('order'))
+          router.push('/(trade)/transactioncomplete')
+      }
+})
+// const intervalId = setInterval(() => {
+//   console.log('listening to the server')
+
+
+// }, 10000); // 5000ms = 5 seconds
+
+// Cleanup interval when the component unmounts
+
+  
+    // Cleanup function to remove listeners and disconnect the socket
+    return () => {
+  //  clearInterval(intervalId);
+      socket.off('newMessage') // Remove the specific listener
+      socket.off('checkEscrow')
+      socket.disconnect() // Properly disconnect the socket
+
+    }
+  }, [isSocketInitialized, escrowId])
+  
+  
+  useEffect(() => {
+    fetchSellersInfo();
+    fetchEscrowId()
+  }, [escrowId])
+
+const fetchEscrowId = async() =>{
+  try{
+    const body = {
+      senderId: userData._id,
+      receiverId: id
+    }
+
+    console.log(escrowId, 'escrow id')
+
+    const a = {
+      escrowId
+    }
+
+    const response = await axios.post('escrowId/get', body)
+
+    setEscrowId(response.data.message.escrowId[0])
+
+    if(escrowId){
+    const escrowData =  await axios.post('escrow/check/status', {escrowId})
+    setP2pNegotiateData(escrowData.data.message)
+    
+    console.log(escrowData.data, 'escrow main dara')
+
+    }
+
+    console.log(response.data)
+  }
+  catch(err){
+    console.log(err)
+  }
+}
 
   const fetchSellersInfo = async () => {
     try {
@@ -106,36 +211,6 @@ const ChatScreen = ({
     }
   };
 
-  const fetchMessages = async () => {
-    try {
-      const body = {
-        sellerId: id,
-        senderId: userData._id,
-      };
-
-      const response = await axios.post('messages', body);
-      const newMessages = response.data.message;
-
-      // Update messages state with new messages from the server
-      setMessages((prevMessages) => {
-        const updatedMessages = prevMessages.map((msg) => {
-          const serverMessage = newMessages.find((m: Message) => m._id === msg._id);
-          return serverMessage ? { ...msg, status: 'sent' } : msg;
-        });
-
-        // Add new messages that were not previously in the state
-        const uniqueMessages = newMessages.filter(
-          (m: Message) => !prevMessages.some((msg) => msg._id === m._id)
-        );
-
-        return [...updatedMessages, ...uniqueMessages];
-      });
-    } catch (error) {
-      ToastAndroid.show('Failed to fetch messages. Refetching!', ToastAndroid.SHORT);
-
-      console.error('Failed to fetch messages:', error);
-    }
-  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -169,45 +244,51 @@ const ChatScreen = ({
     }, [disableBackPress])
   );
 
-  const handleSend = async () => {
+  const getCoinData = (coinName: string) => {
+    return marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === coinName);
+  };
+
+
+
+  const handleSend = () => {    
     if (inputText.trim()) {
-      // Create a temporary message with "sending" status
-      const tempMessage: Message = {
-        _id: Math.random().toString(),
-        message: inputText,
-        senderId: userData._id,
-        status: 'sending',
-      };
-
-      setMessages((prevMessages) => [...prevMessages, tempMessage]);
-      setInputText('');
-
       try {
+        setIsMsgSending(true); // Start the message sending state
+        setIsSocketInitialized((prev) => !prev);
         const body = {
-          sellerId: id,
+          receiverId: id,
           senderId: userData._id,
           message: inputText,
+          image: null
         };
 
-        const response = await axios.post('messages/initiate', body);
-        const serverMessage = response.data.message;
+        console.log(body);
 
-        // Update the temporary message with the server-confirmed message
-        setMessages((prevMessages) =>
-          prevMessages.map((msg) =>
-            msg._id === tempMessage._id ? { ...serverMessage, status: 'sent' } : msg
-          )
-        );
+        // Emit the message to the server
+        socket.emit('sendMessage', body, (acknowledgment) => {
+          // Acknowledgment from the server that the message was received
+          if (acknowledgment && acknowledgment.status === 'success') {
+
+            console.log(true)
+            // Update state or UI to reflect the message was sent successfully
+            console.log('Message sent successfully');
+            setIsMsgSending(false);
+            // setMessages((prev) => [...prev, body]);
+          } else {
+            // Handle failure case
+            console.error('Failed to send message:', acknowledgment.error);
+            setIsMsgSending(false);
+          }
+        });
+
+        setInputText('')
       } catch (error) {
         ToastAndroid.show('Failed to send message, try again!', ToastAndroid.SHORT);
-
         console.error('Failed to send message:', error);
-        // If sending fails, keep the message in "sending" status or handle it appropriately
+        setIsMsgSending(false);
       }
     }
   };
-
-  
 
   
   const uploadImage = async (uri: string) => {
@@ -235,8 +316,9 @@ const ChatScreen = ({
 
       const data = await response.json();
       if (data.secure_url) {
-        console.log(data.secure_url)
-        setImage(data.secure_url); // Store the Cloudinary URL
+        console.log(data.secure_url, 'cloud')
+        setImageUrl(data.secure_url); // Store the Cloudinary URL
+        handleImageSend(data.secure_url);
       } else {
         throw new Error('Failed to upload image');
       }
@@ -249,40 +331,38 @@ const ChatScreen = ({
   };
 
 
-  const handleImageSend = async () => {
-    console.log(image)
-    const tempMessage: Message = {
-      _id: Math.random().toString(),
-      image,
-      senderId: userData._id,
-      status: 'sending',
-    };
+  const handleImageSend = async (image) => {
+    setIsSocketInitialized((prev) => !prev);
 
-    console.log(tempMessage)
-
-    setMessages((prevMessages) => [...prevMessages, tempMessage]);
     fadeIn();
 
     try {
       const body = {
-        sellerId: id,
+        receiverId: id,
         senderId: userData._id,
-       image,
+        message: null,
+        image
       };
 
-      console.log(body, 'body')
+      console.log(body);
 
-      const response = await axios.post('messages/initiate', body);
+      // Emit the message to the server
+      socket.emit('sendMessage', body, (acknowledgment) => {
+        // Acknowledgment from the server that the message was received
+        if (acknowledgment && acknowledgment.status === 'success') {
 
-      console.log(response.data.message)
-      const serverMessage = response.data.message;
+          console.log(true)
+          // Update state or UI to reflect the message was sent successfully
+          console.log('Message sent successfully');
+          setIsMsgSending(false);
+          // setMessages((prev) => [...prev, body]);
+        } else {
+          // Handle failure case
+          console.error('Failed to send message:', acknowledgment.error);
+          setIsMsgSending(false);
+        }
+      });
 
-      // Update the temporary message with the server-confirmed message
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg._id === tempMessage._id ? { ...serverMessage, status: 'sent' } : msg
-        )
-      );
     } catch (error) {
       ToastAndroid.show('Failed to send image. Try again!', ToastAndroid.SHORT);
 
@@ -308,39 +388,17 @@ const ChatScreen = ({
     }).start();
   };
 
-  const checkForStatusInEscrow = async () => {
-    try{
-        const body = {
-          escrowId
-        }
-
-        const response = await axios.post('escrow/check/status', body)
-
-        console.log(response.data)
-        if(response.data.message.status === 'completed'){
-        dispatch(getTransactionData('order'))
-          router.push('/(trade)/transactioncomplete')
-          if (pollingIntervalForEscrow.current) {
-        clearInterval(pollingIntervalForEscrow.current);
-      }
-    }
-        else {
-          return
-        }
-    }
-    catch(err){
-      // ToastAndroid.show('Something went wrong updating escrow status!', ToastAndroid.SHORT);
-      // console.log(err)
-    }
-  }
 
   const buyerVerifiesMoneyIsTransferred = async () => {
     try{
       setIsLoading(true)
+      setIsSocketInitialized((prev) => !prev);
       const body = {
         escrowId,
         userId: userData._id
       }
+      
+      console.log(body, 'body')
 
       const updateEscrow = await axios.post('escrow/pend', body)
 
@@ -360,36 +418,45 @@ const ChatScreen = ({
 
   const sellerVerifiesPayment = async () => {
     try{
+      setIsLoading(true)
+      setIsSocketInitialized((prev) => !prev);
       const body = {
         escrowId,
         userId: userData._id
       }
+
+      console.log(body, 'body')
+
       const updateEscrow = await axios.post('escrow/complete', body)
 
       Alert.alert('Payment Confirmed!');
     }
     catch(err){
-      // ToastAndroid.show('Something went wrong sending request. Try again!', ToastAndroid.SHORT);
+      ToastAndroid.show('Something went wrong sending request. Try again!', ToastAndroid.SHORT);
 
       console.log(err)
     }
+    finally{
+      setIsLoading(false)
+    }
   }
+
 
   const renderItem = ({ item, index }: { item: Message }) => {
     // Avoid rendering the message if it is empty
-    if (!item.message && !item.image) return null;
+    // if (!item.message && !item.image) return null;
 
     return (
       <Animated.View key={index} style={[styles.messageContainer]}>
        
-        {item.senderId === userData._id ? (
+        {item?.senderId === userData._id ? (
           <View style={styles.senderMessage}>
             {item.image ? (
               <TouchableOpacity onPress={() => handleImageClick(item.image)}>
                 <Image source={{ uri: item.image }} style={styles.messageImage} />
               </TouchableOpacity>
             ) : (
-              <ThemedText style={styles.senderText}>{item.message}</ThemedText>
+              <ThemedText style={styles.senderText}>{item?.messages}</ThemedText>
             )}
             <Ionicons
               name={item.status === 'sent' ? 'checkmark-done' : 'checkmark'}
@@ -405,7 +472,7 @@ const ChatScreen = ({
                 <Image source={{ uri: item.image }} style={styles.messageImage} />
               </TouchableOpacity>
             ) : (
-              <ThemedText style={styles.receiverText}>{item.message}</ThemedText>
+              <ThemedText style={styles.receiverText}>{item?.messages}</ThemedText>
             )}
           </View>
         )}
@@ -435,10 +502,29 @@ const ChatScreen = ({
     });
 
     if (!result.canceled) {
-      uploadImage(result.assets[0].uri)
-      handleImageSend(result.assets[0].uri);
+       uploadImage(result.assets[0].uri)
+
     }
   };
+
+  let buyer, seller;
+
+
+  if(userData?._id === p2pNegotiateData?.buyer){
+    console.log(true, 'trueeeeeeeeeeeeeeeeeee for buyer active')
+    buyer = p2pNegotiateData?.buyer
+    seller = id
+
+    console.log(buyer, seller, 'buyer seller')
+  }
+  else{
+    console.log(false, 'falseeeeeeeeeeeeeeee for seller active')
+    buyer = ''
+    seller = id
+    
+
+    console.log(buyer, seller, 'buyer seller')
+  }
 
   return (
     <>
@@ -457,13 +543,24 @@ const ChatScreen = ({
 
           <ThemedText style={styles.receiverName}>{fullname}</ThemedText>
           <View style={styles.headerIcons}>
-            {
-              sellerId === userData._id ? <TouchableOpacity onPress={buyerVerifiesMoneyIsTransferred}>
-                <ThemedText style={{fontFamily:'MonsterReg',fontSize:12}}>Click if money have been paid</ThemedText>
-              </TouchableOpacity> : <TouchableOpacity onPress={sellerVerifiesPayment}>
-                <ThemedText style={{fontFamily:'MonsterReg',fontSize:12}}>Confirm payment</ThemedText>
-              </TouchableOpacity>
-            }
+          {
+  // Check if the current user is the buyer
+  buyer ? (
+    <TouchableOpacity onPress={buyerVerifiesMoneyIsTransferred}>
+      <ThemedText style={{ fontFamily: 'MonsterReg', fontSize: 12 }}>
+        Click if money has been paid
+      </ThemedText>
+    </TouchableOpacity>
+  ) : (
+    // Otherwise, the current user is the seller
+    <TouchableOpacity onPress={sellerVerifiesPayment}>
+      <ThemedText style={{ fontFamily: 'MonsterReg', fontSize: 12 }}>
+        Confirm payment
+      </ThemedText>
+    </TouchableOpacity>
+  )
+}
+
             <TouchableOpacity onPress={handleCall}>
               <FontAwesome name="phone" size={24} color="#555" style={styles.icon} />
             </TouchableOpacity>
@@ -479,15 +576,17 @@ const ChatScreen = ({
         receiverName={fullname}
         // handleCopy={handleCopy}
       />}
- <ThemedText style={styles.label}>Buyer intends to buy {p2pNegotiateData?.coinAmount} quantity of {p2pNegotiateData?.coin} which is worth ${parseFloat(p2pNegotiateData?.fiatAmount).toFixed(2)}. Buyer should confirm money have been sent and seller should confim money have been received by clicking the button above. Dispute should be sent for false transactions.
+ <ThemedText style={styles.label}>Buyer intends to buy {p2pNegotiateData?.fiatAmount / getCoinData(p2pNegotiateData?.coin)?.RAW.USD.PRICE} quantity of {p2pNegotiateData?.coin} which is worth ${parseFloat(p2pNegotiateData?.fiatAmount).toFixed(2)}. Buyer should confirm money have been sent and seller should confim money have been received by clicking the button above. Dispute should be sent for false transactions.
  </ThemedText>
         <FlatList
           ref={flatListRef}
           data={messages}
           renderItem={renderItem}
-          keyExtractor={(item) =>  String(item._id)}
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
           onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
+          ListEmptyComponent={() => {
+            return <ThemedText style={{fontFamily:'MonsterBold', textAlign:'center'}}>You don't have any recent messages </ThemedText>
+          }}
         />
 
         <View style={styles.inputContainer}>
@@ -501,6 +600,9 @@ const ChatScreen = ({
             placeholder="Type a message..."
           />
           <TouchableOpacity onPress={handleSend} disabled={!inputText.trim()}>
+            {/* {
+              isMsgSending ?<ActivityIndicator/>: <Ionicons name="send" size={30} color="#555" style={styles.sendIcon} />
+            } */}
             <Ionicons name="send" size={30} color="#555" style={styles.sendIcon} />
           </TouchableOpacity>
         </View>

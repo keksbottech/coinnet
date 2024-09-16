@@ -19,6 +19,8 @@ import { getMarketData } from '@/lib/store/reducers/storeMarketData';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import { ToastAndroid } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
+import TradingHeaderPeriod from '@/components/trading header period/TradingHeaderPeriod';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const Home = () => {
   const router = useRouter();
@@ -32,7 +34,9 @@ const Home = () => {
   const marketStoredData = useAppSelector(state => state.market.marketData)
   const[refreshing, setRefreshing] = useState(false)
   const theme = useAppSelector(state => state.theme.theme)
-
+ const [ngnRate, setNgnRate] = useState(0)
+  
+ 
 
   useEffect(() =>{
 
@@ -94,13 +98,16 @@ const Home = () => {
 
       console.log('body', body)
 
-      const response = await axios.post('wallets/totalbalance', body)
-
-      console.log('assets')
+      const [response, ngnRate] = await Promise.all([
+        axios.post('wallets/totalbalance', body),
+       axios.get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')
+      ])
+     
+      setNgnRate(ngnRate.data.usd.ngn)
 
       dispatch(getWalletTotalBalance(response.data.message))
 
-      console.log(response.data.message)
+      // console.log(response.data.message)
     
     }
     catch(err:any){
@@ -219,13 +226,6 @@ const Home = () => {
     router.push('/(other)/settings');
   };
 
-
-
-  // useEffect(() => {
-
-  //   fetchPrice();
-  // }, [])
-
   const navigateToProfile = () => {
     router.push('/(other)/profile');
   };
@@ -294,6 +294,7 @@ const Home = () => {
             </View>
           }
         />
+        <TradingHeaderPeriod data={[{id:0, name:'crypto', isSelected: true}, {id:1, name:'fiat', isSelected: true}]} style={undefined} />
 
         <ScrollView 
                showsVerticalScrollIndicator={false}
@@ -301,10 +302,16 @@ const Home = () => {
                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                }
         >
+          
+
           <View style={styles.balanceContainer}>
             <ThemedText style={styles.balanceTitle}>Portfolio Balance</ThemedText>
             <ThemedText style={styles.balanceAmount}>${parseFloat(walletBalance).toFixed(2)}</ThemedText>
-            {/* <ThemedText style={styles.balanceChange}>+2.60%</ThemedText> */}
+            
+            <ThemedText style={styles.balanceChange}>
+            <MaterialCommunityIcons name="approximately-equal" size={24} color="black" />
+            ₦{parseFloat(+walletBalance * ngnRate).toFixed()}
+            </ThemedText>
           </View>
 
           <Chart styles={undefined} />

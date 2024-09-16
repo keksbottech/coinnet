@@ -98,7 +98,8 @@ export function SessionHandler({layoutReady, isDarkMode, setIsDarkMode}:any) {
       <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
       <Stack.Screen name="(other)" options={{ headerShown: false }} />
       <Stack.Screen name="(trade)" options={{ headerShown: false }} />
-      <Stack.Screen name="+not-found" />
+     <Stack.Screen name="+not-found" options={{ headerShown: false }}/>
+     <Stack.Screen name="(fiattabs)" options={{ headerShown: false }} />
     </Stack>
   );
 }

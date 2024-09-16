@@ -63,12 +63,12 @@ const styles = StyleSheet.create({
   },
   addressLabel: {
     fontSize: 16,
-    color: '#ccc',
+    color: 'gray',
     fontFamily:'MonsterReg'
   },
   address: {
     fontSize: 14,
-    color: '#ccc',
+    color: 'gray',
     marginBottom: 20,
     fontFamily:'MonsterReg'
   },

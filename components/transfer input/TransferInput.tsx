@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ToastAndroid, ScrollView } from 'react-native';
 import { ThemedText } from '../ThemedText';
 import { TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { axios } from '@/lib/axios';
 import { useRouter } from 'expo-router';
@@ -11,92 +11,88 @@ import { Controller, useForm } from 'react-hook-form';
 import SelectCoinsToDepositDrawer from '../select coin/SelectCoinToDeposit';
 import Button from '../ui/button/Button';
 import Loading from '../loading/Loading';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import PageHeader from '../page header/PageHeader';
+import { getTransactionDetails } from '@/lib/store/reducers/storeTransferDetails';
 
 const TransferInput = () => {
   const selectedCoin = useAppSelector((state) => state.selectedCoin.selectedCoin);
   const userData = useAppSelector((state) => state.user.user);
   const marketStoredData = useAppSelector((state) => state.market.marketData);
   const theme = useAppSelector((state) => state.theme.theme);
-
+  const [receiverId, setReceiverId] = useState(null)
   const [isLoading, setIsLoading] = useState(false);
   const [isBottomDrawerEnabled, setIsBottomDrawerEnabled] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [username, setUsername] = useState(null)
 
   const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
       amount: '',
       address: '',
       note: '',
-      coinAmount: '',
+      receiverName:''
     },
   });
-
-  const watchAmount = watch('amount', '');
+  const userName = watch('receiverName', '')
 
   // Toggle Bottom Drawer
   const enableBottomDrawer = () => {
     setIsBottomDrawerEnabled(!isBottomDrawerEnabled);
   };
 
-  // Calculate Coin Equivalent as Amount in NGN changes
-  useEffect(() => {
-    if (selectedCoin && watchAmount) {
-      const coinData = marketStoredData.find(
-        (coin: { CoinInfo: { Name: any } }) => coin.CoinInfo.Name === selectedCoin.symbol
-      );
-      if (coinData) {
-        const usdRate = 1700; // Fixed NGN to USD rate
-        const coinRateInUsd = coinData.RAW.USD.PRICE;
-        const coinEquivalent = (parseFloat(watchAmount) / usdRate) / coinRateInUsd;
-        setValue('coinAmount', coinEquivalent.toFixed(8).toString());
-      }
-    }
-  }, [watchAmount, selectedCoin]);
+  const address = watch('address')
+
 
   const sendCoinToUser = async (data: any) => {
-    try {
-      setIsLoading(true);
-      console.log(data.address)
+
       const body = {
         userId: userData._id,
-        amount: +data.coinAmount,
-        coin: selectedCoin?.symbol,
         receiverId: data.address,
         note: data.note,
+        username: userName,
+        amount: +data.amount * 2/100 + +data.amount,
+        percent: data.amount
       };
 
-      const response = await axios.post('wallets/send/coin', body);
-      ToastAndroid.show('Transaction successful!', ToastAndroid.SHORT);
+      dispatch(getTransactionDetails(body))
 
-      setTimeout(() => {
-        router.push('/(tabs)/wallet');
-      }, 2000);
-      console.log(response.data); // Handle the response as needed
-    } catch (err) {
-      if (err.response.data.message === 'Receiver wallet not found') {
-        ToastAndroid.show('Invalid wallet address!', ToastAndroid.SHORT);
-      } else {
-        ToastAndroid.show('Something went wrong... Try again!', ToastAndroid.SHORT);
-      }
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
+      router.push('/(other)/confirmtransfer')
   };
+
+  const getUserFromAddress = async () => {
+    try{
+      setIsLoading(true)
+      const body = {
+        userId: address
+      }
+
+      const getUser = await axios.post('user/get/info', body)
+
+      setValue('receiverName',`${getUser.data.message.firstName} ${getUser.data.message.lastName}`)
+
+    }
+    catch(err){
+      console.log(err.response.data)
+      ToastAndroid.show('User not found!', ToastAndroid.SHORT);
+
+    }
+    finally{
+      setIsLoading(false)
+    }
+  }
 
   return (
     <>
     {isLoading && <Loading/>}
-        <View style={styles.container}>
-          <ThemedText style={styles.label}>Select Coin</ThemedText>
-          <TouchableOpacity onPress={enableBottomDrawer} style={[styles.coin, { backgroundColor: theme ? 'gray' : '#ccc' }]}>
-            <View style={styles.coinText}>
-              <ThemedText style={styles.coinName}>{selectedCoin?.name}</ThemedText>
-              <ThemedText style={styles.coinBalance}>{selectedCoin?.symbol}</ThemedText>
-            </View>
-            <Ionicons name="chevron-down-outline" size={20} />
-          </TouchableOpacity>
+
+        <SafeAreaView style={styles.container}>
+        {/* <ScrollView style={{flex:1}}> */}
+        <PageHeader
+        icon={<FontAwesome name="angle-left" size={24} color={theme ?"white":'black' }/>}
+        label={<ThemedText style={styles.headerText}>Transfer</ThemedText>}
+      />
 
           {/* Amount in NGN */}
           <View style={styles.inputGroup}>
@@ -119,24 +115,6 @@ const TransferInput = () => {
             {errors.amount && <ThemedText style={styles.errorText}>{errors.amount.message}</ThemedText>}
           </View>
 
-          {/* Equivalent Coin Amount */}
-          <View style={styles.inputGroup}>
-            <ThemedText style={styles.label}>Equivalent Coin Amount</ThemedText>
-            <Controller
-              control={control}
-              name="coinAmount"
-              render={({ field: { value } }) => (
-                <TextInput
-                  style={[styles.input, { color: theme ? 'white' : 'black' }]}
-                  value={value}
-                  editable={false} // Disable editing since it's automatically calculated
-                  placeholder="Coin amount"
-                  placeholderTextColor={theme ? '#ccc' : 'gray'}
-                />
-              )}
-            />
-          </View>
-
           {/* Wallet Address */}
           <View style={styles.inputContainer}>
             <ThemedText style={styles.label}>Enter Address</ThemedText>
@@ -146,6 +124,7 @@ const TransferInput = () => {
                 name="address"
                 rules={{ required: 'Address is required' }}
                 render={({ field: { onChange, value } }) => (
+                  <View style={{flexDirection:'row', alignItems:'center'}}>
                   <TextInput
                     style={[styles.input, { color: theme ? 'white' : 'black' }, { flex: 1 }]}
                     onChangeText={onChange}
@@ -153,11 +132,30 @@ const TransferInput = () => {
                     placeholder="Enter wallet address"
                     placeholderTextColor={theme ? '#ccc' : 'gray'}
                   />
+                  <TouchableOpacity onPress={getUserFromAddress} style={{backgroundColor:'#eee',padding:10, marginLeft:10}}><Text style={{fontFamily:'MonsterReg'}}>Confirm User</Text></TouchableOpacity>
+                  </View>
                 )}
               />
               {/* <Ionicons name="qr-code-outline" color={theme ? 'white' : 'black'} size={24} style={styles.icon} /> */}
             </View>
             {errors.address && <ThemedText style={styles.errorText}>{errors.address.message}</ThemedText>}
+          </View>
+
+          <View style={styles.inputGroup}>
+            <ThemedText style={styles.label}>Confirmed Username</ThemedText>
+            <Controller
+              control={control}
+              name="receiverName"
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Receiver name appears here"
+                  readOnly
+                />
+              )}
+            />
           </View>
 
           {/* Note */}
@@ -176,21 +174,23 @@ const TransferInput = () => {
               )}
             />
           </View>
-          <Button onClick={handleSubmit(sendCoinToUser)} label='Next' styles={{position:'relative', top:10}}/>
+ 
+          <Button onClick={handleSubmit(sendCoinToUser)} label='Next' styles={{position:'relative', top:50}}/>
+          {/* </ScrollView> */}
+        </SafeAreaView>
 
-{isBottomDrawerEnabled && <SelectCoinsToDepositDrawer />}
-        </View>
+
 </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
+    padding: 10,
+    flex:1
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   label: {
     fontSize: 16,
@@ -232,6 +232,10 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     fontFamily: 'MonsterReg',
+  },
+  headerText: {
+    fontFamily: 'MonsterBold',
+    fontSize: 24,
   },
 });
 

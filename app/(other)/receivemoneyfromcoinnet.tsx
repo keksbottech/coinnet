@@ -11,7 +11,7 @@ const ReceiveMoneyFromCoinnetPage = () => {
     <SafeAreaView style={styles.safeArea}>
       <PageHeader
         icon={<FontAwesome name="angle-left" size={24} color="black" />}
-        label={<ThemedText style={styles.pageHeaderLabel}>Receive money from Coinnet user</ThemedText>}
+        label={<ThemedText style={styles.pageHeaderLabel}>Wallet ID</ThemedText>}
       />
       <View style={styles.container}>
         <ReceiveMoneyFromCoinnet />

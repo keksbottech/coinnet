@@ -111,7 +111,7 @@ const CreateAccount: React.FC = () => {
         ToastAndroid.show('Failed! Something went wrong', ToastAndroid.LONG);
 
       }
-      console.log(err)
+      console.log(err.response.data)
     }
     finally{
       setIsLoading(false)

@@ -13,14 +13,16 @@ const Card = ({fullname, time, sellersRate,sellerId, quantity, limits, coin, off
   const router = useRouter()
   const dispatch = useAppDispatch()
   const theme = useAppSelector(state => state.theme.theme)
+  const userData = useAppSelector(state => state.user.user)
 
-  const navigateToSellCoin = () => {
-    router.push(`/(trade)/chats/${sellerId}`,)
-  }
+
   const navigateToP2pNegotiate = () => {
+    console.log(userData._id, 'buyer id')
+    console.log(sellerId, 'sellers id')
+    console.log(limits, 'limits')
     dispatch(getOrderSellerIdData(sellerId))
     dispatch(getSelectedOrderData({fullname, time, sellersRate, sellerId, limits, coin, offerId}))
-    router.push(`/(trade)/buytradingform`,)
+    router.push(`/(trade)/buytradingform`)
   }
 
 

@@ -13,7 +13,7 @@ const ConfirmTransferPage = () => {
     <SafeAreaView style={styles.safeArea}>
       <PageHeader 
         icon={<FontAwesome name="angle-left" size={24} color={theme ?'white': "black"} />} 
-        label={<ThemedText style={styles.headerLabel}>Transfer</ThemedText>} 
+        label={<ThemedText style={styles.headerLabel}>Confirm Transfer</ThemedText>} 
       />
       <View style={styles.container}>
         <ConfirmTransfer />
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   headerLabel: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily:'MonsterBold'
   },
   container: {
     paddingTop: 50,

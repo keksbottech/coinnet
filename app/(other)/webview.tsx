@@ -40,7 +40,7 @@ export default function Pay() {
     React.useCallback(() => {
       const onBackPress = () => {
         // Prevent back navigation
-        router.push('/(tabs)/wallet')
+        router.back()
         return true;
       };
 

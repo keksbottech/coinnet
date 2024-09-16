@@ -1,43 +1,46 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '../ThemedText';
 
 const ReceiveMoneyFromCoinnet = () => {
-  const walletID = "1100326447";
+  const userData = useAppSelector(state => state.user.user)
+  const theme = useAppSelector(state => state.theme.theme)
 
   const copyToClipboard = async () => {
-    await Clipboard.setStringAsync(walletID);
+    await Clipboard.setStringAsync(userData._id);
     Alert.alert("Copied to Clipboard", "Wallet ID copied successfully!");
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Use Your Coinnet Account to Receive Payment</Text>
+      <ThemedText style={styles.headerText}>Use Your Coinnet Account to Receive Payment</ThemedText>
 
       <View style={styles.card}>
         <View style={styles.row}>
-          <Text style={styles.title}>Coinnet</Text>
+          <ThemedText style={styles.title}>Coinnet</ThemedText>
           <TouchableOpacity onPress={copyToClipboard}>
-            <Text style={styles.copyText}>Copy</Text>
+            <ThemedText style={styles.copyText}>Copy</ThemedText>
           </TouchableOpacity>
         </View>
 
         <View style={styles.infoBlock}>
-          <Text style={styles.label}>Recipient Bank</Text>
-          <Text style={styles.infoText}>Coinnet</Text>
+          <ThemedText style={styles.label}>Recipient Bank</ThemedText>
+          <ThemedText style={styles.infoText}>Coinnet</ThemedText>
         </View>
 
         <View style={styles.infoBlock}>
-          <Text style={styles.label}>Wallet Name</Text>
-          <Text style={styles.infoText}>Divine Ikemma</Text>
+          <ThemedText style={styles.label}>Wallet Name</ThemedText>
+          <ThemedText style={styles.infoText}>{`${userData.firstName} ${userData.lastName}`}</ThemedText>
         </View>
 
         <View style={styles.infoBlock}>
-          <Text style={styles.label}>Wallet ID</Text>
+          <ThemedText style={styles.label}>Wallet ID</ThemedText>
           <View style={styles.row}>
-            <Text style={styles.walletID}>{walletID}</Text>
+            <ThemedText style={styles.walletID}>{userData._id}</ThemedText>
             <TouchableOpacity onPress={copyToClipboard} style={styles.iconButton}>
-              <Text style={styles.copyText}>📋</Text>
+              <ThemedText style={styles.copyText}>📋</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -49,15 +52,13 @@ const ReceiveMoneyFromCoinnet = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
   },
   headerText: {
     textAlign: 'center',
     marginBottom: 20,
     fontSize: 16,
     color: '#000',
+    fontFamily:'MonsterBold'
   },
   card: {
     borderWidth: 2,
@@ -74,12 +75,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+  fontFamily:'MonsterBold',
     color: '#000',
   },
   copyText: {
     fontSize: 16,
     color: '#000',
+    fontFamily:'MonsterReg'
   },
   infoBlock: {
     marginBottom: 15,
@@ -90,10 +92,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     color: '#555',
+    fontFamily:'MonsterBold'
   },
   infoText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily:'MonsterReg',
     color: '#000',
   },
   walletID: {

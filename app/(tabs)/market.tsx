@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, Touchable, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import PageHeader from '@/components/page header/PageHeader'
@@ -19,6 +19,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch'
 import { ToastAndroid } from 'react-native'
 import { useAppSelector } from '@/hooks/useAppSelector'
 import { ThemedText } from '@/components/ThemedText'
+import { useRouter } from 'expo-router'
 
 
 const Market = () => {
@@ -28,7 +29,8 @@ const Market = () => {
     const [value, setValue] = useState('')
     const dispatch = useAppDispatch()
     const theme = useAppSelector(state => state.theme.theme)
- 
+    const router = useRouter()
+    
     useEffect(()=>{
         fetchPrice()
     },[])
@@ -86,6 +88,9 @@ const Market = () => {
     }
    }
 
+   const navigateToFavorites = () => {
+  router.push('/(other)/favorites')
+   }
 
 
 
@@ -93,7 +98,11 @@ const Market = () => {
     <SafeAreaView style={[styles.safeAreaView, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
       <PageHeader 
         icon={<FontAwesome name="angle-left" size={24} color={theme ?'white':"black"} />} 
-        // other={<AntDesign name="infocirlceo" size={24} color={theme ?'white':"black"} />} 
+        other={
+          <TouchableOpacity onPress={navigateToFavorites}>
+            <AntDesign name="staro" size={24} color="black" />
+          </TouchableOpacity>
+        } 
         label={<ThemedText style={styles.pageHeaderText}>Market</ThemedText>} 
       />
 

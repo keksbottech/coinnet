@@ -42,48 +42,78 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
   const orderDetails = useAppSelector(state => state.orders.selectedOrder)
   const [isLoading,setIsLoading] = useState(false)
   const theme = useAppSelector(state => state.theme.theme)
+  const userData = useAppSelector(state => state.user.user)
 
-  console.log(orderDetails, 'details')
   useEffect(() => {
-    // Find the selected coin data from marketStoredData
-    const selectedCoinData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === selectedCoin);
-
-    if (selectedCoinData) {
-      setCoinValue(selectedCoinData.RAW.USD.PRICE); // Example property for coin price in USD
+    // Check if coin amount is valid, otherwise default to 0
+    const amount = coinAmount ? parseFloat(coinAmount) : 0;
+  
+    // Perform the calculation using the seller's rate in USD per coin
+    if (amount > 0 && sellerFiatRate > 0) {
+      // The seller's rate is already in USD, so we only multiply it by the coin amount
+      const calculatedFiatAmount = amount * orderDetails?.sellersRate;
+      setFiatAmount(calculatedFiatAmount);
     } else {
-      setCoinValue(0); // Default to 0 if coin data is not found
+      setFiatAmount(0); // Default to 0 if values are invalid
     }
+  }, [coinAmount, sellerFiatRate]);
+  
+  const getCoinData = (coinName: string) => {
+    return marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === coinName);
+  };
 
-    const amount = coinAmount || 0;
-    const calculatedFiatAmount = amount * coinValue * sellerFiatRate;
-    setFiatAmount(calculatedFiatAmount);
-  }, [coinAmount, selectedCoin, sellerFiatRate, marketStoredData]);
 
   const sendDataToOrderDispatch = async (data: any) => {
     try{
         setIsLoading(true)
     const { coinAmount } = data;
 
-    console.log(coinAmount)
+    console.log(coinAmount,'coin amount')
+    console.log(orderDetails.limits)
+    console.log(+coinAmount > +orderDetails.limits)
+    if(+coinAmount > +orderDetails.limits) {
+      ToastAndroid.show('coin limit exceeded', ToastAndroid.SHORT);
+    }
+    else{
+    // console.log(coinAmount)
     
-    console.log(orderDetails,'details')
+    // console.log(orderDetails,'details')
+
     const body = {
-        userId: sellerId,
+        userId: userData._id,
         offerId: orderDetails?.offerId,
         status:'pending',
-        quantity: coinAmount
+        quantity: coinAmount,
+        fiatAmount,
+        coin: selectedCoin,
+        sellerId,
+        limits: orderDetails.limits,
+        coinRate: orderDetails.sellersRate
     }
+    // // sellerId, senderId, message, image, coinTransaction
     const createEscrow = await axios.post('escrow/create', body)
+
+    console.log(createEscrow.data, 'escrow')
+    
+    const a = {
+      senderId: userData?._id,
+      receiverId: sellerId,
+      escrowId: createEscrow.data.escrow._id
+    }
+
+    console.log(a,'id')
+
+    const getEscrowId = await axios.post('escrowId/send', a)
+    console.log(getEscrowId.data, 'escrow id')
+
 
     ToastAndroid.show('Success!', ToastAndroid.SHORT);
 
-    dispatch(getEscrowData(createEscrow.data.escrow._id))
-
-    dispatch(getOrderP2pData({ coinAmount: parseFloat(coinAmount) || 0, fiatAmount , coin:selectedCoin}));
-    router.push(`/(trade)/chats/${sellerId}`);
+      router.push(`/(trade)/chats/${sellerId}`);
+    }
     }
     catch(err){
-      ToastAndroid.show('Failed to send request! Try again', ToastAndroid.SHORT);
+      ToastAndroid.show('Failed to send request! Seller has Insufficient funds', ToastAndroid.SHORT);
         console.log(err)
     }
     finally{
@@ -98,7 +128,10 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
       <View style={styles.container}>
         <ThemedText style={styles.title}>Negotiate Purchase</ThemedText>
 
-        <Controller
+        <ThemedText style={styles.label}>Coin Name:</ThemedText>
+          <ThemedText style={styles.conversion}>{orderDetails.coin}</ThemedText>
+
+        {/* <Controller
           control={control}
           name="selectedCoin"
           rules={{ required: true }}
@@ -121,7 +154,7 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
               </Picker>
             </View>
           )}
-        />
+        /> */}
 
         <Controller
           control={control}
@@ -149,6 +182,13 @@ const P2PNegotiationForm: React.FC<NegotiationFormProps> = ({ sellerFiatRate = 1
           <ThemedText style={styles.label}>Selected Coin Value:</ThemedText>
           <ThemedText style={styles.conversion}>{coinValue.toFixed(2)} USD</ThemedText>
 
+          <ThemedText style={styles.label}>Sellers Rate in Fiat</ThemedText>
+          <ThemedText style={styles.conversion}>{orderDetails.sellersRate} USD</ThemedText>
+
+          <ThemedText style={styles.label}>Sellers Coin Limits</ThemedText>
+          <ThemedText style={styles.conversion}> 0 - {orderDetails.limits}</ThemedText>
+
+
           <ThemedText style={styles.label}>Estimated Value in Fiat:</ThemedText>
           <ThemedText style={styles.conversion}>{fiatAmount.toFixed(2)} USD</ThemedText>
         </View>
@@ -164,11 +204,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
     flex: 1,
   },
   title: {

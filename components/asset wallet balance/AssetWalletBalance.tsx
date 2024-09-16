@@ -7,6 +7,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getWalletTotalBalance } from '@/lib/store/reducers/storeWalletBalances';
 import { useFocusEffect } from '@react-navigation/native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const AssetWalletBalance = () => {
   const [balanceSum, setBalanceSum] = useState(null);
@@ -14,7 +15,7 @@ const AssetWalletBalance = () => {
   const dispatch = useAppDispatch();
   const walletBalance = useAppSelector(state => state.wallet.walletTotalBalance);
   const marketStoredData = useAppSelector(state => state.market.marketData)
-
+  const [ngnRate, setNgnRate] = useState(0)
 
 
   useFocusEffect(
@@ -44,9 +45,12 @@ const AssetWalletBalance = () => {
 
       console.log('body', body)
 
-      const response = await axios.post('wallets/totalbalance', body)
+      const [response, ngnRate] = await Promise.all([
+        axios.post('wallets/totalbalance', body),
+        axios.get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')
+      ])
 
-      console.log('assets')
+      setNgnRate(ngnRate.data.usd.ngn)
 
       dispatch(getWalletTotalBalance(response.data.message))
 
@@ -120,8 +124,9 @@ const AssetWalletBalance = () => {
             fill="#3E4C59"
           >
             {`$${parseFloat(walletBalance).toFixed(2)}`}
+            
           </SVGText>
-          {/* <SVGText
+          <SVGText
             x="50%"
             y="60%"
             textAnchor="middle"
@@ -130,8 +135,8 @@ const AssetWalletBalance = () => {
             fill="#2ECC71"
             fontFamily='MonsterBold'
           >
-            2.60%
-          </SVGText> */}
+     {`≈ ₦${parseFloat(+walletBalance * ngnRate).toFixed()}`}
+          </SVGText>
         </G>
       </Svg>
     </View>

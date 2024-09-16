@@ -15,6 +15,10 @@ import storeMessages from './reducers/storeMessages'
 import storeEscrowData from './reducers/storeEscrowData'
 import storeTransactionHistory from './reducers/storeTransactionHistory'
 import storeTheme from './reducers/storeTheme'
+import storeTransferDetails from './reducers/storeTransferDetails'
+import storeSelectedCurrency from './reducers/storeSelectedCurrency'
+import storeFiatWalletBalance from './reducers/storeFiatWalletBalance'
+import storeToggleState from './reducers/storeToggleState'
 
 
 export const rootReducer = combineReducers({
@@ -33,5 +37,9 @@ export const rootReducer = combineReducers({
    messages: storeMessages,
    escrow: storeEscrowData,
    transactionHistory: storeTransactionHistory,
-   theme: storeTheme
+   theme: storeTheme,
+   transactionDetails: storeTransferDetails,
+   selectedCurrency: storeSelectedCurrency,
+   fiatWallet:storeFiatWalletBalance,
+   toggle: storeToggleState
 })

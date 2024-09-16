@@ -61,6 +61,9 @@ const SettingsScreen = () => {
     router.push('/(trade)/transactionhistory')
   }
 
+  const navigateToWalletId = () => {
+    router.push('/(other)/receivemoneyfromcoinnet')
+  }
   // useEffect(() => {
 
   //   console.log(isDarkMode)
@@ -100,6 +103,12 @@ const SettingsScreen = () => {
         <TouchableOpacity onPress={navigateToProfile} style={styles.row}>
           <Ionicons name="person-outline" size={24} style={styles.icon} />
           <ThemedText style={styles.text}>Profile</ThemedText>
+          <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={navigateToWalletId} style={styles.row}>
+          <Ionicons name="wallet-outline" size={24} style={styles.icon} />
+          <ThemedText style={styles.text}>Wallet ID</ThemedText>
           <Ionicons name="chevron-forward-outline" size={24} style={styles.rightIcon} />
         </TouchableOpacity>
 

@@ -75,11 +75,11 @@ const SendCoins = () => {
           <ThemedText style={[styles.title, {textAlign:'center'}]}>Please enter only coinnet associated wallet address</ThemedText>
           <ThemedText style={styles.title}>Select Coin</ThemedText>
           <View style={styles.coinSelector}>
-            <TouchableOpacity onPress={enableBottomDrawer} style={[styles.coin,{backgroundColor:theme ? 'gray': 'white'}]}>
+            <TouchableOpacity onPress={enableBottomDrawer} style={[styles.coin,{backgroundColor:theme ? 'gray': '#eee', borderRadius:10}]}>
          
          
               <View style={styles.coinText}>
-                <ThemedText style={styles.coinName}>{selectedCoin?.name}</ThemedText>
+                <ThemedText style={styles.coinName}>{selectedCoin?.name? selectedCoin?.name: 'Select Coin here'}</ThemedText>
                 <ThemedText style={styles.coinBalance}>{selectedCoin?.symbol}</ThemedText>
               </View>
 
@@ -179,6 +179,8 @@ const styles = StyleSheet.create({
   },
   coinSelector: {
     marginBottom: 20,
+    backgroundColor:'#eee',
+    borderRadius:10
   },
   coin: {
     flexDirection: 'row',

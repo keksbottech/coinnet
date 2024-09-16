@@ -13,18 +13,19 @@ const BvnFaceCapture = () => {
   const theme = useAppSelector((state) => state.theme.theme);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  
 
-  // Open Image Picker
-  const pickImage = async () => {
+  // Open Camera using Image Picker
+  const openCamera = async () => {
     // Ask for permission
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
-      ToastAndroid.show('Permission to access camera roll is required!', ToastAndroid.LONG);
+      ToastAndroid.show('Permission to access camera is required!', ToastAndroid.LONG);
       return;
     }
 
-    // Select image
-    const result = await ImagePicker.launchImageLibraryAsync({
+    // Launch the camera
+    const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
@@ -32,7 +33,8 @@ const BvnFaceCapture = () => {
     });
 
     if (!result.canceled) {
-      setImageUri(result.assets[0].uri); // Set the selected image URI
+      setImageUri(result.assets[0].uri); // Set the captured image URI
+      await uploadImage(result.assets[0].uri);
     }
   };
 
@@ -59,7 +61,10 @@ const BvnFaceCapture = () => {
       const data = await response.json();
       if (data.secure_url) {
         setImageUri(data.secure_url); // Store the Cloudinary URL
-        ToastAndroid.show('Image uploaded successfully!', ToastAndroid.LONG);
+        ToastAndroid.show('Image uploaded successfully!', ToastAndroid.LONG); 
+
+        navigateToBvnFaceCaptureBox()
+    
       } else {
         throw new Error('Failed to upload image. Try again');
       }
@@ -72,7 +77,7 @@ const BvnFaceCapture = () => {
   };
 
   const navigateToBvnFaceCaptureBox = () => {
-    router.push('/(onboarding)/bvnfacecapture');
+    router.push('/(onboarding)/alldone');
   };
 
   return (
@@ -86,7 +91,7 @@ const BvnFaceCapture = () => {
           accessories such as glasses or hats before taking the photo.
         </ThemedText>
 
-        <Button onClick={pickImage} label="Pick an Image" />
+        <Button onClick={openCamera} label="Open Camera" />
 
         {/* Show selected image */}
         {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
@@ -102,7 +107,7 @@ const BvnFaceCapture = () => {
 
         {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
 
-        <Button onClick={navigateToBvnFaceCaptureBox} label="Continue" />
+        <Button onClick={openCamera} label="Continue" />
       </View>
     </SafeAreaView>
   );

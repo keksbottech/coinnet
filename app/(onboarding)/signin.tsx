@@ -71,6 +71,7 @@ const Signin: React.FC = () => {
         errorMessage = 'You entered an invalid credential';
       }
 
+      console.log(err.response.data)
       ToastAndroid.show('Login failed! Invalid Credential', ToastAndroid.SHORT);
 
     } finally {

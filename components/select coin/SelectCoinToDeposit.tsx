@@ -16,14 +16,14 @@ const SelectCoinsToDepositDrawer = () => {
   const ethData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'ETH');
   const usdCData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'USDC');
   const bnbData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BNB');
-  const solData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'SOL');
+  // const solData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'SOL');
 
   const coins = [
     { id: 1, name: 'Bitcoin', symbol: 'BTC', imageUrl: `https://www.cryptocompare.com${btcData.CoinInfo.ImageUrl}` },
     { id: 2, name: 'Ethereum', symbol: 'ETH', imageUrl: `https://www.cryptocompare.com${ethData.CoinInfo.ImageUrl}` },
     { id: 3, name: 'USD Coin', symbol: 'USDC', imageUrl: `https://www.cryptocompare.com${usdCData.CoinInfo.ImageUrl}` },
     { id: 4, name: 'Binance Coin', symbol: 'BNB', imageUrl: `https://www.cryptocompare.com${bnbData.CoinInfo.ImageUrl}` },
-    { id: 5, name: 'Solana', symbol: 'SOL', imageUrl: `https://www.cryptocompare.com${solData.CoinInfo.ImageUrl}` },
+    // { id: 5, name: 'Solana', symbol: 'SOL', imageUrl: `https://www.cryptocompare.com${solData.CoinInfo.ImageUrl}` },
   ];
 
   const [selectedMethod, setSelectedMethod] = useState<any>(null);

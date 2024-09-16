@@ -106,7 +106,7 @@ const PayWithPaystackScreen = () => {
                   <View style={styles.withdrawToInnerContainer}>
                     <FontAwesome name="bank" size={24} color="black" />
                     <View>
-                      <ThemedText style={styles.withdrawToText}>{selectedCoin?.name} </ThemedText>
+                      <ThemedText style={styles.withdrawToText}>{selectedCoin?.name? selectedCoin?.name : 'Select coin to buy'} </ThemedText>
                       <ThemedText style={styles.withdrawToText}>{selectedCoin?.symbol}</ThemedText>
                     </View>
                   </View>
