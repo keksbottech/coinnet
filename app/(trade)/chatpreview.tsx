@@ -7,7 +7,7 @@ import { getMessagesData } from '@/lib/store/reducers/storeMessages';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { RefreshControl, ToastAndroid } from 'react-native';
+import { RefreshControl, ScrollView, ToastAndroid } from 'react-native';
 import { BackHandler } from 'react-native';
 import { Alert } from 'react-native';
 import { View, Text, FlatList, StyleSheet, TextInput } from 'react-native';
@@ -185,19 +185,20 @@ if (userId === id1) {
         onChangeText={setSearchQuery}
         placeholderTextColor={'#eee'}
       />
+      <ScrollView
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              showsVerticalScrollIndicator={false}
+      >
       <View style={{alignItems:'center'}}>
       {isLoading && <Wave size={50} color={theme?'white':'black'}/>}
       </View>
       <View style={{marginTop:20}}>
-      {filteredChats.length > 0 ?
-      <FlatList
-        data={filteredChats}
-        refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <ChatPreview
+
+        {
+          filteredChats.length ? filteredChats.map(item => <ChatPreview
+          key={item.id}
             id={item.id}
             name={item.name}
             lastMessage={item.lastMessage}
@@ -206,12 +207,12 @@ if (userId === id1) {
             isNewMessage={item.isNewMessage}
             image={item.image}
             onPress={()=> handleChatPress(item?.sellerId)}
-          />
-        
-        )}
-      /> : <ThemedText style={styles.label}>You have no chats</ThemedText>
+          />)
+        : <ThemedText style={styles.label}>You have no chats</ThemedText>
     }
+    
     </View>
+    </ScrollView>
     </SafeAreaView>
   );
 };

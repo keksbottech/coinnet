@@ -115,17 +115,6 @@ const PayWithFlutterwaveScreen = () => {
               </TouchableOpacity>
 
               <View style={styles.wrap}>
-                <ThemedText style={styles.labels}>Name:</ThemedText>
-                <Controller
-                  name="name"
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <Input onChangeText={onChange} value={value} />
-                  )}
-                />
-              </View>
-
-              <View style={styles.wrap}>
                 <ThemedText style={styles.labels}>Coin Amount:</ThemedText>
                 <Controller
                   name="coinAmount"

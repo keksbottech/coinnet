@@ -24,11 +24,11 @@ interface MarketDataSwipeSideProps {
 
 const screenWidth = Dimensions.get('window').width;
 
-const MarketDataSwipeSide: React.FC<MarketDataSwipeSideProps> = ({ fetchData }) => {
+const MarketDataSwipeSide: React.FC<MarketDataSwipeSideProps> = ({ fetchData, marketData }) => {
   const dispatch = useAppDispatch();
   const [favoriteArray, setFavoriteArray] = useState<MarketData[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const marketData = useAppSelector(state => state.market.marketData)
+  // const marketData = useAppSelector(state => state.market.marketData)
   const theme = useAppSelector(state => state.theme.theme)
 
   useEffect(() => {
@@ -61,13 +61,13 @@ const MarketDataSwipeSide: React.FC<MarketDataSwipeSideProps> = ({ fetchData }) 
           <View style={styles.header}>
             <View>
           <Image
-            source={{ uri: `https://cryptocompare.com${item.CoinInfo.ImageUrl}` }}
+            source={{ uri: `https://cryptocompare.com${item?.CoinInfo?.ImageUrl}` }}
             style={{ width: 40, height: 40 }}
           />
-            <ThemedText style={styles.pair}>{item.CoinInfo.Name}/USD</ThemedText>
+            <ThemedText style={styles.pair}>{item?.CoinInfo?.Name}/USD</ThemedText>
             </View>
             <ThemedText style={styles.volumeText}>Vol:</ThemedText>
-            <ThemedText style={styles.volumeText}>{item.DISPLAY?.USD.VOLUME24HOUR}</ThemedText>
+            <ThemedText style={styles.volumeText}>{item?.DISPLAY?.USD.VOLUME24HOUR}</ThemedText>
           </View>
           <View style={styles.body}>
             <ThemedText style={styles.priceText}>Top price: {item.DISPLAY?.USD?.HIGH24HOUR}</ThemedText>

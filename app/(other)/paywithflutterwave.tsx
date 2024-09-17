@@ -14,6 +14,7 @@ import SelectCoinsToDepositDrawer from '@/components/select coin/SelectCoinToDep
 import { useForm, Controller } from 'react-hook-form';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { ThemedText } from '@/components/ThemedText';
+import { getTransactionWebviewFallback } from '@/lib/store/reducers/storeTransferDetails';
 
 const PayWithFlutterwaveScreen = () => {
   const router = useRouter();
@@ -70,7 +71,7 @@ const PayWithFlutterwaveScreen = () => {
       console.log(response.data.message.data);
 
       dispatch(getPaymentUrl(response.data.message.data.link));
-
+      dispatch(getTransactionWebviewFallback('crypto'))
       router.push('/(other)/webview');
     } catch (err) {
       ToastAndroid.show('Failed to initalize payment! Try again', ToastAndroid.SHORT);

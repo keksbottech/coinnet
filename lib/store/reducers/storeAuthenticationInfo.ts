@@ -23,7 +23,7 @@ export const storeAuthenticationInfoSlice = createSlice({
     getaBvnImage: (state, action: PayloadAction<any>) => {
       state.bvnImage = action.payload
   }
-  },
+  }
 })
 
 // Action creators are generated for each case reducer function

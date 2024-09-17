@@ -16,7 +16,7 @@ export const storeMessagesDataSlice = createSlice({
     getMessagesData: (state, action: PayloadAction<any>) => {
         state.messages = action.payload
     }
-  },
+  }
 })
 
 // Action creators are generated for each case reducer function

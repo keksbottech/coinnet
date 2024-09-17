@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import SendImage from '@/assets/svg/send.svg'
 import { axios } from '@/lib/axios';
@@ -11,6 +11,19 @@ import { ThemedText } from '../ThemedText';
 
 const TransactionHistory = ({ transaction }:any) => {
   const theme = useAppSelector(state => state.theme.theme)
+  const [ngnRate, setNgnRate] = useState(null)
+
+
+  useFocusEffect(
+    useCallback(() =>{
+      getRateInNgn()
+    }, [])
+  )
+
+  const getRateInNgn = async () => {
+    const response = await axios.get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')
+    setNgnRate(response.data.usd.ngn)
+  }
 
   function hideStringPartially(str:any) {
     if(!str) return ''
@@ -40,6 +53,8 @@ function formatDateAndTime(dateString:any) {
   };
 }
 
+console.log(transaction)
+
 
   return (
 
@@ -48,8 +63,8 @@ function formatDateAndTime(dateString:any) {
     <View style={[styles.transactionItem]}>
       <View style={styles.header}>
       <ThemedText style={styles.amountUSD}>{transaction.asset}</ThemedText>
-        <ThemedText style={styles.currency}>$ {parseFloat(transaction.amountInFiat / 1700).toFixed(6)}</ThemedText>
-        <ThemedText style={styles.amountUSD}> {parseFloat(transaction.coinAmount)}</ThemedText>
+        <ThemedText style={styles.currency}>$ {parseFloat(transaction.amountInFiat).toFixed(6)}</ThemedText>
+        <ThemedText style={styles.amountUSD}>Coin {parseFloat(transaction.coinAmount)}</ThemedText>
         <ThemedText
           style={[
             styles.status,

@@ -14,6 +14,7 @@ import { getPaymentUrl } from '@/lib/store/reducers/storePaymentUrl';
 import Loading from '@/components/loading/Loading';
 import SelectCoinsToDepositDrawer from '@/components/select coin/SelectCoinToDeposit';
 import { ThemedText } from '@/components/ThemedText';
+import { getTransactionWebviewFallback } from '@/lib/store/reducers/storeTransferDetails';
 
 const PayWithPaypalScreen = () => {
   const router = useRouter();
@@ -66,7 +67,7 @@ const PayWithPaypalScreen = () => {
       console.log(response.data);
 
       dispatch(getPaymentUrl(response.data.message));
-
+      dispatch(getTransactionWebviewFallback('crypto'))
       router.push('/(other)/webview')
     } catch (err) {
       ToastAndroid.show('Failed to initialize payment! Try again', ToastAndroid.SHORT);

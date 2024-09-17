@@ -21,6 +21,7 @@ import Feather from '@expo/vector-icons/Feather';
 import { getSelectedCurrencyData } from '@/lib/store/reducers/storeSelectedCurrency'
 import { Wave } from 'react-native-animated-spinkit'
 import { ToastAndroid } from 'react-native'
+import { getTransactionFallback } from '@/lib/store/reducers/storeTransferDetails'
 
 const FiatPage = () => {
   const theme = useAppSelector(state => state.theme.theme)
@@ -36,6 +37,7 @@ const selectedCurrency = useAppSelector(state => state.selectedCurrency.selected
 const toggleBalanceShown = useAppSelector(state => state.toggle.toggleBalanceShown)
 useFocusEffect(
   useCallback(() =>{
+    dispatch(getTransactionFallback(null))
     fetchDataFromFunctions()
   }, [])
 )
@@ -53,24 +55,46 @@ const fetchDataFromFunctions = async () => {
   }
   finally{
     setIsLoading(false)
+
   }
 }
+
 
 const fetchTransactionHistoryForFiat =async () =>{
   try{
      setIsLoading(true)
-     const response = await axios.get(`transaction-history-fiat/${userData._id}`)
+     console.log('hey')
 
-     dispatch(getTransactionHistoryForFiat(response.data.transactions))
+     const [responseForMainTransactionHistory, responseForRecievedTransferTransaction] = await Promise.all([
+      axios.get(`transaction-history-fiat/${userData._id}`),
+      axios.post(`transaction-history-fiat/receiver`, {receiverId: userData._id})
+     ])
+
+     console.log(responseForMainTransactionHistory.data, responseForRecievedTransferTransaction.data, 'both')
+
+     const mergedTransactions = [
+      ...responseForMainTransactionHistory.data.message,
+       ...responseForRecievedTransferTransaction.data.message
+     ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
+
+  
+     dispatch(getTransactionHistoryForFiat(mergedTransactions))
   }
   catch(err){
 
-    console.log(err)
+    if(err.response.data.message === 'No transfer fiat for receiver'){
+      const responseForMainTransactionHistory = await axios.get(`transaction-history-fiat/${userData._id}`)
+      
+     dispatch(getTransactionHistoryForFiat(responseForMainTransactionHistory.data.message))
+    }
+    console.log(err, 'error')
   }
   finally{
 setIsLoading(false)
   }
 }
+
 const fetchUserWalletBalance = async () =>{
   try{
     const body ={
@@ -140,6 +164,10 @@ const enableCurrencyBottomDrawer = () => {
 
 const navigateToExchange = () => {
    router.push('/(other)/exchangefiatcurrency')
+}
+
+const navigateToTransactionHistory = () => {
+  router.push('/(fiattabs)/history')
 }
 
   return (
@@ -214,9 +242,14 @@ const navigateToExchange = () => {
 
         {/* Transactions */}
         <View style={styles.transactionsSection}>
+          <View style={{flexDirection:'row', justifyContent:'space-between'}}>
           <ThemedText style={styles.transactionsLabel}>Your Transactions</ThemedText>
+          <TouchableOpacity onPress={navigateToTransactionHistory}>
+            <Text style={{color:'orangered', fontFamily:'MonsterBold',fontSize:15}}>More</Text>
+          </TouchableOpacity>
+          </View>
            {/* Add your transactions here */}
-           <TransactionHistoryForFiat />
+           <TransactionHistoryForFiat filterToFive={true}/>
         </View>
       </ScrollView>
     </View>

@@ -19,7 +19,7 @@ const ShowAccountBottomDrawer = () => {
      const selectedCurrency = useAppSelector(state => state.selectedCurrency.selectedCurrency)
      const toggleBalanceShown = useAppSelector(state => state.toggle.toggleBalanceShown)
      const [isBalanceVisible, setIsBalanceVisible] = useState(toggleBalanceShown);
-
+     const userData = useAppSelector(state => state.user.user)
 
      useEffect(() => {
       dispatch(getToggleData(isBalanceVisible))
@@ -34,17 +34,17 @@ const ShowAccountBottomDrawer = () => {
     ui={
         <View style={styles.container}>
         {/* Account Information Section */}
-        <Text style={styles.header}>Accounts</Text>
+        <ThemedText style={styles.header}>Accounts</ThemedText>
         <View style={styles.accountContainer}>
           {/* Circular initials */}
           <View style={styles.circle}>
-            <Text style={styles.initials}>OF</Text>
+            <Text style={styles.initials}> {`${userData?.firstName.split('').shift()}${userData?.lastName.split('').shift()}`} </Text>
           </View>
   
           {/* Account details */}
           <View style={styles.accountDetails}>
             <Text style={styles.accountName}>
-              Onyechere Favour <Text style={styles.accountType}>(Main)</Text>
+              {`${userData?.firstName} ${userData?.lastName}`} <Text style={styles.accountType}>(Main)</Text>
             </Text>
             <Text style={styles.balance}>₦{isBalanceVisible ? '***' : parseFloat(selectedCurrency?.balance).toFixed()}</Text>
           </View>

@@ -15,6 +15,7 @@ import SelectCoinsToDepositDrawer from '@/components/select coin/SelectCoinToDep
 import { useForm, Controller } from 'react-hook-form';
 import { ThemedText } from '@/components/ThemedText';
 import CurrencyBottomDrawer from '@/components/currency bottom drawer/CurrencyBottomDrawer';
+import { getTransactionWebviewFallback } from '@/lib/store/reducers/storeTransferDetails';
 
 const PayWithPaystackScreen = () => {
   const router = useRouter();
@@ -71,7 +72,7 @@ const PayWithPaystackScreen = () => {
       console.log(response.data?.message);
 
       dispatch(getPaymentUrl(response.data.message.data.authorization_url));
-
+      dispatch(getTransactionWebviewFallback('fiat'))
       router.push('/(other)/webview');
     } catch (err) {
       ToastAndroid.show('Payment fetched to initialize! Try again', ToastAndroid.SHORT);

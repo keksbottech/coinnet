@@ -16,7 +16,7 @@ export const storeEscrowDataSlice = createSlice({
     getEscrowData: (state, action: PayloadAction<any>) => {
         state.escrowId = action.payload
     }
-  },
+  }
 })
 
 // Action creators are generated for each case reducer function

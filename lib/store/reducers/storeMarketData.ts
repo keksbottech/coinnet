@@ -21,7 +21,7 @@ export const storeMarketDataSlice = createSlice({
     getMarketData: (state, action: PayloadAction<any>) => {
       state.marketData = action.payload
   }
-  },
+  }
 })
 
 // Action creators are generated for each case reducer function

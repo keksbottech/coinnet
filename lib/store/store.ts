@@ -20,7 +20,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Needed if you're storing non-serializable data
-    }).concat(logger),
+    })
 });
 
 // Create the persistor

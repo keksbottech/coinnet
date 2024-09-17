@@ -12,6 +12,7 @@ export default function Pay() {
   const webViewRef = useRef(null);
   const router = useRouter()
   const theme = useAppSelector(state => state.theme.theme)
+  const webviewTransactionFallback = useAppSelector(state => state.transactionDetails.transactionWebviewFallback)
 
   const handleLoadStart = () => {
     setLoading(true);
@@ -40,7 +41,12 @@ export default function Pay() {
     React.useCallback(() => {
       const onBackPress = () => {
         // Prevent back navigation
-        router.back()
+     if(webviewTransactionFallback ==='crypto'){
+      router.push('/(tabs)/wallet')
+     }
+     else {
+      router.push('/(fiattabs)')
+     }
         return true;
       };
 

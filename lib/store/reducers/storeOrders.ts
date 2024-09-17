@@ -30,8 +30,8 @@ export const storeOrdersDataSlice = createSlice({
 },
 getSelectedOrderData: (state, action: PayloadAction<any>) => {
   state.selectedOrder = action.payload
-},
-  },
+}
+  }
 })
 
 // Action creators are generated for each case reducer function

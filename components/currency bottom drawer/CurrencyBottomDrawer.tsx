@@ -5,6 +5,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import BottomDrawer from '../bottom drawer/BottomDrawer';
 import { getSelectedCurrencyData } from '@/lib/store/reducers/storeSelectedCurrency';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '../ThemedText';
 
 
 const currencies = [
@@ -52,7 +53,7 @@ const CurrencyBottomDrawer = () => {
     enablePanDownToClose={true}
     ui={
     <View style={styles.container}>
-      <Text style={styles.title}>Currencies</Text>
+      <ThemedText style={styles.title}>Currencies</ThemedText>
       {
         currency?.map(item =>  <TouchableOpacity key={item.id}
             style={[styles.currencyItem, selectedCurrency?.id === item.id && styles.selectedItem]} 
@@ -60,10 +61,10 @@ const CurrencyBottomDrawer = () => {
           >
             <View style={styles.currencyInfo}>
               <Image source={{uri:item.imageUrl}} width={50} height={50}/>
-              <Text style={styles.currencyText}>{item.name}</Text>
+              <ThemedText style={styles.currencyText}>{item.name}</ThemedText>
             </View>
             <View style={styles.currencyValue}>
-              <Text style={styles.currencyAmount}>{item.symbol} {parseFloat(item.balance).toFixed()}</Text>
+              <ThemedText style={styles.currencyAmount}>{item.symbol} {parseFloat(item.balance).toFixed()}</ThemedText>
               <Ionicons 
                 name={selectedCurrency?.id === item.id ? 'radio-button-on' : 'radio-button-off'} 
                 size={24} 

@@ -16,7 +16,7 @@ export const storeFavoriteDataSlice = createSlice({
     getFavoriteData: (state, action: PayloadAction<any>) => {
         state.favorites = action.payload
     }
-  },
+  }
 })
 
 // Action creators are generated for each case reducer function

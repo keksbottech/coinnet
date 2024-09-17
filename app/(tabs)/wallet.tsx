@@ -18,6 +18,8 @@ import { Image } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
+import { getWalletTotalBalance } from '@/lib/store/reducers/storeWalletBalances';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
 
 const Wallet = () => {
   const router = useRouter();
@@ -28,15 +30,56 @@ const Wallet = () => {
   const marketStoredData = useAppSelector(state => state.market.marketData);
   const [refreshing, setRefreshing] = useState(false)
   const theme = useAppSelector(state => state.theme.theme)
-
+const dispatch = useAppDispatch()
   useFocusEffect(
     useCallback(() => {
       fetchWalletBalanceCoins();
+      getTotalWalletBalance()
       return () => {
         console.log('Screen is unfocused, cleaning up...');
       };
     }, [])
   );
+
+  const getTotalWalletBalance = async () => {
+    try{
+
+      const btcData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BTC');
+      const ethData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'ETH');
+      const usdcData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'USDC');
+      const bnbData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BNB');
+
+      // console.log('btc')
+      // console.log(btcRate, 'btc')
+      const body = {
+        btcDollarRate: parseFloat(btcData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        ethDollarRate: parseFloat(ethData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        usdcDollarRate: parseFloat(usdcData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        bnbDollarRate: parseFloat(bnbData?.DISPLAY?.USD?.PRICE.replace(/[$,]/g, '')),
+        userId:userData?._id
+      }
+
+
+      console.log('body', body)
+
+      const [response] = await Promise.all([
+        axios.post('wallets/totalbalance', body),
+      //  axios.get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')
+      ])
+     
+
+      dispatch(getWalletTotalBalance(response.data.message))
+
+      // console.log(response.data.message)
+    
+    }
+    catch(err:any){
+      // ToastAndroid.show('Something went wrong fetching your balance. Try refreshing!', ToastAndroid.SHORT);
+
+      // console.log(err.response.data)
+    }
+   }
+
 
   const fetchWalletBalanceCoins = async () => {
     try {
@@ -118,7 +161,7 @@ const Wallet = () => {
   
   const onRefresh = async () => {
     setRefreshing(true);
-    await Promise.all([fetchWalletBalanceCoins()]);
+    await Promise.all([fetchWalletBalanceCoins(), getTotalWalletBalance()]);
     setRefreshing(false);
   };
 

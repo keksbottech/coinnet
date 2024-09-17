@@ -74,7 +74,7 @@ const SettingsScreen = () => {
 
   }
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <View style={styles.header}>
       {userData?.profileImage ? (
           <Image source={{ uri: userData.profileImage }} style={styles.image} />

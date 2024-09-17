@@ -4,9 +4,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import BottomDrawer from '../bottom drawer/BottomDrawer';
 import { getSelectedCurrencyData, getSelectedCurrencyFromData } from '@/lib/store/reducers/storeSelectedCurrency';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { ThemedText } from '../ThemedText';
 
 
-const currency = [
+const currencies = [
     { id: 1, name: 'Nigerian Naira', symbol: 'NGN', imageUrl: `https://flagsapi.com/NG/shiny/64.png`, balance:0 },
     { id: 2, name: 'American Dollars', symbol: 'USD', imageUrl: `https://flagsapi.com/US/shiny/64.png`, balance:0 },
     { id: 3, name: 'Ghanian Cedis', symbol: 'GHS', imageUrl: `https://flagsapi.com/GH/shiny/64.png`, balance:0 },
@@ -15,38 +17,53 @@ const currency = [
   ];
 
 
-const CurrencyBottomDrawerFromExchange = () => {
-  const [selectedCurrency, setSelectedCurrency] = useState(currency[0]);
+const CurrencyBottomDrawer = () => {
   const dispatch = useAppDispatch();
+  const fiatWalletBalance = useAppSelector(state => state.fiatWallet.fiatWalletBalance)
+  const [currency, setCurrency] = useState([])
+  const [selectedCurrency, setSelectedCurrency] = useState({ id: 1, name: 'Nigerian Naira', symbol: 'NGN', imageUrl: `https://flagsapi.com/NG/shiny/64.png`, balance:fiatWalletBalance?.balance?.NGN });
 
   useEffect(() => {
+    const updatedCurrency = currencies.map((curr) => {
+        // Check if the currency symbol exists in the userBalances object
+        if (fiatWalletBalance?.balance) {
+          return {
+            ...curr, // Spread the original object
+            balance: fiatWalletBalance.balance[curr.symbol] // Update the balance with data from the database
+          };
+        }
+        return curr; // Return the object unchanged if no matching balance is found
+      });
+
+      console.log(updatedCurrency)
+      setCurrency(updatedCurrency)
     dispatch(getSelectedCurrencyFromData(selectedCurrency));
     // setDisableDrawer(!disableDrawer);
-  }, [selectedCurrency]);
+  }, [selectedCurrency, fiatWalletBalance]);
 
   const handleSelectCurrency = (currency) => {
     setSelectedCurrency(currency);
   };
   
 
+
   return (
     <BottomDrawer
     enablePanDownToClose={true}
     ui={
     <View style={styles.container}>
-      <Text style={styles.title}>Currencies</Text>
+      <ThemedText style={styles.title}>Currencies</ThemedText>
       {
-        currency?.map(item =>  <TouchableOpacity 
-            key={item.id}
+        currency?.map(item =>  <TouchableOpacity key={item.id}
             style={[styles.currencyItem, selectedCurrency?.id === item.id && styles.selectedItem]} 
             onPress={() => handleSelectCurrency(item)}
           >
             <View style={styles.currencyInfo}>
               <Image source={{uri:item.imageUrl}} width={50} height={50}/>
-              <Text style={styles.currencyText}>{item.name}</Text>
+              <ThemedText style={styles.currencyText}>{item.name}</ThemedText>
             </View>
             <View style={styles.currencyValue}>
-              <Text style={styles.currencyAmount}>{item.symbol}{item.balance}</Text>
+              <ThemedText style={styles.currencyAmount}>{item.symbol} {parseFloat(item.balance).toFixed()}</ThemedText>
               <Ionicons 
                 name={selectedCurrency?.id === item.id ? 'radio-button-on' : 'radio-button-off'} 
                 size={24} 
@@ -113,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CurrencyBottomDrawerFromExchange;
+export default CurrencyBottomDrawer;

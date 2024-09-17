@@ -16,7 +16,7 @@ export const storeFiatWalletBalancesSlice = createSlice({
     getFiatWalletBalance: (state, action: PayloadAction<any>) => {
         state.fiatWalletBalance = action.payload
     }
-  },
+  }
 })
 
 // Action creators are generated for each case reducer function

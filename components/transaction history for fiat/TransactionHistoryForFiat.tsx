@@ -1,58 +1,33 @@
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image, ScrollView } from 'react-native';
 
-const transactions = [
-  {
-    id: '1',
-    type: 'payment',
-    name: 'Onyechere Chukwumeka Favour',
-    date: 'Aug 22 at 9:56 AM',
-    amount: '- ₦15,000.00',
-    status: 'Payment to Onyechere Chukwumeka Favour 4037 is complete',
-  },
-  {
-    id: '2',
-    type: 'incoming',
-    name: 'Chipper Account Number',
-    date: 'Aug 21 at 11:10 AM',
-    amount: '+ ₦10,000.00',
-    status: 'Incoming Payment to your Account Number 6074261341 - From FAVOUR CHUKWUMEKA ONYECHERE, 080*******37 via PayCom',
-  },
-  {
-    id: '3',
-    type: 'failed',
-    name: 'Data purchase failed',
-    date: 'Aug 21 at 1:29 AM',
-    amount: '₦350.00',
-    status: 'Data purchase failed',
-  },
-  {
-    id: '4',
-    type: 'failed',
-    name: 'Data purchase failed',
-    date: 'Aug 21 at 1:28 AM',
-    amount: '₦350.00',
-    status: 'Data purchase failed',
-  },
-  {
-    id: '5',
-    type: 'message',
-    name: 'You received a message',
-    date: 'Aug 19 at 11:13 AM',
-    status: 'Your Chipper Virtual Card ending in 9069 has been deactivated.',
-  },
-  {
-    id: '6',
-    type: 'withdrawal',
-    name: 'Withdrawal from card',
-    date: 'Aug 19 at 11:13 AM',
-    amount: '$0.27',
-    status: 'Withdrawing all funds before permanently revoking card qGfbmb',
-  },
-];
-
 const TransactionItem = ({ item }) => {
+    const userData = useAppSelector(state => state.user.user)
+
+    function formatDateAndTime(dateString:any) {
+        const date = new Date(item.createdAt);
+        
+        // Format the date as DD-MM-YYYY
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        const formattedDate = `${day}-${month}-${year}`;
+        
+        // Format the time as HH:MM
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const formattedTime = `${hours}:${minutes}`;
+        
+        return {
+            formattedDate,
+            formattedTime
+        };
+      }
+      
+
+
   return (
     <View style={styles.transactionItem}>
       <View style={styles.iconContainer}>
@@ -61,22 +36,28 @@ const TransactionItem = ({ item }) => {
         </View>
       </View>
       <View style={styles.transactionDetails}>
-        <Text style={styles.transactionName}>{item.name}</Text>
-        <Text style={styles.transactionDate}>{item.createdAt}</Text>
-        <Text style={styles.transactionStatus}>{item.details}</Text>
+        <Text style={styles.transactionName}>{userData._id === item.receiverIdForTransfer ? 'You just got a payment':item.name}</Text>
+        <Text style={styles.transactionDate}>Date: {formatDateAndTime().formattedDate} Time: {formatDateAndTime().formattedTime} </Text>
+        <Text style={styles.transactionStatus}>{userData._id === item.receiverIdForTransfer  ? item.receiverNote:item.details}</Text>
       </View>
       {item.amount && <Text style={styles.transactionAmount}> {
-      item.transactionType === 'transfer' ? `-₦${parseFloat(item.amount).toFixed()}` : item.transactionType === 'deposit' ? `+₦${parseFloat(item.amount).toFixed()}`: item.transactionType === 'coin topup' ? `-₦${parseFloat(item.amount).toFixed()}` : `₦${parseFloat(item.amount).toFixed()}`}</Text>}
+      item.transactionType === 'transfer' ? userData._id === item.receiverIdForTransfer  ? `+₦${parseFloat(item.amount).toFixed()}` : `-₦${parseFloat(item.amount).toFixed()}` : item.transactionType === 'deposit' ? `+₦${parseFloat(item.amount).toFixed()}`: item.transactionType === 'coin topup' ? `-₦${parseFloat(item.amount).toFixed()}` : `₦${parseFloat(item.amount).toFixed()}`}</Text>}
     </View>
   );
 };
 
 const TransactionHistoryForFiat = () => {
     const transactionHistoryForFiat = useAppSelector(state => state.transactionHistory.transactionHistoryForFiat)
+
+    console.log(transactionHistoryForFiat, 'k')
   return (
     <View style={styles.container}>
         {
-            transactionHistoryForFiat?.map(item => <TransactionItem key={item._id} item={item} />)
+          transactionHistoryForFiat &&  transactionHistoryForFiat.length > 0 ?  transactionHistoryForFiat?.map(item => <TransactionItem key={item._id} item={item} />):
+            <View style={styles.noTransactionContainer}>
+        <FontAwesome5 name="search" size={50} color="gray" />
+        <Text style={styles.noTransactionText}>No transactions found</Text>
+      </View> 
         }
     </View>
   );
@@ -132,6 +113,17 @@ const styles = StyleSheet.create({
   transactionAmount: {
     fontSize: 16,
     fontFamily:'MonsterBold'
+  },
+  noTransactionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:100
+  },
+  noTransactionText: {
+    color: 'gray',
+    fontSize: 18,
+    marginTop: 20,
   },
 });
 

@@ -15,6 +15,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { ThemedText } from '@/components/ThemedText';
 import CurrencyBottomDrawer from '@/components/currency bottom drawer/CurrencyBottomDrawer';
+import { getTransactionWebviewFallback } from '@/lib/store/reducers/storeTransferDetails';
 
 const PayWithFlutterwaveScreen = () => {
   const router = useRouter();
@@ -58,6 +59,7 @@ const PayWithFlutterwaveScreen = () => {
 
       dispatch(getPaymentUrl(response.data.message.data.link));
 
+      dispatch(getTransactionWebviewFallback('fiat'))
       router.push('/(other)/webview');
     } catch (err) {
       ToastAndroid.show('Failed to initalize payment! Try again', ToastAndroid.SHORT);

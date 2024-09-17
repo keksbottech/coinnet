@@ -16,7 +16,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { FontAwesome, Ionicons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
@@ -30,7 +30,8 @@ import { getTransactionData } from '@/lib/store/reducers/storeTransactionAuthent
 import Loading from '@/components/loading/Loading';
 import { ThemedText } from '@/components/ThemedText';
 import io from 'socket.io-client'
-
+import { getTransactionFallback } from '@/lib/store/reducers/storeTransferDetails';
+import axiosBase from 'axios'
 
 type Message = {
   _id: string;
@@ -76,7 +77,8 @@ const ChatScreen = ({
   const [escrowId, setEscrowId] = useState('')
   const pollingIntervalForEscrow = useRef<any>(null);
   const marketStoredData = useAppSelector(state => state.market.marketData); // Assuming the state is stored here
-
+  const [ngnRate, setNgnRate] = useState(null)
+  
   useEffect(() => {
     const fetchMessages = async () => {
       try{
@@ -103,10 +105,9 @@ const ChatScreen = ({
     fetchMessages()
   },[])
 
-
   useEffect(() => {
     // Initialize the socket
-   socket = io('https://81f0-2c0f-f5c0-44e-f94b-a45a-197f-c65b-d40b.ngrok-free.app', {
+   socket = io('https://coinnet-server.onrender.com', {
     query: {
       userId: userData._id
     }
@@ -183,9 +184,12 @@ const fetchEscrowId = async() =>{
     setEscrowId(response.data.message.escrowId[0])
 
     if(escrowId){
-    const escrowData =  await axios.post('escrow/check/status', {escrowId})
+    const [escrowData, ngnRateResponse] =  await Promise.all([
+      axios.post('escrow/check/status', {escrowId}),
+      axiosBase.get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json')
+    ])
     setP2pNegotiateData(escrowData.data.message)
-    
+    setNgnRate(ngnRateResponse.data.usd.ngn)
     console.log(escrowData.data, 'escrow main dara')
 
     }
@@ -391,20 +395,24 @@ const fetchEscrowId = async() =>{
 
   const buyerVerifiesMoneyIsTransferred = async () => {
     try{
-      setIsLoading(true)
-      setIsSocketInitialized((prev) => !prev);
-      const body = {
-        escrowId,
-        userId: userData._id
-      }
+
+      dispatch(getTransactionFallback({name:'p2p transaction', chatId: id}))
+
+      router.push('/(other)/transferinput')
+      // setIsLoading(true)
+      // setIsSocketInitialized((prev) => !prev);
+      // const body = {
+      //   escrowId,
+      //   userId: userData._id
+      // }
       
-      console.log(body, 'body')
+      // console.log(body, 'body')
 
-      const updateEscrow = await axios.post('escrow/pend', body)
+      // const updateEscrow = await axios.post('escrow/pend', body)
 
-      console.log(updateEscrow)
+      // console.log(updateEscrow)
 
-      Alert.alert('Awaiting seller to confirm payment!');
+      // Alert.alert('Awaiting seller to confirm payment!');
     }
     catch(err){
       ToastAndroid.show('Something went wrong sending request! Try again', ToastAndroid.SHORT);
@@ -537,7 +545,7 @@ const fetchEscrowId = async() =>{
             <Image source={{ uri: receiverImage }} style={styles.profileImage} />
           ) : (
             <View style={styles.initialsContainer}>
-              <ThemedText style={styles.initials}>{receiverName[0]}</ThemedText>
+              <ThemedText style={styles.initials}>{fullname && fullname[0]}</ThemedText>
             </View>
           )}
 
@@ -546,15 +554,15 @@ const fetchEscrowId = async() =>{
           {
   // Check if the current user is the buyer
   buyer ? (
-    <TouchableOpacity onPress={buyerVerifiesMoneyIsTransferred}>
-      <ThemedText style={{ fontFamily: 'MonsterReg', fontSize: 12 }}>
-        Click if money has been paid
+    <TouchableOpacity style={styles.buyer} onPress={buyerVerifiesMoneyIsTransferred}>
+      <ThemedText style={{ fontFamily: 'MonsterReg', fontSize: 12, color:'white' }}>
+        Click to make payment
       </ThemedText>
     </TouchableOpacity>
   ) : (
     // Otherwise, the current user is the seller
-    <TouchableOpacity onPress={sellerVerifiesPayment}>
-      <ThemedText style={{ fontFamily: 'MonsterReg', fontSize: 12 }}>
+    <TouchableOpacity style={styles.seller} onPress={sellerVerifiesPayment}>
+      <ThemedText style={{ fontFamily: 'MonsterReg', fontSize: 12,  color:'white' }}>
         Confirm payment
       </ThemedText>
     </TouchableOpacity>
@@ -576,7 +584,7 @@ const fetchEscrowId = async() =>{
         receiverName={fullname}
         // handleCopy={handleCopy}
       />}
- <ThemedText style={styles.label}>Buyer intends to buy {p2pNegotiateData?.fiatAmount / getCoinData(p2pNegotiateData?.coin)?.RAW.USD.PRICE} quantity of {p2pNegotiateData?.coin} which is worth ${parseFloat(p2pNegotiateData?.fiatAmount).toFixed(2)}. Buyer should confirm money have been sent and seller should confim money have been received by clicking the button above. Dispute should be sent for false transactions.
+ <ThemedText style={styles.label}>Buyer intends to buy {p2pNegotiateData?.fiatAmount / getCoinData(p2pNegotiateData?.coin)?.RAW.USD.PRICE} quantity of {p2pNegotiateData?.coin} which is worth ${parseFloat(p2pNegotiateData?.fiatAmount).toFixed(2)} ≈ ₦{ngnRate && (parseFloat(ngnRate*p2pNegotiateData?.fiatAmount).toFixed())}. Buyer should confirm money have been sent and seller should confim money have been received by clicking the button above. Dispute should be sent for false transactions.
  </ThemedText>
         <FlatList
           ref={flatListRef}
@@ -742,6 +750,18 @@ const styles = StyleSheet.create({
     fontFamily:'MonsterBold',
     textAlign:'center',
     padding:5
+  },
+  buyer:{
+    backgroundColor:'orangered',
+    color:'white',
+    padding:10,
+    borderRadius:30
+  },
+  seller:{
+    backgroundColor:'orangered',
+    color:'white',
+    padding:10,
+    borderRadius:30 
   }
 });
 

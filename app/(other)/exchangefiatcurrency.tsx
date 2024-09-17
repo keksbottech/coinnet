@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -12,6 +12,9 @@ import axiosBase from 'axios';
 import { axios } from '@/lib/axios';
 import Loading from '@/components/loading/Loading';
 import { ThemedText } from '@/components/ThemedText';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useFocusEffect } from '@react-navigation/native';
+import { getSelectedCurrencyFromData, getSelectedCurrencyToData } from '@/lib/store/reducers/storeSelectedCurrency';
 
 const CurrencyExchange = () => {
   const [exchangeRates, setExchangeRates] = useState({}); // Store all exchange rates
@@ -31,6 +34,8 @@ const CurrencyExchange = () => {
   const selectedCurrencyFrom = useAppSelector(state => state.selectedCurrency.selectedCurrencyFrom);
   const theme = useAppSelector(state => state.theme.theme);
   const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useAppDispatch()
+  const fiatWalletBalance = useAppSelector(state => state.fiatWallet.fiatWalletBalance)
 
 
   // Watch the form fields we want to observe for live updates
@@ -38,6 +43,10 @@ const CurrencyExchange = () => {
   const fromCurrency = selectedCurrencyFrom?.symbol;
   const toCurrency = selectedCurrencyTo?.symbol;
 
+  useEffect(() => {
+   dispatch(getSelectedCurrencyToData({ id: 3, name: 'Ghanian Cedis', symbol: 'GHS', imageUrl: `https://flagsapi.com/GH/shiny/64.png`, balance:fiatWalletBalance?.balance?.GHS  }))
+   dispatch(getSelectedCurrencyFromData({ id: 1, name: 'Nigerian Naira', symbol: 'NGN', imageUrl: `https://flagsapi.com/NG/shiny/64.png`, balance:fiatWalletBalance?.balance?.NGN }))
+    }, [])
   // Fetch exchange rate data once when the component mounts
   useEffect(() => {
     const fetchExchangeRates = async () => {
@@ -60,7 +69,7 @@ const CurrencyExchange = () => {
   useEffect(() => {
     console.log(exchangeRates , 'exchange rate')
     if (fromCurrency && toCurrency && exchangeRates) {
-      const rate = exchangeRates[selectedCurrencyFrom.symbol.toLowerCase()]?.[toCurrency.toLowerCase()];
+      const rate = exchangeRates[selectedCurrencyFrom?.symbol.toLowerCase()]?.[toCurrency.toLowerCase()];
 
       console.log(rate,'rate')
       setExchangeRate(rate || 1);  // Set the exchange rate or default to 1 if undefined
@@ -85,6 +94,8 @@ const CurrencyExchange = () => {
     setIsBottomDrawerFromEnabled(!isBottomDrawerFromEnabled);
   };
 
+  console.log(selectedCurrencyFrom, 'from')
+  console.log(selectedCurrencyTo, 'to')
   const convertCurrency = async(data) =>{
     try{
         setIsLoading(true)
@@ -112,7 +123,7 @@ const CurrencyExchange = () => {
   return (
     <>
     {isLoading && <Loading/>}
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         <PageHeader
           icon={<FontAwesome name="angle-left" size={24} color={theme ? 'white' : 'black'} />}
           label={<ThemedText style={styles.headerText}>Exchange Fiat</ThemedText>}

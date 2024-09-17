@@ -16,6 +16,7 @@ import SelectCoinsToDepositDrawer from '@/components/select coin/SelectCoinToDep
 import { ThemedText } from '@/components/ThemedText';
 import { Image } from 'react-native';
 import CurrencyBottomDrawer from '@/components/currency bottom drawer/CurrencyBottomDrawer';
+import { getTransactionWebviewFallback } from '@/lib/store/reducers/storeTransferDetails';
 
 const PayWithPaypalScreen = () => {
   const router = useRouter();
@@ -62,6 +63,7 @@ const PayWithPaypalScreen = () => {
 
       dispatch(getPaymentUrl(response.data.message));
 
+      dispatch(getTransactionWebviewFallback('fiat'))
       router.push('/(other)/webview')
     } catch (err) {
       ToastAndroid.show('Failed to initialize payment! Try again', ToastAndroid.SHORT);

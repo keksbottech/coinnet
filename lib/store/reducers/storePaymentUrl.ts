@@ -25,8 +25,8 @@ export const storePaymentUrlSlice = createSlice({
   },
   getPaymentBanks: (state, action: PayloadAction<any>) => {
     state.paymentBank = action.payload
-},
-  },
+}
+  }
 })
 
 // Action creators are generated for each case reducer function

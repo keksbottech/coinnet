@@ -31,13 +31,29 @@ const HistoryPage = () => {
   const fetchTransactionHistoryForFiat =async () =>{
     try{
        setIsLoading(true)
-       const response = await axios.get(`transaction-history-fiat/${userData._id}`)
+       const [responseForMainTransactionHistory, responseForRecievedTransferTransaction] = await Promise.all([
+        axios.get(`transaction-history-fiat/${userData._id}`),
+        axios.post(`transaction-history-fiat/receiver`, {receiverId: userData._id})
+       ])
 
-       dispatch(getTransactionHistoryForFiat(response.data.transactions))
+       const mergedTransactions = [
+        ...responseForMainTransactionHistory.data.message,
+         ...responseForRecievedTransferTransaction.data.message
+       ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+
+
+    
+       console.log('logg')
+       dispatch(getTransactionHistoryForFiat(mergedTransactions))
     }
     catch(err){
 
       console.log(err)
+      if(err.response.data.message === 'No transfer fiat for receiver'){
+        const responseForMainTransactionHistory = await axios.get(`transaction-history-fiat/${userData._id}`)
+        
+       dispatch(getTransactionHistoryForFiat(responseForMainTransactionHistory.data.message))
+      }
     }
     finally{
   setIsLoading(false)
@@ -79,10 +95,7 @@ showsVerticalScrollIndicator={false}>
   <View style={{alignItems:'center'}}>
 {isLoading && <Wave size={40} color={theme ? 'white': 'black'}/>}
 </View>
-      {/* <View style={styles.noTransactionContainer}>
-        <FontAwesome5 name="search" size={50} color="gray" />
-        <Text style={styles.noTransactionText}>No transactions found</Text>
-      </View> */}
+
       <TransactionHistoryForFiat/>
       </ScrollView>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ToastAndroid, ScrollView } from 'react-native';
 import { ThemedText } from '../ThemedText';
 import { TouchableOpacity } from 'react-native';
@@ -13,7 +13,8 @@ import Button from '../ui/button/Button';
 import Loading from '../loading/Loading';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PageHeader from '../page header/PageHeader';
-import { getTransactionDetails } from '@/lib/store/reducers/storeTransferDetails';
+import { getTransactionDetails, getTransactionFallback } from '@/lib/store/reducers/storeTransferDetails';
+import { useFocusEffect } from '@react-navigation/native';
 
 const TransferInput = () => {
   const selectedCoin = useAppSelector((state) => state.selectedCoin.selectedCoin);
@@ -36,6 +37,8 @@ const TransferInput = () => {
     },
   });
   const userName = watch('receiverName', '')
+
+
 
   // Toggle Bottom Drawer
   const enableBottomDrawer = () => {
@@ -75,7 +78,12 @@ const TransferInput = () => {
     }
     catch(err){
       console.log(err.response.data)
-      ToastAndroid.show('User not found!', ToastAndroid.SHORT);
+      if(err.response.data.message === 'User does not exist'){
+        ToastAndroid.show('User not found!', ToastAndroid.SHORT);
+      }
+      else{
+        ToastAndroid.show('Something went wrong! Server Error', ToastAndroid.SHORT);
+      }
 
     }
     finally{
@@ -87,7 +95,7 @@ const TransferInput = () => {
     <>
     {isLoading && <Loading/>}
 
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
         {/* <ScrollView style={{flex:1}}> */}
         <PageHeader
         icon={<FontAwesome name="angle-left" size={24} color={theme ?"white":'black' }/>}
@@ -148,11 +156,11 @@ const TransferInput = () => {
               name="receiverName"
               render={({ field: { onChange, value } }) => (
                 <TextInput
-                  style={styles.input}
                   onChangeText={onChange}
                   value={value}
                   placeholder="Receiver name appears here"
                   readOnly
+                  style={[styles.input, { color: theme ? 'white' : 'black' }]}
                 />
               )}
             />
@@ -166,7 +174,7 @@ const TransferInput = () => {
               name="note"
               render={({ field: { onChange, value } }) => (
                 <TextInput
-                  style={styles.input}
+                style={[styles.input, { color: theme ? 'white' : 'black' }]}
                   onChangeText={onChange}
                   value={value}
                   placeholder="Optional description"

@@ -12,10 +12,10 @@ const SelectCoinsToDepositDrawer = () => {
   const marketStoredData = useAppSelector(state => state.market.marketData)
 
   
-  const btcData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BTC');
-  const ethData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'ETH');
-  const usdCData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'USDC');
-  const bnbData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BNB');
+  const btcData = marketStoredData?.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BTC');
+  const ethData = marketStoredData?.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'ETH');
+  const usdCData = marketStoredData?.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'USDC');
+  const bnbData = marketStoredData?.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'BNB');
   // const solData = marketStoredData.find((coin: { CoinInfo: { Name: string; }; }) => coin.CoinInfo.Name === 'SOL');
 
   const coins = [
@@ -55,7 +55,7 @@ const SelectCoinsToDepositDrawer = () => {
               </View>
               {selectedMethod?.name === method.name && (
                 <MaterialIcons name="check-circle" size={24} color="green" />
-              )}
+              )}router.push('/(tabs)/wallet')
             </TouchableOpacity>
           ))}
         </View>

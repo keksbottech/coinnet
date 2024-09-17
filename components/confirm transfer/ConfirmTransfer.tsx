@@ -11,22 +11,32 @@ const ConfirmTransfer = () => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const transactionDetails = useAppSelector(state => state.transactionDetails.transactionDetails)
+  const transactionFallback = useAppSelector(state => state.transactionDetails.transactionFallback)
 
+ 
   console.log(transactionDetails)
 
   const sendCoinToUser = async (data: any) => {
     try {
       setIsLoading(true);
 
+      
+      console.log(transactionFallback, 'fallback')
+
       const response = await axios.post('wallets/send/fiat', transactionDetails);
 
       ToastAndroid.show('Transaction successful!', ToastAndroid.SHORT);
 
       setTimeout(() => {
-        router.push('/(fiattabs)');
+        if(transactionFallback?.name === 'p2p transaction'){
+          router.push(`/(trade)/chats/${transactionFallback?.chatId}`)
+        }
+        else{
+          router.push('/(fiattabs)');
+        }
       }, 2000);
 
-      console.log(response.data); // Handle the response as needed
+      // console.log(response.data); // Handle the response as needed
     } catch (err) {
       if (err.response.data.message === 'Receiver wallet not found') {
         ToastAndroid.show('Receiver wallet address not found!', ToastAndroid.SHORT);
@@ -77,8 +87,7 @@ const ConfirmTransfer = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
+    padding: 10,
   },
   row: {
     flexDirection: 'row',
@@ -90,12 +99,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#555',
     fontFamily:'MonsterBold'
   },
   value: {
     fontSize: 16,
-    color: '#000',
     fontFamily:'MonsterReg'
   },
   bold: {
