@@ -32,12 +32,12 @@ const defaultStyles = StyleSheet.create({
     backgroundColor: 'yellow',
     borderRadius: 10,
     position: 'absolute',
-    bottom: 30,
-    color:'white'
+    bottom: 0,
+    color:'white',
   },
   text: {
     fontFamily: 'MonsterBold',
     fontSize: 18, // Added font size to match text-xl
-   color:'white'
+   color:'black'
   },
 });

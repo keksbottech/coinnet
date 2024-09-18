@@ -1,3 +1,4 @@
+import 'expo-dev-client';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -16,12 +17,51 @@ import { Users } from '@tamagui/lucide-icons';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 import { getThemeData } from '@/lib/store/reducers/storeTheme';
+import io from 'socket.io-client'
+// import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo'
+
+// import * as SecureStore from 'expo-secure-store'
+
+// const tokenCache = {
+//   async getToken(key: string) {
+//     try {
+//       const item = await SecureStore.getItemAsync(key)
+//       if (item) {
+//         console.log(`${key} was used 🔐 \n`)
+//       } else {
+//         console.log('No values stored under key: ' + key)
+//       }
+//       return item
+//     } catch (error) {
+//       console.error('SecureStore get item error: ', error)
+//       await SecureStore.deleteItemAsync(key)
+//       return null
+//     }
+//   },
+//   async saveToken(key: string, value: string) {
+//     try {
+//       return SecureStore.setItemAsync(key, value)
+//     } catch (err) {
+//       return
+//     }
+//   },
+// }
+
+let socket;
+
 
 SplashScreen.preventAutoHideAsync();
 
+// export interface TokenCache {
+//   getToken: (key: string) => Promise<string | undefined | null>
+//   saveToken: (key: string, token: string) => Promise<void>
+//   clearToken?: (key: string) => void
+// }
 // export const unstable_settings = {
 //   initialRouteName: '(tabs)',
 // };
+// const publishableKey = 'pk_test_YWxsb3dlZC10YWhyLTc1LmNsZXJrLmFjY291bnRzLmRldiQ'
+
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -61,8 +101,11 @@ export function SessionHandler({layoutReady, isDarkMode, setIsDarkMode}:any) {
   const userSession = useAppSelector((state) => state.session.session);
   const dispatch = useAppDispatch()
   const theme = useAppSelector(state => state.theme.theme)
+  const userData = useAppSelector(state => state.user.user)
+
 
   if (layoutReady) {
+
     useEffect(() => {
       dispatch(getThemeData(theme))
     setIsDarkMode(theme)
@@ -90,6 +133,42 @@ export function SessionHandler({layoutReady, isDarkMode, setIsDarkMode}:any) {
   
       checkSession();
     }, [userSession, isSessionChecked]);  
+
+
+    useEffect(() => {
+      // Initialize the socket connection if user data or session exists
+      if (userData?._id) {
+        socket = io('https://80b9-105-113-12-52.ngrok-free.app', {
+          query: {
+            userId: userData._id
+          }
+        });
+  
+        const userOnlineData = {
+          userId: userData._id
+        };
+  
+        // Emit user online when connected
+        socket.emit('userOnline', userOnlineData);
+  
+        // Handle socket disconnection
+        socket.on('disconnect', () => {
+          socket.emit('userOffline', { userId: userData._id }); // Inform server about the disconnection
+        });
+
+        const heartbeatInterval = setInterval(() => {
+          socket.emit('heartbeat', { userId: userData._id });
+        }, 10000); // 10 seconds, for example
+        
+  
+        // Cleanup function to properly handle disconnection
+        return () => {
+          clearInterval(heartbeatInterval);
+          socket.disconnect(); // Properly disconnect the socket when component unmounts
+        };
+      }
+    }, [userData, userSession, router]);
+
 
   return (
     <Stack>

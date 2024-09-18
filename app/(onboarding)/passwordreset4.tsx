@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { BackHandler, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import Button from '@/components/ui/button/Button';
@@ -9,10 +9,25 @@ import ShieldImage from '@/assets/svg/shield.svg';
 import { useRouter } from 'expo-router';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { ThemedText } from '@/components/ThemedText';
+import { useFocusEffect } from '@react-navigation/native';
 
 const PasswordReset4 = () => {
   const router = useRouter();
   const theme = useAppSelector(state => state.theme.theme)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
 
   const navigateToHome = () => {
     router.push('/(tabs)/');

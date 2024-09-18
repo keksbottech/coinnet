@@ -173,7 +173,7 @@ const fetchEscrowId = async() =>{
       receiverId: id
     }
 
-    console.log(escrowId, 'escrow id')
+    // console.log(escrowId, 'escrow id')
 
     const a = {
       escrowId

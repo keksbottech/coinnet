@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { BackHandler, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Feather from '@expo/vector-icons/Feather';
 import Button from '@/components/ui/button/Button';
@@ -7,10 +7,24 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import { useFocusEffect } from '@react-navigation/native';
 
 const AllDoneAccountCreation = () => {
   const router = useRouter();
   const theme = useAppSelector(state => state.theme.theme)
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const onBackPress = () => {
+  //       // Prevent back navigation
+  //       return true;
+  //     };
+
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+  //     return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //   }, [])
+  // );
 
   const navigateToPasswordReset = () => {
     router.push('/(tabs)');

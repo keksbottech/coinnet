@@ -36,11 +36,11 @@ const WithdrawConfirmationForFiat = () => {
 }
       <View style={styles.row}>
         <ThemedText style={styles.label}>Withdrawal Amount</ThemedText>
-        <ThemedText style={styles.value}>${withdrawData.amount}</ThemedText>
+        <ThemedText style={styles.value}>₦{withdrawData.amount}</ThemedText>
       </View>
       <View style={styles.row}>
         <ThemedText style={styles.label}>Transaction Fee (2%)</ThemedText>
-        <ThemedText style={styles.value}>$8.0</ThemedText>
+        <ThemedText style={styles.value}>₦8.0</ThemedText>
       </View>
       <View style={styles.row}>
         <ThemedText style={styles.label}>Total Withdrawal Amount</ThemedText>

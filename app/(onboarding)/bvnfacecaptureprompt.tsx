@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ToastAndroid, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ToastAndroid, Image, ActivityIndicator, BackHandler, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
@@ -7,6 +7,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import * as ImagePicker from 'expo-image-picker';
 import Button from '@/components/ui/button/Button';
 import BvnFaceImage from '@/assets/svg/facecaputure.svg';
+import { useFocusEffect } from '@react-navigation/native';
 
 const BvnFaceCapture = () => {
   const router = useRouter();
@@ -14,6 +15,19 @@ const BvnFaceCapture = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
 
   // Open Camera using Image Picker
   const openCamera = async () => {
@@ -91,23 +105,18 @@ const BvnFaceCapture = () => {
           accessories such as glasses or hats before taking the photo.
         </ThemedText>
 
-        <Button onClick={openCamera} label="Open Camera" />
 
         {/* Show selected image */}
         {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
 
-        {/* Upload image button */}
-        {imageUri && (
+ 
           <Button
-            onClick={() => uploadImage(imageUri)}
-            label={isLoading ? 'Uploading...' : 'Upload Image'}
-            disabled={isLoading}
+            onClick={openCamera}
+            label='Open Camera'
           />
-        )}
 
         {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
 
-        <Button onClick={openCamera} label="Continue" />
       </View>
     </SafeAreaView>
   );

@@ -18,6 +18,8 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import Loading from '@/components/loading/Loading';
 import Toast from 'react-native-toast-message';
 import { ThemedText } from '@/components/ThemedText';
+import { useFocusEffect } from '@react-navigation/native';
+import { BackHandler } from 'react-native';
 
 const PasswordReset3 = () => {
   const [isFingerprintEnabled, setIsFingerprintEnabled] = useState(false);
@@ -37,6 +39,20 @@ const PasswordReset3 = () => {
       confirmPassword: '',
     },
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
 
   const password = watch('password');
 

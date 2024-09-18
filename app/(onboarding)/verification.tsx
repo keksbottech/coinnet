@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform
+} from 'react-native';
 import PageHeader from '@/components/page header/PageHeader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -13,6 +23,8 @@ import { getUserOtpId } from '@/lib/store/reducers/storeUserInfo';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import Button from '@/components/ui/button/Button';
 import { ThemedText } from '@/components/ThemedText';
+import { BackHandler } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Verification = () => {
   const router = useRouter();
@@ -24,12 +36,25 @@ const Verification = () => {
       code: '',
     },
   });
-  const theme = useAppSelector(state => state.theme.theme)
+  const theme = useAppSelector(state => state.theme.theme);
   const [otpId, setOtpId] = useState('');
 
   useEffect(() => {
     sendPhoneConfirmationOtpToValidate();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
 
   const formatPhoneNumber = () => {
     return userData?.phone.replace(/(\d{2})(\d{4})(\d{2})/, '$1 xxxx xx$3');
@@ -103,55 +128,64 @@ const Verification = () => {
     }
   };
 
-  
+  const navigateToSupport = () => {
+    router.push('/(other)/support');
+  };
 
   return (
     <>
       {isLoading && <Loading />}
-      <SafeAreaView style={[styles.safeArea,  {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
-        <View style={styles.container}>
-          <PageHeader />
-          <Toast />
-          <View style={styles.content}>
-            <ThemedText style={styles.title}>Enter the 7-digit code we texted to {formatPhoneNumber()}</ThemedText>
-            <ThemedText style={styles.text}>This extra step shows it's really you trying to sign in</ThemedText>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme ? '#0F0F0F' : 'white' }]}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.container}>
+              <PageHeader />
+              <Toast />
+              <View style={styles.content}>
+                <ThemedText style={styles.title}>Enter the 6-digit code we texted to {formatPhoneNumber()}</ThemedText>
+                <ThemedText style={styles.text}>This extra step shows it's really you trying to sign in</ThemedText>
 
-            <Controller
-              control={control}
-              rules={{
-                required: 'Verification code is required',
-                pattern: {
-                  value: /^[0-9]{6}$/,
-                  message: 'Code must be 6 digits',
-                },
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={[styles.input, errors.code && styles.inputError,  {color:theme ? 'white': 'black'}]}
-                  placeholder='******'
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  keyboardType='numeric'
+                <Controller
+                  control={control}
+                  rules={{
+                    required: 'Verification code is required',
+                    pattern: {
+                      value: /^[0-9]{6}$/,
+                      message: 'Code must be 6 digits',
+                    },
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      style={[styles.input, errors.code && styles.inputError, { color: theme ? 'white' : 'black' }]}
+                      placeholder='******'
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      keyboardType='numeric'
+                    />
+                  )}
+                  name="code"
                 />
-              )}
-              name="code"
-            />
-            {errors.code && <ThemedText style={styles.errorText}>{errors.code.message}</ThemedText>}
-          </View>
+                {errors.code && <ThemedText style={styles.errorText}>{errors.code.message}</ThemedText>}
+              </View>
 
-          <View style={styles.footer}>
-            <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.buttonSubmit}>
-              <ThemedText style={styles.buttonText}>Submit</ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={sendPhoneConfirmationOtpToValidate} style={styles.buttonSubmit}>
-              <ThemedText style={styles.buttonText}>Resend Code</ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonHelp}>
-              <ThemedText style={styles.buttonText}>I need help</ThemedText>
-            </TouchableOpacity>
-          </View>
-        </View>
+              <View style={styles.footer}>
+                <TouchableOpacity onPress={handleSubmit(onSubmit)} style={styles.buttonSubmit}>
+                  <ThemedText style={styles.buttonText}>Submit</ThemedText>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={sendPhoneConfirmationOtpToValidate} style={styles.buttonSubmit}>
+                  <ThemedText style={styles.buttonText}>Resend Code</ThemedText>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.buttonHelp} onPress={navigateToSupport}>
+                  <ThemedText style={styles.buttonText}>I need help</ThemedText>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </>
   );
@@ -161,16 +195,19 @@ export default Verification;
 
 const styles = StyleSheet.create({
   safeArea: {
-    padding: 10,
-    justifyContent: 'space-between',
-    flexDirection: 'column',
     flex: 1,
+    padding: 10,
   },
   container: {
     flex: 1,
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 20, // Add padding to ensure content is visible above keyboard
+  },
   content: {
     marginTop: 20,
+    flex: 1,
   },
   title: {
     fontSize: 24,
@@ -200,18 +237,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   footer: {
-    position: 'absolute',
-    bottom: 20,
-    width: '100%',
+    marginTop: 20,
   },
   buttonSubmit: {
     width: '100%',
     paddingVertical: 20,
-    backgroundColor: '#F9C74F', // equivalent to bg-yellow-300
+    backgroundColor: 'yellow', // equivalent to bg-yellow-300
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    marginTop:10
+    marginTop: 10,
   },
   buttonHelp: {
     width: '100%',

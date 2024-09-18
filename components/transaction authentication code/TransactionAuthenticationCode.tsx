@@ -236,6 +236,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'relative',
+    bottom:30
   },
   resendButton: {
     position: 'relative',

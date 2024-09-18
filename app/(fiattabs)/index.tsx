@@ -1,4 +1,4 @@
-import { Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { BackHandler, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import PageHeader from '@/components/page header/PageHeader'
@@ -35,6 +35,23 @@ const [isLoading, setIsLoading] = useState(false)
 const [isBottomCurrencyDrawerEnabled, setIsBottomCurrencyDrawerEnabled] = useState(false)
 const selectedCurrency = useAppSelector(state => state.selectedCurrency.selectedCurrency)
 const toggleBalanceShown = useAppSelector(state => state.toggle.toggleBalanceShown)
+
+
+useFocusEffect(
+  React.useCallback(() => {
+    const onBackPress = () => {
+      // Prevent back navigation
+      return true;
+    };
+
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  }, [])
+);
+
+
+
 useFocusEffect(
   useCallback(() =>{
     dispatch(getTransactionFallback(null))

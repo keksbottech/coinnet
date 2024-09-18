@@ -1,5 +1,5 @@
 import { FlatList, View, Text, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';
@@ -21,6 +21,10 @@ import { RefreshControl } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ToastAndroid } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
+import io from 'socket.io-client'
+import TransactionAuthenticationCode from '@/components/transaction authentication code/TransactionAuthenticationCode';
+
+let socket;
 
 const P2PPage = () => {
     const router = useRouter();
@@ -31,7 +35,8 @@ const P2PPage = () => {
     const [refreshing, setRefreshing] = useState(false)
     const theme = useAppSelector(state => state.theme.theme)
     const [disableBackPress, setDisableBackPress] = useState(true)
-
+    const userData = useAppSelector(state => state.user.user)
+    const [socketInitialized, setSocketInitialized] = useState(false)
 
 
     console.log(selectedCoin,'selected')
@@ -52,6 +57,41 @@ const P2PPage = () => {
     }, [disableBackPress])
   );
 
+  
+  useFocusEffect(
+    useCallback(() => {
+      // Ensure the socket is initialized
+      setIsLoading(true)
+      socket = io('https://coinnet-server.onrender.com', {
+        query: {
+          userId: userData._id
+        }
+      });
+  
+      const userOnlineData = {
+        userId: userData._id
+      };
+  
+      // Emit the request to check seller online status
+      socket.emit('checkSellerOnlineStatus', userOnlineData);
+  
+      // Listen for the response from the server
+      socket.on('onlineSellersOrders', (message) => {
+        console.log(message, 'online sellers orders');
+        dispatch(getOrdersData(message));
+      });
+  
+      socket.on('isLoading', (message) => {
+        console.log(message, 'isLoading online sellers orders');
+        setIsLoading(message.isLoading)
+      });
+      
+      return () => {
+        socket.disconnect(); // Cleanup when component unmounts
+      };
+    }, [userData, socketInitialized])
+  );
+  
 
 
     useEffect(() => {
@@ -59,20 +99,19 @@ const P2PPage = () => {
     }, [])
 
 
-    
-    useEffect(() => {
-      if (selectedCoin === 'ALL') {
-        fetchAllOrders();
-      } else{
-        fetchOrdersBasedOnSelectedCoin();
-      }
-    }, [selectedCoin, dispatch]);
+
+    // useEffect(() => {
+    //   if (selectedCoin === 'ALL') {
+    //     fetchAllOrders();
+    //   } else{
+    //     fetchOrdersBasedOnSelectedCoin();
+    //   }
+    // }, [selectedCoin, dispatch]);
 
     const fetchAllOrders = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get('orders/get');
-        dispatch(getOrdersData(response.data.message));
+        setSocketInitialized(prev => !prev)
   
       } catch (err) {
         ToastAndroid.show('Failed to fetch orders! Try again', ToastAndroid.SHORT);

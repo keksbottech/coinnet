@@ -15,6 +15,8 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 import { ThemedText } from '@/components/ThemedText';
+import { useFocusEffect } from '@react-navigation/native';
+import { BackHandler } from 'react-native';
 
 const AuthenticationCode = () => {
   const router = useRouter();
@@ -29,6 +31,20 @@ const AuthenticationCode = () => {
       code: '',
     },
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
 
   const sendPhoneConfirmationOtpToValidate = async () => {
     try {
@@ -239,16 +255,16 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     width: '100%',
-    bottom: 10,
+    bottom: 50,
   },
   button: {
-    position: 'relative',
+    bottom:50
   },
   resendButton: {
     position: 'relative',
     borderWidth: 0.5,
     backgroundColor: 'transparent',
     fontWeight: 'bold',
-    bottom: 10,
+    top: 30,
   },
 });

@@ -15,6 +15,7 @@ const Card = ({fullname, time, sellersRate,sellerId, quantity, limits, coin, off
   const theme = useAppSelector(state => state.theme.theme)
   const userData = useAppSelector(state => state.user.user)
 
+  
 
   const navigateToP2pNegotiate = () => {
     console.log(userData._id, 'buyer id')

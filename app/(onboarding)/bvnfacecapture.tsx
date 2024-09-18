@@ -1,12 +1,27 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import Button from '@/components/ui/button/Button';
 import FaceCaptureBox from '@/assets/svg/facesquare.svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 
 const BvnFaceCapture = () => {
   const router = useRouter();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
 
   const navigateToAllDone = () => {
     router.push('/(onboarding)/alldone');

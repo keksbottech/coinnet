@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons'; // Expo vector icons
+import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons'; // Expo vector icons
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 import SupportActionButtons from '@/components/support action buttons/SupportActionButtons';
@@ -24,7 +24,9 @@ const QuickActionPage = () => {
     router.push('/(other)/exchangefiatcurrency')
   }
 
-  
+  const navigateToWithdrawFiat = () => {
+    router.push('/(other)/withdrawforfiat')
+  }
   return (
     <SafeAreaView style={[styles.container, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
 <SupportActionButtons/>
@@ -52,6 +54,14 @@ const QuickActionPage = () => {
           <Ionicons name="swap-horizontal-outline" size={24} color="orangered" />
         </View>
         <Text style={styles.optionText}>Exchange</Text>
+        <Ionicons name="chevron-forward-outline" size={24} color="#8F8F8F" />
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={navigateToWithdrawFiat} style={styles.option}>
+        <View style={styles.iconContainer}>
+        <Feather name="download" size={24} color='orangered' />
+        </View>
+        <Text style={styles.optionText}>Withdraw</Text>
         <Ionicons name="chevron-forward-outline" size={24} color="#8F8F8F" />
       </TouchableOpacity>
     </SafeAreaView>

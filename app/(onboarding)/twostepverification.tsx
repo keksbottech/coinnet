@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ToastAndroid, BackHandler } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PageHeader from '@/components/page header/PageHeader';
@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 import { ThemedText } from '@/components/ThemedText';
+import { useFocusEffect } from '@react-navigation/native';
 
 const TwoStepVerification = () => {
   const router = useRouter();
@@ -29,6 +30,20 @@ const TwoStepVerification = () => {
       phone: '',
     },
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
 
   const navigateToAuthenticationCode = () => {
     // Navigation logic

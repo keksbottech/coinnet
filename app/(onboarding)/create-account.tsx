@@ -16,6 +16,7 @@ import Toast, { BaseToast, ToastOptions } from 'react-native-toast-message';
 import Loading from '@/components/loading/Loading';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { ThemedText } from '@/components/ThemedText';
+import ContinueWithOauth from '@/components/continue with oauth/ContinueWithOauth';
 
 // Define the shape of the form data
 interface FormValues {
@@ -45,19 +46,6 @@ const CreateAccount: React.FC = () => {
       // phone:''
     }
   });
-
-  const toastConfig = {
-    success: (props: ToastOptions) => (
-      <BaseToast
-        {...props}
-        style={{ borderLeftColor: 'green', zIndex: 1000 }} // Adjust zIndex here
-        contentContainerStyle={{ paddingHorizontal: 15 }}
-        text1Style={{ fontSize: 18, fontWeight: 'bold' }}
-        text2Style={{ fontSize: 16 }}
-      />
-    ),
-    // Add more configurations for other types if needed
-  };
 
   // Handle form submission
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -221,28 +209,6 @@ const CreateAccount: React.FC = () => {
                 {errors.email && <ThemedText style={{ color: 'red' }}>{errors.email.message}</ThemedText>}
               </View>
 
-              {/* <View style={styles.inputGroup}>
-                <ThemedText style={styles.label}>Phone</ThemedText>
-                <Controller
-                  control={control}
-                  name="phone"
-                  rules={{
-                    required: 'Phone is required',
-                  }}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      style={[styles.input,  {color:theme ? 'white': 'black'}]}
-                      placeholder="without country code or the the prefix 0"
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                      placeholderTextColor={theme ?'#eee' : 'gray'}
-                    />
-                  )}
-                />
-                {errors.phone && <Text style={{ color: 'red' }}>{errors.phone.message}</ThemedText>}
-              </View> */}
-
 
               <View style={styles.inputGroup}>
                 <ThemedText style={styles.label}>Password</ThemedText>
@@ -293,8 +259,11 @@ const CreateAccount: React.FC = () => {
 
             </View>
 
-            <Button onClick={handleSubmit(onSubmit)} styles={{position:'relative'}} label="Start" />
+
           </View>
+          
+            <Button onClick={handleSubmit(onSubmit)} label="Start" styles={{position:'relative'}}/>
+          <ContinueWithOauth url={'/(onboarding)/create-account'} />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

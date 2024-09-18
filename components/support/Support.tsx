@@ -61,7 +61,7 @@ const ContactUs = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
       >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
           <View style={styles.container}>
             <ThemedText style={styles.headerText}>Contact us for Coinnet</ThemedText>
             <View style={styles.infoContainer}>
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   infoText: {
     marginLeft: 10,
     fontSize: 14,
-    color: '#ccc',
+    color: 'gray',
     fontFamily: 'MonsterReg',
   },
   input: {

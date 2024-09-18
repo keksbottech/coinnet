@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform, ToastAndroid, BackHandler } from 'react-native';
 import React, { useRef, useState } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -20,6 +20,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserSession } from '@/lib/store/reducers/storeUserSession';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 import { ThemedText } from '@/components/ThemedText';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Passwordreset2 = () => {
   const router = useRouter();
@@ -34,6 +35,19 @@ const Passwordreset2 = () => {
   const handleOtpChange = (otp: any) => {
     setOtpValue(otp);
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
 
 
   const navigateToPasswordReset3 = async () => {

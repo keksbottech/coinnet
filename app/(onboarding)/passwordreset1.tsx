@@ -161,7 +161,7 @@ const Passwordreset = () => {
               By registering you accept our Terms & Conditions and Privacy Policy. Your data will be securely encrypted with TLS
             </ThemedText>
 
-            {/* <ContinueWithOauth styles={styles.oauth} /> */}
+            <ContinueWithOauth  url={'/(onboarding)/passwordreset1'}/>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

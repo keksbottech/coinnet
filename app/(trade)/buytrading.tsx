@@ -1,5 +1,5 @@
 import { FlatList, View, Text, SafeAreaView, StyleSheet, BackHandler } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PageHeader from '@/components/page header/PageHeader';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';
@@ -21,6 +21,9 @@ import { RefreshControl } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { ToastAndroid } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
+import io from 'socket.io-client'
+
+let socket;
 
 const BuyTrading = () => {
     const router = useRouter();
@@ -31,6 +34,7 @@ const BuyTrading = () => {
     const [refreshing, setRefreshing] = useState(false)
     const theme = useAppSelector(state => state.theme.theme)
     const [disableBackPress, setDisableBackPress] = useState(true)
+    const userData = useAppSelector(state => state.user.user)
 
 
 
@@ -52,7 +56,33 @@ const BuyTrading = () => {
     }, [disableBackPress])
   );
 
-
+  useFocusEffect(
+    useCallback(() => {
+      // Ensure the socket is initialized
+      socket = io('https://coinnet-server.onrender.com', {
+        query: {
+          userId: userData._id
+        }
+      });
+  
+      const userOnlineData = {
+        userId: userData._id
+      };
+  
+      // Emit the request to check seller online status
+      socket.emit('checkSellerOnlineStatus', userOnlineData);
+  
+      // Listen for the response from the server
+      socket.on('onlineSellersOrders', (message) => {
+        console.log(message, 'online sellers orders');
+      });
+  
+      return () => {
+        socket.disconnect(); // Cleanup when component unmounts
+      };
+    }, [userData])
+  );
+  
 
     useEffect(() => {
       dispatch(getSelectedCoinData('ALL'))

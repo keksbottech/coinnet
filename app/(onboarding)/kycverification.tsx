@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, KeyboardAvoidingView, Platform, ToastAndroid, BackHandler } from 'react-native';
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import PageHeader from '@/components/page header/PageHeader';
@@ -15,6 +15,7 @@ import { Image } from 'react-native';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { axios } from '@/lib/axios';
 import { ThemedText } from '@/components/ThemedText';
+import { useFocusEffect } from '@react-navigation/native';
 
 const KycVerification = () => {
   const router = useRouter();
@@ -33,6 +34,20 @@ const KycVerification = () => {
       nin: '', // Initial value for NIN
     },
   });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        // Prevent back navigation
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+
 
   const pickImage = async () => {
     // Request permission to access media library
@@ -224,7 +239,7 @@ const KycVerification = () => {
                   <Image source={{uri:imageUri}} width={200} height={200}/>
                 )}
               </View>
-              <Button styles={{ position: 'relative' }} onClick={handleSubmit(navigateToFacialRecognition)} label="Continue" />
+              <Button styles={{ position: 'relative', marginBottom:50 }} onClick={handleSubmit(navigateToFacialRecognition)} label="Continue" />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

@@ -1,5 +1,17 @@
 import React, { useCallback, useState } from 'react';
-import { TextInput, TouchableOpacity, StyleSheet, View, Text, SafeAreaView, ToastAndroid, BackHandler } from 'react-native';
+import {
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  ToastAndroid,
+  BackHandler,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform
+} from 'react-native';
 import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { Controller, useForm, SubmitHandler } from 'react-hook-form';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,6 +23,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { ThemedText } from '@/components/ThemedText';
+import ContinueWithOauth from '@/components/continue with oauth/ContinueWithOauth';
 
 // Define the shape of the form data
 interface FormValues {
@@ -28,7 +41,7 @@ const Signin: React.FC = () => {
   const { control, handleSubmit, formState: { errors } } = useForm<FormValues>();
 
   useFocusEffect(
-  useCallback(() => {
+    useCallback(() => {
       const onBackPress = () => {
         // Prevent back navigation
         return true;
@@ -39,11 +52,11 @@ const Signin: React.FC = () => {
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [])
   );
+
   const navigateToForgottenPassword = () => router.navigate('/(onboarding)/passwordreset1');
 
   const signInUserAndNavigateToEmailVerification: SubmitHandler<FormValues> = async (data) => {
     try {
-      
       setIsLoading(true);
 
       const { password, email } = data;
@@ -60,7 +73,6 @@ const Signin: React.FC = () => {
 
       ToastAndroid.show('Logged in successfully!', ToastAndroid.SHORT);
 
-
       setTimeout(() => {
         router.push('/(onboarding)/verification');
       }, 3000);
@@ -68,12 +80,13 @@ const Signin: React.FC = () => {
       let errorMessage = 'Something went wrong... Try Again';
       if (err.response.data.message === 'User does not exist. Please register to gain access' ||
           err.response.data.message === 'AppwriteException: Invalid credentials. Please check the email and password.') {
+        ToastAndroid.show('Login failed! Invalid Credential', ToastAndroid.SHORT);
         errorMessage = 'You entered an invalid credential';
+      } else {
+        ToastAndroid.show('Login failed! Something went wrong with our server. Try again', ToastAndroid.SHORT);
       }
 
       console.log(err.response.data)
-      ToastAndroid.show('Login failed! Invalid Credential', ToastAndroid.SHORT);
-
     } finally {
       setIsLoading(false);
     }
@@ -83,84 +96,92 @@ const Signin: React.FC = () => {
     <>
       {isLoading && <Loading />}
 
-      <SafeAreaView style={[styles.safeArea,{backgroundColor:theme ? '#0F0F0F': 'white'}]}>
-        <View style={styles.container}>
-          <Toast />
-          <View style={styles.wrapper}>
-            <ThemedText style={styles.title}>Sign in to Coinnet</ThemedText>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme ? '#0F0F0F' : 'white' }]}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.container}>
+              <Toast />
+              <View style={styles.wrapper}>
+                <ThemedText style={styles.title}>Sign in to Coinnet</ThemedText>
 
-
-            <View style={[styles.inputContainer, {marginTop:50}]}>
-              <ThemedText style={styles.text}>Email/Phone number</ThemedText>
-              <Controller
-                control={control}
-                name="email"
-                rules={{ required: 'Email is required' }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[styles.input,  {color:theme ? 'white': 'black'}]}
-                    placeholder='mobbin.cms2@gmail.com'
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholderTextColor={theme ?'#eee': 'gray'}
+                <View style={[styles.inputContainer, { marginTop: 50 }]}>
+                  <ThemedText style={styles.text}>Email/Phone number</ThemedText>
+                  <Controller
+                    control={control}
+                    name="email"
+                    rules={{ required: 'Email is required' }}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <TextInput
+                        style={[styles.input, { color: theme ? 'white' : 'black' }]}
+                        placeholder='mobbin.cms2@gmail.com'
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        value={value}
+                        placeholderTextColor={theme ? '#eee' : 'gray'}
+                      />
+                    )}
                   />
-                )}
-              />
-              {errors.email && <ThemedText style={styles.errorText}>{errors.email.message}</ThemedText>}
-            </View>
+                  {errors.email && <ThemedText style={styles.errorText}>{errors.email.message}</ThemedText>}
+                </View>
 
-            <View style={styles.inputContainer}>
-              <ThemedText style={styles.text}>Password</ThemedText>
-              <View style={styles.inputWrapper}>
-                <Controller
-                  control={control}
-                  name="password"
-                  rules={{ required: 'Password is required' }}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      style={[styles.input,  {color:theme ? 'white': 'black'}]}
-                      placeholder="Password"
-                      secureTextEntry={!oldPasswordVisible}
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      placeholderTextColor={theme ?'#eee': 'gray'}
+                <View style={styles.inputContainer}>
+                  <ThemedText style={styles.text}>Password</ThemedText>
+                  <View style={styles.inputWrapper}>
+                    <Controller
+                      control={control}
+                      name="password"
+                      rules={{ required: 'Password is required' }}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                          style={[styles.input, { color: theme ? 'white' : 'black' }]}
+                          placeholder="Password"
+                          secureTextEntry={!oldPasswordVisible}
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          value={value}
+                          placeholderTextColor={theme ? '#eee' : 'gray'}
+                        />
+                      )}
                     />
-                  )}
-                />
-                <TouchableOpacity
-                  style={styles.pwdIcon}
-                  onPress={() => setOldPasswordVisible(!oldPasswordVisible)}
-                >
-                  <Ionicons
-                    name={oldPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
-                    size={24}
-                    color="gray"
-                  />
+                    <TouchableOpacity
+                      style={styles.pwdIcon}
+                      onPress={() => setOldPasswordVisible(!oldPasswordVisible)}
+                    >
+                      <Ionicons
+                        name={oldPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+                        size={24}
+                        color="gray"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  {errors.password && <ThemedText style={styles.errorText}>{errors.password.message}</ThemedText>}
+                </View>
+
+                <View style={styles.linkContainer}>
+                  <TouchableOpacity onPress={navigateToForgottenPassword}>
+                    <ThemedText style={styles.linkText}>Forgotten Password</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <ThemedText style={styles.linkText}>Privacy policy</ThemedText>
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={handleSubmit(signInUserAndNavigateToEmailVerification)} style={styles.button}>
+                  <ThemedText style={styles.buttonText}>Sign in</ThemedText>
                 </TouchableOpacity>
+
+                <View style={styles.signupContainer}>
+                  <ThemedText style={styles.signupText}>Don't have an account? <Link style={styles.signupLink} href={'/(onboarding)/create-account'}>Sign up</Link></ThemedText>
+                </View>
               </View>
-              {errors.password && <ThemedText style={styles.errorText}>{errors.password.message}</ThemedText>}
             </View>
-
-            <View style={styles.linkContainer}>
-              <TouchableOpacity onPress={navigateToForgottenPassword}>
-                <ThemedText style={styles.linkText}>Forgotten Password</ThemedText>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <ThemedText style={styles.linkText}>Privacy policy</ThemedText>
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity onPress={handleSubmit(signInUserAndNavigateToEmailVerification)} style={styles.button}>
-              <ThemedText style={styles.buttonText}>Sign in</ThemedText>
-            </TouchableOpacity>
-
-            <View style={styles.signupContainer}>
-              <ThemedText style={styles.signupText}>Don't have an account? <Link style={styles.signupLink} href={'/(onboarding)/create-account'}>Sign up</Link></ThemedText>
-            </View>
-          </View>
-        </View>
+            
+        <ContinueWithOauth url={'/(onboarding)/signin'} />
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </>
   );
@@ -170,27 +191,29 @@ export default Signin;
 
 const styles = StyleSheet.create({
   safeArea: {
-    alignItems: 'center',
     flex: 1,
     padding: 10,
   },
   container: {
     flex: 1,
     width: '100%',
-    paddingTop:20
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingTop: 20,
   },
   wrapper: {
     paddingTop: 50,
   },
   title: {
     fontFamily: 'MonsterBold',
-    fontSize: 20, // equivalent to text-3xl
+    fontSize: 20,
     marginTop: 10,
     textAlign: 'left',
   },
   text: {
     fontFamily: 'MonsterBold',
-    fontSize: 14, // equivalent to text-lg
+    fontSize: 14,
   },
   inputContainer: {
     marginTop: 10,
@@ -219,7 +242,7 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   button: {
-    backgroundColor: 'yellow', // equivalent to bg-yellow-300
+    backgroundColor: 'yellow',
     width: '100%',
     paddingVertical: 15,
     justifyContent: 'center',
@@ -229,7 +252,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'MonsterBold',
-    color:'white'
+    color: 'black',
   },
   linkContainer: {
     flexDirection: 'row',
@@ -237,8 +260,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   linkText: {
-    color: '#F9C74F', // equivalent to text-yellow-400
-    fontSize: 16, // equivalent to text-lg
+    color: '#F9C74F',
+    fontSize: 16,
   },
   signupContainer: {
     marginTop: 20,
@@ -248,6 +271,6 @@ const styles = StyleSheet.create({
     fontFamily: 'MonsterBold',
   },
   signupLink: {
-    color: '#F9C74F'
+    color: '#F9C74F',
   },
 });
