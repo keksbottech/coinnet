@@ -60,11 +60,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginTop: 20,
+  
   },
   categoryButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 5,
     borderRadius: 20,
   },
   categoryText: {

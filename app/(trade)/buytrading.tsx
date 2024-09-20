@@ -35,10 +35,9 @@ const BuyTrading = () => {
     const theme = useAppSelector(state => state.theme.theme)
     const [disableBackPress, setDisableBackPress] = useState(true)
     const userData = useAppSelector(state => state.user.user)
+    const [socketInitialized, setSocketInitialized] = useState(false)
 
 
-
-    console.log(selectedCoin,'selected')
 
   useFocusEffect(
     React.useCallback(() => {
@@ -56,9 +55,11 @@ const BuyTrading = () => {
     }, [disableBackPress])
   );
 
+  
   useFocusEffect(
     useCallback(() => {
       // Ensure the socket is initialized
+      setIsLoading(true)
       socket = io('https://coinnet-server.onrender.com', {
         query: {
           userId: userData._id
@@ -75,18 +76,26 @@ const BuyTrading = () => {
       // Listen for the response from the server
       socket.on('onlineSellersOrders', (message) => {
         console.log(message, 'online sellers orders');
+        dispatch(getOrdersData(message));
       });
   
+      socket.on('isLoading', (message) => {
+        console.log(message, 'isLoading online sellers orders');
+        setIsLoading(message.isLoading)
+      });
+      
       return () => {
         socket.disconnect(); // Cleanup when component unmounts
       };
-    }, [userData])
+    }, [userData, socketInitialized])
   );
   
+
 
     useEffect(() => {
       dispatch(getSelectedCoinData('ALL'))
     }, [])
+
 
 
     useEffect(() => {
@@ -100,8 +109,7 @@ const BuyTrading = () => {
     const fetchAllOrders = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get('orders/get');
-        dispatch(getOrdersData(response.data.message));
+        setSocketInitialized(prev => !prev)
   
       } catch (err) {
         ToastAndroid.show('Failed to fetch orders! Try again', ToastAndroid.SHORT);
@@ -146,6 +154,7 @@ const BuyTrading = () => {
     const navigateToChatPreview = () => {
       router.push('/(trade)/chatpreview')
     }
+    
     return (
       <SafeAreaView style={[{ flex: 1, padding: 10, paddingTop:30,  }, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
                 <PageHeader

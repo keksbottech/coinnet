@@ -38,9 +38,6 @@ const P2PPage = () => {
     const userData = useAppSelector(state => state.user.user)
     const [socketInitialized, setSocketInitialized] = useState(false)
 
-
-    console.log(selectedCoin,'selected')
-
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -100,13 +97,13 @@ const P2PPage = () => {
 
 
 
-    // useEffect(() => {
-    //   if (selectedCoin === 'ALL') {
-    //     fetchAllOrders();
-    //   } else{
-    //     fetchOrdersBasedOnSelectedCoin();
-    //   }
-    // }, [selectedCoin, dispatch]);
+    useEffect(() => {
+      if (selectedCoin === 'ALL') {
+        fetchAllOrders();
+      } else{
+        fetchOrdersBasedOnSelectedCoin();
+      }
+    }, [selectedCoin, dispatch]);
 
     const fetchAllOrders = async () => {
       try {

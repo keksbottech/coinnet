@@ -11,6 +11,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import Loading from '../loading/Loading';
 import { getUserInfo } from '@/lib/store/reducers/storeUserInfo';
 import { axios } from '@/lib/axios';
+import { ThemedText } from '../ThemedText';
 
 const ContinueWithOauth = ({ url }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -139,7 +140,7 @@ const ContinueWithOauth = ({ url }) => {
       <View style={[localStyles.container]}>
         <View style={localStyles.separatorContainer}>
           <View style={localStyles.separator} />
-          <Text style={localStyles.text}>or continue with</Text>
+          <ThemedText style={localStyles.text}>or continue with</ThemedText>
           <View style={localStyles.separator} />
         </View>
 

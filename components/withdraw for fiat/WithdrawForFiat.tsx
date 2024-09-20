@@ -150,7 +150,7 @@ const WithdrawForFiat = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
               )}
             />
 
-            <ThemedText style={styles.label}>Withdraw to</ThemedText>
+            {/* <ThemedText style={styles.label}>Withdraw to</ThemedText>
             <TouchableOpacity onPress={enableBottomSheet} style={[styles.withdrawToContainer, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
               <View style={styles.withdrawToContent}>
                 <FontAwesome name="bank" size={24} color={theme?'white':"black"} />
@@ -160,9 +160,9 @@ const WithdrawForFiat = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                 </View>
               </View>
               <AntDesign name="down" size={20} color={theme?'white':"black"} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            {selectedPayment?.name === 'PayPal' && (
+            {/* {selectedPayment?.name === 'PayPal' && (
               <>
                 <ThemedText style={styles.label}>Paypal Email Address</ThemedText>
                 <Controller
@@ -188,10 +188,8 @@ const WithdrawForFiat = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                   )}
                 />
               </>
-            )}
+            )} */}
 
-            {selectedPayment?.name === 'Bank Transfer' && (
-              <>
                 <ThemedText style={styles.label}>Choose Bank</ThemedText>
                 <TouchableOpacity onPress={enableBankBottomSheet} style={[styles.withdrawToContainer, {backgroundColor:theme ? 'gray': 'white'}]}>
                   <View style={styles.withdrawToContent}>
@@ -252,8 +250,7 @@ const WithdrawForFiat = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                     </>
                   )}
                 />
-              </>
-            )}
+
           </View>
      
      

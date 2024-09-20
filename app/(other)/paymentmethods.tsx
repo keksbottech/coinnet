@@ -39,10 +39,11 @@ const PaymentMethods = () => {
         <ThemedText style={styles.title}>Payment Methods</ThemedText>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={navigateToPaypal} style={[styles.button, {borderColor:theme ? 'white': 'black'}]}>
+          {/* <TouchableOpacity onPress={navigateToPaypal} style={[styles.button, {borderColor:theme ? 'white': 'black'}]}>
             <Paypal />
             <ThemedText style={styles.label}>Deposit with Paypal</ThemedText>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          
 
           <TouchableOpacity onPress={navigateToFlutterwave} style={[styles.button, {borderColor:theme ? 'white': 'black'}]}>
             <View>

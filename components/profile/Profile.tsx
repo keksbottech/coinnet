@@ -167,13 +167,7 @@ const ProfileScreen = () => {
           placeholderTextColor={theme ? 'white': 'black'}
         />
       </View>
-      <Picker
-        selectedValue={selectedGender}
-        style={styles.picker}
-        onValueChange={(itemValue) => setSelectedGender(itemValue)}
-      >
-        <Picker.Item label="Male" value="male" />
-      </Picker>
+
       <TextInput readOnly placeholderTextColor={theme ? 'white': 'black'} style={styles.input} placeholder={`${userData?.email}`}  />
       <TouchableOpacity onPress={logoutUser} style={styles.logoutButton}>
         <ThemedText style={styles.logoutButtonText}>Logout</ThemedText>

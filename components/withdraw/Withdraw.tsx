@@ -98,27 +98,21 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
       code: selectedBank.code,
       currency: 'NGN',
       amount: +data.amount,
-      email: data.paypalEmail,
+      // email: data.paypalEmail,
       coin: selectedCoin.symbol,
       coinAmount: data.coinAmount
     };
-
-    console.log(selectedPayment.name)
-
-    if (selectedPayment.name === 'Bank Transfer') {
       baseBody.amount = +data.amount * 1690;
-      console.log('CLICKED')
+
 
       // dispatch(getWithdrawalData(baseBody));
       // dispatch(getWithdrawalMethod(selectedPayment));
   
       // router.push('/(trade)/confirmwithdraw');
-    }
-
-    console.log('CLICKED')
-
+    
+  
     dispatch(getWithdrawalData(baseBody));
-    dispatch(getWithdrawalMethod(selectedPayment));
+    dispatch(getWithdrawalMethod('Bank Transfer'));
 
     router.push('/(trade)/confirmwithdraw');
 
@@ -201,7 +195,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
               )}
             />
 
-            <ThemedText style={styles.label}>Withdraw to</ThemedText>
+            {/* <ThemedText style={styles.label}>Withdraw to</ThemedText>
             <TouchableOpacity onPress={enableBottomSheet} style={[styles.withdrawToContainer, {backgroundColor:theme ? '#0F0F0F': 'white'}]}>
               <View style={styles.withdrawToContent}>
                 <FontAwesome name="bank" size={24} color={theme?'white':"black"} />
@@ -211,9 +205,9 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                 </View>
               </View>
               <AntDesign name="down" size={20} color={theme?'white':"black"} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
-            {selectedPayment?.name === 'PayPal' && (
+            {/* {selectedPayment?.name === 'PayPal' && (
               <>
                 <ThemedText style={styles.label}>Paypal Email Address</ThemedText>
                 <Controller
@@ -239,10 +233,9 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                   )}
                 />
               </>
-            )}
+            )} */}
 
-            {selectedPayment?.name === 'Bank Transfer' && (
-              <>
+     
                 <ThemedText style={styles.label}>Choose Bank</ThemedText>
                 <TouchableOpacity onPress={enableBankBottomSheet} style={[styles.withdrawToContainer, {backgroundColor:theme ? 'gray': 'white'}]}>
                   <View style={styles.withdrawToContent}>
@@ -303,8 +296,7 @@ const Withdraw = ({ enableBottomSheet, enableBankBottomSheet }: any) => {
                     </>
                   )}
                 />
-              </>
-            )}
+          
           </View>
         <Button label="Proceed" styles={{position:'re'}} onClick={handleSubmit(onSubmit)} />
 

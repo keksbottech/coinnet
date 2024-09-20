@@ -12,6 +12,7 @@ import { getPaymentBanks, getPaymentMethod } from '@/lib/store/reducers/storePay
 import { axios } from '@/lib/axios';
 import { Wave } from 'react-native-animated-spinkit';
 import { ThemedText } from '../ThemedText';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 interface Bank {
   id: number;
@@ -32,6 +33,7 @@ const BanksBottomDrawer: React.FC = () => {
   const dispatch = useAppDispatch();
   const [banks, setBanks] = useState<Bank[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const theme = useAppSelector(state => state.theme.theme)
 
   useEffect(() => {
     fetchBanksAvailable();
@@ -70,7 +72,7 @@ const BanksBottomDrawer: React.FC = () => {
         <View style={styles.container}>
           <ThemedText style={styles.title}>Choose Bank</ThemedText>
           <View style={{ alignItems: 'center' }}>
-            {isLoading && <Wave size={40} />}
+            {isLoading && <Wave size={40} color={theme ?'white':'black'} />}
           </View>
 
           {banks && banks.map((method) => (

@@ -204,14 +204,14 @@ const dispatch = useAppDispatch()
           <View style={{ flex: 1 }}>
             <View style={styles.drawerHeader}>
               <ThemedText style={styles.drawerTitle}>My Assets</ThemedText>
-              <View style={styles.iconsContainer}>
+              {/* <View style={styles.iconsContainer}>
                 <TouchableOpacity style={styles.iconMargin}>
                   <Ionicons name="search-outline" size={24} color={theme ? 'white':"black"} />
                 </TouchableOpacity>
                 <TouchableOpacity>
                   <Ionicons name="filter-outline" size={24} color={theme ? 'white':"black"} />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
 
             {isLoading && (

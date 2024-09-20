@@ -55,7 +55,7 @@ const SelectCoinsToDepositDrawer = () => {
               </View>
               {selectedMethod?.name === method.name && (
                 <MaterialIcons name="check-circle" size={24} color="green" />
-              )}router.push('/(tabs)/wallet')
+              )}
             </TouchableOpacity>
           ))}
         </View>
